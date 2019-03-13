@@ -17,3 +17,7 @@
 .blockBorder {
   border: 1px solid black;
 }
+
+.white {
+  background-color: white;
+}

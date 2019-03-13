@@ -1,43 +1,62 @@
 import React from 'react'
 import './styles.css';
 
-const setCols = (x) => {
-  const result = [];
-  for (let i = 0; i <= x; i++) {
-    result.push(<X/>)
-  } 
-  return result;
-}
+const map = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+  [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+];
 
-const setRows = (y) => {
-  const result = [];
-  for (let i = 0; i <= y; i++) {
-    result.push(
-      <Y>
-        {setCols(9)}
+const setRows = (map) => {
+  const result = map.map((rows, idx)=> {
+    return (
+      <Y idx={idx}>
+        {
+          rows.map((cols, idx) => {
+            return (
+             <X idx={idx} color={cols} />
+            );
+          })
+        }
       </Y>
-    )
-  } 
+    );
+  })
   return result;
 }
 
 const Map = () => {
   return (
    <Wrapper>
-     {setRows(19)}
+     {setRows(map)}
    </Wrapper> 
   )
 };
 
-const X = () => {
+const X = ({color, idx}) => {
   return (
-    <div className='block blockBorder' />
+    <div key={idx} className={`block blockBorder ${color === 1 ? 'white' : ''}`} />
   );
 }
 
-const Y = ({children}) => {
+const Y = ({children, idx}) => {
   return (
-    <div className='rows'>{children}</div>
+    <div key={idx} className='rows'>{children}</div>
   );
 }
 
