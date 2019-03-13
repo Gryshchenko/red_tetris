@@ -1,9 +1,14 @@
 const params = {
-  server:{
+  server: {
      host: '127.0.0.1'
    , port: 3004
    , get url(){ return 'http://' + this.host + ':' + this.port } 
   },
+  db: {
+    dbName: 'mongodb',
+    dbPort: 27017,
+    dbHost: '127.0.0.1'
+  }
 }
 
 module.exports = params
