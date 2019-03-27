@@ -9,10 +9,9 @@ const App = ({message}) => {
   );
 }
   
-  // <span>{message}</span>
 const mapStateToProps = (state) => {
   return {
-    message: state.message
+    message: state.message,
   }
 }
 export default connect(mapStateToProps, null)(App)
