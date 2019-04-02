@@ -5,19 +5,15 @@ const Model = mongoose.model;
 
 const PieceModel = new Schema({
     id: Number,
-    figure: { type: Array, default: [] },
-    color: { type: String, default: 'blue' },
-    coordX: { type: Number, default: 0 },
-    coordY: { type: Number, default: 0 }
+    shape: { type: Array, default: [] },
+    color: { type: String, default: 'blue' }
 });
 
 PieceModel.virtual('info').get(() => {
     return {
         id: this.id,
-        figure: this.figure,
-        color: this.color,
-        coordX: this.coordX,
-        coordY: this.coordY
+        shape: this.figure,
+        color: this.color
     };
 });
 
