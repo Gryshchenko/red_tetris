@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Map } from '../components/map';
+import { Map } from './map';
 
 
 const App = ({message}) => {
