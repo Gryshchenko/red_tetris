@@ -1,47 +1,41 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './styles.css';
+import createNewPlayer from '../../actions/createNewPlayer';
 
-const Main = ({message}) => {
+const Main = ({ router, createNewPlayer }) => {
     return (
         <section className='main'>
-            {/* <form className='form' onSubmit={(e) => {
-                e.preventDefault()
-                const hostName = document.getElementById('name').value
-                const roomName = document.getElementById('roomName').value
-
-                if (hostName !== '' && roomName !== '') {
-                    router.router.push(`#${roomName}[${hostName}]`)
-                }
-            }}>
-                <legend className='legend'>join</legend>
-                <input className='input' type='text' id='name' placeholder='Name'/>
-                <input className='input' type='text' id='roomName' placeholder='Room Name'/>
-                <button className='button'type='submit'>Start</button>
-            </form> */}
-
             <form className='form' onSubmit={(e) => {
                 e.preventDefault()
                 const hostName = document.getElementById('name').value
                 const roomName = document.getElementById('roomName').value
 
                 if (hostName !== '' && roomName !== '') {
-                    router.router.push(`#${roomName}[${hostName}]`)
+                    createNewPlayer({name: hostName, room: roomName});
+                    router.history.push(`#${roomName}-${hostName}`)
                 }
             }}>
                 <legend className='legend'>Create your game</legend>
-                <input className='input' type='text' id='name' placeholder='Name'/>
-                <input className='input' type='text' id='roomName' placeholder='Room Name'/>
-                <button className='button'type='submit'>Start</button>
+                <input className={'input'} type={'text'} id={'name'} placeholder={'Name'} />
+                <input type={'number'} className={'input'} type={'text'} id={'roomName'} placeholder={'Room Name'} />
+                <button className={'button'} type={'submit'}>Start</button>
             </form>
         </section>
     );
 }
-  
-const mapStateToProps = (state) => {
-  return {
-    message: state.message,
-  }
+
+const mapStateToProps = (state, router) => {
+    return {
+        router,
+    };
+}   
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createNewPlayer: (data) => dispatch(createNewPlayer(data)),
+    }
 }
-export default connect(mapStateToProps, null)(Main);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
 

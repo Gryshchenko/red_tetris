@@ -1,4 +1,4 @@
-// import newPlayer from '../actions/newPlayer'
+import createNewPlayer from '../actions/createNewPlayer'
 // import disconnect from '../actions/disconnect'
 const parseUrl = (data) => {
   const hash = data.hash
@@ -13,9 +13,11 @@ const socketIoMiddleWare = socket => ({ dispatch, getState }) => {
     if (action.type == '@@router/LOCATION_CHANGE') {
       const data = parseUrl(action.payload);
       const state = getState();
-      // if (state.game.room) dispatch(disconnect(data))
+      if (state.game.room) {
+        // dispatch(disconnect(data))
+      } 
 
-      // dispatch(newPlayer(data))
+      dispatch(createNewPlayer(data))
     }
     if (socket && action.type && action.type.indexOf('server/') === 0) {
       const serverAction = action.type.split('/');

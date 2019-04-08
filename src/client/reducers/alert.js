@@ -1,11 +1,11 @@
-import { ALERT_POP } from '../actions/alert'
+import { fromJS } from 'immutable';
 
-const reducer = (state = {} , action) => {
-  switch(action.type){
-    case ALERT_POP:
-      return { message: action.message }
-    default: 
-      return state
+const reducer = (state = {}, action) => {
+  switch (action.type) {
+  case 'NEW_PLAYER':
+    return state.setIn(['room'], fromJS(action.data));
+  default:
+    return state
   }
 }
 
