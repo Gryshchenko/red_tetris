@@ -12,7 +12,10 @@ const Main = ({ router, createNewPlayer }) => {
                 const roomName = document.getElementById('roomName').value
 
                 if (hostName !== '' && roomName !== '') {
-                    createNewPlayer({name: hostName, room: roomName});
+                    createNewPlayer({
+                        name: hostName,
+                        room: roomName,
+                    });
                     router.history.push(`#${roomName}-${hostName}`)
                 }
             }}>
@@ -34,6 +37,7 @@ const mapStateToProps = (state, router) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         createNewPlayer: (data) => dispatch(createNewPlayer(data)),
+        createNewRoom: (data) => dispatch(createNewRoom(data)),
     }
 }
 
