@@ -4,6 +4,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import event from './socket/index.js';
+import PlayerController from './controllers/Player.controller';
 
 const app = express();
 
@@ -38,6 +39,6 @@ db.once('open', () => {
 })
 
 
- server.listen(params.server.port, function(){
+ server.listen(params.server.port, async () => {
    console.log(`listening on ${params.server.port}`);
  });

@@ -3,6 +3,7 @@ import constants from '../const';
 import { randomNumber, flipMatrix } from '../utils';
 
 class PieceController {
+
     static async createPiece() {
         let figure = {};
         let figureType = randomNumber(7);
@@ -15,6 +16,7 @@ class PieceController {
         let newPiece = await new Piece(figure).save();
         return newPiece.info;
     }
+
 }
 
 export default PieceController;
