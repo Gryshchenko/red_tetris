@@ -37,7 +37,6 @@ const mapStateToProps = (state, router) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         createNewPlayer: (data) => dispatch(createNewPlayer(data)),
-        createNewRoom: (data) => dispatch(createNewRoom(data)),
     }
 }
 
