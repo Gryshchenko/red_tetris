@@ -4,7 +4,6 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import event from './socket/index.js';
-import PlayerController from './controllers/Player.controller';
 
 const app = express();
 

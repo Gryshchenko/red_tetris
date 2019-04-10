@@ -2,9 +2,9 @@ import PlayerModel from '../models/Player.model';
 
 class PlayerController {
 
-    static async createNewPlayer(name) {
+    static async createNewPlayer(name, gameId, socketId, isHost) {
         try {
-            const newPlayer = new PlayerModel({ name });
+            const newPlayer = new PlayerModel({ name, gameId, socketId, isHost });
             await newPlayer.save();
             return newPlayer.get;
         } catch(e) {

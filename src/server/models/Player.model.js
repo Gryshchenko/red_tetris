@@ -8,7 +8,9 @@ const PlayerModel = new Schema({
     map: { type: [Number], default: [] },
     haveWon: { type: [Boolean], default: false },
     score: { type: Number, default: 0 },
-    gameId: { type: Number, default: 0 }
+    gameId: { type: Number },
+    socketId: { type: Number },
+    isHost: { type: Boolean }
 });
 
 PlayerModel.virtual('get').get(() => {
@@ -19,9 +21,11 @@ PlayerModel.virtual('get').get(() => {
         map: this.map,
         haveWon: this.haveWon,
         score: this.score,
-        gameId: this.gameId
+        gameId: this.gameId,
+        socketId: this.socketId,
+        isHost: this.isHost
     };
-})
+});
 
 const Player = Model('Player', PlayerModel);
 

@@ -53,7 +53,12 @@ const constants = {
             [0, 1, 1, 0],
             [0, 0, 0, 0]
         ],
-    ]
+    ],
+
+    gameStatuses: {
+        NOT_STARTED: 0,
+        STARTED: 1
+    }
 
 };
 

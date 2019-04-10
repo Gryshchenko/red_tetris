@@ -1,20 +1,20 @@
 import mongoose from 'mongoose';
+import constants from '../const';
 
 const Schema = mongoose.Schema;
 const Model = mongoose.model;
 const ObjectId = Schema.ObjectId;
 
 const GameModel = Schema({
-    id: Number,
     name: String,
-    status: { type: Number, default: 0 },
+    status: { type: Number, default: constants.gameStatuses.NOT_STARTED },
     pieceList: [{ type: ObjectId, ref: 'Piece' }],
     playerList: [{ type: ObjectId, ref: 'Player' }]
 });
 
-GameModel.virtual('info').get(() => {
+GameModel.virtual('get').get(() => {
     return {
-        id: this.id,
+        id: this._id,
         name: this.name,
         status: this.status,
         pieceList: this.pieceList,

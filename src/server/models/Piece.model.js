@@ -4,15 +4,14 @@ const Schema = mongoose.Schema;
 const Model = mongoose.model;
 
 const PieceModel = new Schema({
-    id: Number,
     shape: { type: Array, default: [] },
-    color: { type: String, default: 'blue' }
+    color: { type: String, default: '#0074D9' }
 });
 
-PieceModel.virtual('info').get(() => {
+PieceModel.virtual('get').get(() => {
     return {
-        id: this.id,
-        shape: this.figure,
+        id: this._id,
+        shape: this.shape,
         color: this.color
     };
 });
