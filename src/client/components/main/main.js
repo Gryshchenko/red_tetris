@@ -10,7 +10,7 @@ const Main = ({ router, createNewPlayer }) => {
                 e.preventDefault()
                 const hostName = document.getElementById('name').value
                 const roomName = document.getElementById('roomName').value
-
+                console.warn(1);
                 if (hostName !== '' && roomName !== '') {
                     createNewPlayer({
                         name: hostName,
