@@ -8,13 +8,12 @@ const PlayerModel = new Schema({
     map: { type: [Number], default: [] },
     haveWon: { type: [Boolean], default: false },
     score: { type: Number, default: 0 },
-    gameId: { type: Number },
-    socketId: { type: Number },
+    gameId: { type: String },
+    socketId: { type: String },
     isHost: { type: Boolean }
 });
 
 PlayerModel.virtual('get').get(() => {
-    console.log(this)
     return {
         id: this._id,
         name: this.name,

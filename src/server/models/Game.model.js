@@ -8,8 +8,10 @@ const ObjectId = Schema.ObjectId;
 const GameModel = Schema({
     name: String,
     status: { type: Number, default: constants.gameStatuses.NOT_STARTED },
-    pieceList: [{ type: ObjectId, ref: 'Piece' }],
-    playerList: [{ type: ObjectId, ref: 'Player' }]
+    pieceList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Piece' }],
+    playerList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }]
+}, {
+    usePushEach: true
 });
 
 GameModel.virtual('get').get(() => {

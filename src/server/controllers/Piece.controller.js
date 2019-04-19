@@ -6,18 +6,19 @@ class PieceController {
 
     static async createPiece() {
         try {
-            let figure = {};
-            let figureType = randomNumber(7);
+            let piece = {};
+            let pieceType = randomNumber(7);
 
-            figure.shape = constants.pieces[figureType];
-            figure.color = constants.colors[figureType];
+            piece.shape = constants.pieces[pieceType];
+            piece.color = constants.colors[pieceType];
             for (let i = randomNumber(4); i < 4; i++) {
                 flipMatrix(piece.shape);
             }
-            let newPiece = await new Piece(figure).save();
-            return newPiece.get;
+            const newPiece = await new Piece(piece).save();
+            console.log(newPiece)
+            return newPiece;
         } catch (e) {
-            throw `Error occured while creating piece: ${e}`;
+            throw `Error occured while createPiece(): ${e}`;
         }
     }
 
@@ -25,7 +26,7 @@ class PieceController {
         try {
             await Piece.findOneAndRemove({ _id: pieceId });
         } catch (e) {
-            throw `Error occured while deleting piece: ${e}`;
+            throw `Error occured while deletePiece(): ${e}`;
         }
     }
 

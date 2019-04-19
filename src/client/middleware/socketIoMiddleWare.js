@@ -17,7 +17,7 @@ const socketIoMiddleWare = socket => ({ dispatch, getState }) => {
         // dispatch(disconnect(data))
       } 
 
-      dispatch(createNewPlayer(data))
+      // dispatch(createNewPlayer(data))
     }
     if (socket && action.type && action.type.indexOf('server/') === 0) {
       const serverAction = action.type.split('/');

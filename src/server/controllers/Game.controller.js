@@ -7,37 +7,69 @@ class GameController {
     static async createNewGame(name) {
         try {
             let newGame = await new Game({ name }).save();
+            let pieceArray = [];
+    
             for (let i = 0; i < 10; i++) {
-                newGame.pieceList.push(await Piece.createPiece().id);
+                let piece = await Piece.createPiece();
+                await pieceArray.push(piece);
             }
+            newGame.pieceList = pieceArray.map(item => item.id);
             await newGame.save();
-            return newGame.get;
+            return newGame;
         } catch (e) {
             throw `Error occured while creating a new game: ${e}`;
         }
+        // try {
+        //     let game = await new Game({ name }).save()
+        //     const piece1 = await Piece.createPiece()
+        //     const piece2 = await Piece.createPiece()
+        //     const piece3 = await Piece.createPiece()
+        //     const piece4 = await Piece.createPiece()
+        //     const piece5 = await Piece.createPiece()
+        //     const piece6 = await Piece.createPiece()
+        //     const piece7 = await Piece.createPiece()
+        //     const piece8 = await Piece.createPiece()
+        //     const piece9 = await Piece.createPiece()
+        //     const piece10 = await Piece.createPiece()
+        //     game.pieces.push(piece1.id)
+        //     game.pieces.push(piece2.id)
+        //     game.pieces.push(piece3.id)
+        //     game.pieces.push(piece4.id)
+        //     game.pieces.push(piece5.id)
+        //     game.pieces.push(piece6.id)
+        //     game.pieces.push(piece7.id)
+        //     game.pieces.push(piece8.id)
+        //     game.pieces.push(piece9.id)
+        //     game.pieces.push(piece10.id)
+        //     await game.save()
+        //     return game.serialize
+        //   }
+      
+        //   catch (err) { throw `Error occured while createNewGame(): ${err}` }
     }
 
     static async getGameById(gameId) {
         try {
             let game = await Game.findOne({ _id: gameId }).populate('pieceList').populate('playerList');
             if (!game) {
-                throw 'Game does not exists';
+                return null;
             }
-            return game.get;
+            return game;
         } catch (e) {
-            throw `Error occured while getting game: ${e}`;
+            throw `Error occured while getGameById: ${e}`;
         }
     }
 
     static async getGameByName(gameName) {
         try {
             let game = await Game.findOne({ name: gameName }).populate('pieceList').populate('playerList');
+            console.log(game)
             if (!game) {
-                throw 'Game does not exists';
+                return null;
             }
-            return game.get;
+            return game;
         } catch (e) {
-            throw `Error occured while getting game: ${e}`;
+            throw `Error occured while getGameByName: ${e}`;
         }
     }
 
@@ -49,11 +81,11 @@ class GameController {
             if (data.playerList) columnsToUpdate.playerList = data.playerList;
             let game = await Game.findOneAndUpdate({ _id: gameId }, columnsToUpdate, { new: true }).populate('pieceList').populate('playerList');
             if (!game) {
-                throw 'Game does not exists';
+                return null;
             }
-            return game.get;
+            return game;
         } catch (e) {
-            throw `Error occured while updating game: ${e}`;
+            throw `Error occured while updateGame: ${e}`;
         }
     }
 
@@ -68,7 +100,7 @@ class GameController {
             });
             game.remove();
         } catch (e) {
-            throw `Error occured while deleting game: ${e}`;
+            throw `Error occured while deleteGame: ${e}`;
         }
     }
 

@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 global.io = require('socket.io')(server)
 mongoose.Promise = global.Promise
 
-mongoose.connect(`mongodb://${params.db.dbHost}:${params.db.dbPort}/?gssapiServiceName=${params.db.dbName}`)
+mongoose.connect(`mongodb://${params.db.dbHost}:${params.db.dbPort}/${params.db.dbName}`, { useNewUrlParser: true });
 
 const db = mongoose.connection
 
@@ -34,6 +34,7 @@ io.on('connection', (socket) => {
  })
 
 db.once('open', () => {
+  console.log('db is open')
   app.emit('ready')
 })
 
