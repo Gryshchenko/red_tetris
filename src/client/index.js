@@ -1,11 +1,7 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import React from 'react'
 import ReactDom from 'react-dom'
-import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
-import { Router, Route, browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
-import { createHashHistory } from 'history'
 import io from 'socket.io-client';
 import { socketIoMiddleWare } from './middleware/socketIoMiddleWare';
 import reducer from './reducers';
@@ -14,13 +10,21 @@ import Main from './components/main/main';
 import './styles.css';
 import JoinGame from './components/joinGame/JoinGame';
 
+import { Provider } from 'react-redux'
+// import { Router, Route } from 'react-router'
+// import { createHashHistory } from 'history'
+// import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
+
+import { HashRouter, Route } from 'react-router-dom';
+
+
 require("babel-core/register");
 require("babel-polyfill");
 
 
 const configureStore = (reducer, socket) => createStore(
   combineReducers({
-    routing: routerReducer,
+    // routing: routerReducer,
     game: reducer,
   }),
   composeEnhancers(
@@ -32,14 +36,18 @@ const configureStore = (reducer, socket) => createStore(
 const socket = io('localhost:5000');
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = configureStore(reducer, socket);
-const history = syncHistoryWithStore(createHashHistory(), store);
+// const history = syncHistoryWithStore(createHashHistory(), store);
 
 ReactDom.render((
-  <Provider store={store}>
-    <Router history={history}>
+  <HashRouter hashType='noslash'>
+    <Provider store={store}>
+      <React.Fragment>
+        {/* <Router history={history}> */}
         <Route exact path='/' component={Main} />
         <Route path='/game' component={Room} />
         <Route path='/join-game' component={JoinGame} />
-    </Router>
-  </Provider>
+      </React.Fragment>
+      {/* </Router> */}
+    </Provider>
+  </HashRouter>
 ), document.getElementById('tetris'))
