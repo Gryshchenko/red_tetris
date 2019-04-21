@@ -4,13 +4,22 @@
 <head>
   <title>RedTetris</title>
   <link rel="icon" href="http://redpelicans.com/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
 </head>
 
 <body>
   <div id="tetris"></div>
-  <canvas></canvas>
   <script src="bundle.js"></script>
-  <script src="lib/index.js"></script>
+  <script src="src/lib/three.r92.min.js"></script>
+  <script src="src/lib/vanta.net.min.js"></script>
+  <script>
+    VANTA.NET({
+    el: "#tetris",
+    points: 8.00,
+    maxDistance: 27.00,
+    spacing: 17.00
+  })
+  </script>
 </body>
 
 </html>

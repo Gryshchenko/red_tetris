@@ -1,0 +1,55 @@
+.center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.button-wrap {
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.button {
+  width: 100%;
+  background-color: #FF4081;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.26);
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  height: 52px;
+  line-height: 50px;
+  padding: 0 15px;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  transition: box-shadow 0.2s cubic-bezier(0.895, 0.03, 0.685, 0.22);
+  margin: 10px 0;
+}
+
+.button:hover,
+.button:focus,
+.button:active {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.16), 0 6px 12px rgba(0, 0, 0, 0.32);
+  transition: box-shadow 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.button:focus {
+  outline: 0;
+}
+
+.button .pulse {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  left: 0;
+  margin: 0 -50%;
+  position: absolute;
+  top: 0;
+  -webkit-transform: scaleX(0) scaleY(0);
+  transform: scaleX(0) scaleY(0);
+}

@@ -1,0 +1,22 @@
+div.createGameWrap {
+  width: 300px;
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  vertical-align: middle; */
+}
+
+.titleFontSize {
+  color: white;
+  font-size: 16px;
+}
+
+div.createGameWrap div {
+  position: relative;
+  margin: 30px 0;
+  color: white;
+  height: 60px;
+}
+
+.buttonWidth {}
