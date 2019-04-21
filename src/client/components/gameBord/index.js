@@ -40,7 +40,7 @@ const setRows = (map) => {
   return result;
 }
 
-const Map = () => {
+const GameBord = () => {
   return (
    <Wrapper>
      {setRows(map)}
@@ -69,5 +69,5 @@ const Wrapper = ({children}) => {
 }
 
 export {
-    Map,
+    GameBord,
 };

@@ -1,0 +1,23 @@
+.block {
+  height: 30px;
+  width: 30px;
+  background-color: red;
+}
+
+.rows {
+  display: flex;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.blockBorder {
+  border: 1px solid black;
+}
+
+.white {
+  background-color: white;
+}

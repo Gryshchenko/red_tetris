@@ -9,7 +9,7 @@ import { createHashHistory } from 'history'
 import io from 'socket.io-client';
 import { socketIoMiddleWare } from './middleware/socketIoMiddleWare';
 import reducer from './reducers';
-import App from './components/app';
+import Room from './components/Room/Room';
 import Main from './components/main/main';
 import './styles.css';
 import JoinGame from './components/joinGame/JoinGame';
@@ -38,7 +38,7 @@ ReactDom.render((
   <Provider store={store}>
     <Router history={history}>
         <Route exact path='/' component={Main} />
-        <Route path='/game' component={App} />
+        <Route path='/game' component={Room} />
         <Route path='/join-game' component={JoinGame} />
     </Router>
   </Provider>
