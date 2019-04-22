@@ -34,7 +34,6 @@ io.on('connection', (socket) => {
  })
 
 db.once('open', () => {
-  console.log('db is open')
   app.emit('ready')
 })
 

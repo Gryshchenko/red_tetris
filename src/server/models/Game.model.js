@@ -3,7 +3,6 @@ import constants from '../const';
 
 const Schema = mongoose.Schema;
 const Model = mongoose.model;
-const ObjectId = Schema.ObjectId;
 
 const GameModel = Schema({
     name: String,
@@ -12,16 +11,6 @@ const GameModel = Schema({
     playerList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }]
 }, {
     usePushEach: true
-});
-
-GameModel.virtual('get').get(() => {
-    return {
-        id: this._id,
-        name: this.name,
-        status: this.status,
-        pieceList: this.pieceList,
-        playerList: this.playerList
-    };
 });
 
 const Game = Model('Game', GameModel);

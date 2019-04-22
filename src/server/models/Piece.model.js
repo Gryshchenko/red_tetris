@@ -10,14 +10,6 @@ const PieceModel = new Schema({
     usePushEach: true
 });
 
-PieceModel.virtual('get').get(() => {
-    return {
-        id: this._id,
-        shape: this.shape,
-        color: this.color
-    };
-});
-
 const Piece = Model('Piece', PieceModel);
 
 module.exports = Piece;
