@@ -12,13 +12,11 @@ const JoinGame = ({ router, createNewPlayer, room }) => {
         <div className="joinGameWrap">
             <form onSubmit={(e) => handledSumbit(e, createNewPlayer, router)}>
                 <Input
-                    onChange={() => console.warn(1)}
                     title={'Your name'}
                     id={'joinGameName'}
                 />
                 <div className='buttonWidth'>
                     <Button
-                        onClick={() => console.warn(2)}
                         title={'Join'}
                     />
                 </div>
@@ -34,7 +32,7 @@ const handledSumbit = (e, createNewPlayer, router) => {
         createNewPlayer({
             name: name,
         });
-        router.history.push(`/waitingRoom`)
+        router.history.push(`/waiting-room:[${name}]`)
     }
 
 }
