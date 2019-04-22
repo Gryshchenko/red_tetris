@@ -9,11 +9,12 @@ export default socket => {
 
 const createNewPlayer = async (data, socket) => {
     try {
-        let game = await Game.getGameByName(data.gameName);
+        let game = await Game.getGameByName(data.room);
         let isHost = false;
 
         if (!game) {
-            game = await Game.createNewGame(data.gameName);
+            game = await Game.createNewGame(data.room);
+            console.log('Game created!!!')
             isHost = true;
         }
 
@@ -21,10 +22,12 @@ const createNewPlayer = async (data, socket) => {
             throw 'Game already started';
         }
 
-        let player = await Player.createNewPlayer(data.playerName, game._id, socket.id, isHost);
+        let player = await Player.createNewPlayer(data.name, game._id, socket.id, isHost);
+        console.log('Player created!!!')
         game = await Game.updateGame(game._id, {
             playerList: game.playerList.push(player._id)
         });
+        console.log('Game updated!!!')
 
         global.io.to(socket.id).emit({
             response: {

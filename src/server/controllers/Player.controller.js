@@ -6,24 +6,36 @@ class PlayerController {
         try {
             const newPlayer = new PlayerModel({ name, gameId, socketId, isHost });
             await newPlayer.save();
-            return newPlayer.get;
+            return newPlayer;
         } catch(e) {
-            console.log(e)
+           throw e;
         }
     }
 
     static async deletePlayer(playerId) {
-        await PlayerModel.remove({ id: playerId });
+        try {
+            await PlayerModel.remove({ id: playerId });
+        } catch (e) {
+            throw e;
+        }
     }
 
     static async getPlayer(playerId) {
-        const player = PlayerModel.findOne({ name: playerId });
-        return player.get;
+        try {
+            const player = PlayerModel.findOne({ name: playerId });
+            return player;
+        } catch (e) {
+            throw e;
+        }
     }
 
     static async updatePlayer(playerId, data) {
-        const player = PlayerModel.findOneAndUpdate({ id: playerId }, { name: 'batman' }, { new: true });
-        return player.get;
+        try {
+            const player = PlayerModel.findOneAndUpdate({ id: playerId }, { name: 'batman' }, { new: true });
+            return player;
+        } catch (e) {
+            throw e;
+        }
     }
 
 }
