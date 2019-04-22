@@ -39,7 +39,7 @@ const store = configureStore(reducer, socket);
 // const history = syncHistoryWithStore(createHashHistory(), store);
 
 ReactDom.render((
-  <HashRouter hashType='noslash'>
+  <HashRouter >
     <Provider store={store}>
       <React.Fragment>
         {/* <Router history={history}> */}

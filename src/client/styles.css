@@ -3,12 +3,14 @@ body,
 #tetris {
   margin: 0;
   height: 100%;
-  background: #123341;
-  overflow:hidden;
+  background-color: #789d19;
+  overflow: hidden;
+  font-family: 'Press Start 2P', cursive;
+
 }
 
-canvas{
-	position:absolute;
-	top:0;
-	left:0;
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
