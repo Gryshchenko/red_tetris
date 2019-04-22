@@ -19,13 +19,13 @@ const CreateGame = ({ router, createNewPlayer }) => {
                 <ErrorMsg id={VALID_ID.NAME_VALID}>
                     <Input
                         title={'Room name'}
-                        id={'name'}
+                        id={'roomName'}
                     />
                 </ErrorMsg>
                 <ErrorMsg id={VALID_ID.ROOM_VALID}>
                     <Input
                         title={'Your name'}
-                        id={'roomName'}
+                        id={'name'}
                     />
                 </ErrorMsg>
                 <div className='buttonWidth'>
