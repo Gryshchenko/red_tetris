@@ -5,6 +5,10 @@ import constants from '../const';
 
 export default socket => {
     socket.on('createNewPlayer', data => createNewPlayer(data, socket));
+
+    socket.on('startGame', data => startGame(data, socket));
+
+    socket.on('getAllGames', data => getAllGames(data, socket));
 }
 
 const createNewPlayer = async (data, socket) => {
@@ -27,13 +31,52 @@ const createNewPlayer = async (data, socket) => {
         game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id)});
         console.log('Game updated!!!')
 
-        global.io.to(socket.id).emit({
-            response: {
-                type: 'NEW_PLAYER_CREATED',
-                data: game
-            }
+        game.playerList.forEach(player => {
+            global.io.to(player.socketId).emit(
+                {
+                    type: 'NEW_PLAYER_CREATED',
+                    data: game
+                }
+            );
         });
     } catch (e) {
-        throw `Error occured while creating player: ${e}`;
+        throw `Error occured while createNewPlayer event: ${e}`;
+    }
+}
+
+const startGame = async (data, socket) => {
+    try {
+        let game = await Game.getGameByName(data.room);
+
+        if (!game) {
+            throw 'Game does not exists';
+        }
+
+        game = Game.updateGame(game.id, {status: constants.gameStatuses['STARTED']});
+        game.playerList.forEach(player => {
+            global.io.to(player.socketId).emit(
+                {
+                    type: 'GAME_STARTED',
+                    data: game
+                }
+            );
+        });
+    } catch (e) {
+        throw `Error occured while startGame event: ${e}`;
+    }
+}
+
+const getAllGames = async (data, socket) => {
+    try {
+        let games = await Game.getAllGames();
+        
+        global.io.to(socket.id).emit(
+            {
+                type: 'GET_ALL_GAMES',
+                data: games
+            }
+        );
+    } catch (e) {
+        throw `Error occured while getAllGames event: ${e}`;
     }
 }

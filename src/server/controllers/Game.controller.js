@@ -17,35 +17,18 @@ class GameController {
             await newGame.save();
             return newGame;
         } catch (e) {
-            throw `Error occured while creating a new game: ${e}`;
+            throw `Error occured while createNewGames: ${e}`;
         }
-        // try {
-        //     let game = await new Game({ name }).save()
-        //     const piece1 = await Piece.createPiece()
-        //     const piece2 = await Piece.createPiece()
-        //     const piece3 = await Piece.createPiece()
-        //     const piece4 = await Piece.createPiece()
-        //     const piece5 = await Piece.createPiece()
-        //     const piece6 = await Piece.createPiece()
-        //     const piece7 = await Piece.createPiece()
-        //     const piece8 = await Piece.createPiece()
-        //     const piece9 = await Piece.createPiece()
-        //     const piece10 = await Piece.createPiece()
-        //     game.pieces.push(piece1.id)
-        //     game.pieces.push(piece2.id)
-        //     game.pieces.push(piece3.id)
-        //     game.pieces.push(piece4.id)
-        //     game.pieces.push(piece5.id)
-        //     game.pieces.push(piece6.id)
-        //     game.pieces.push(piece7.id)
-        //     game.pieces.push(piece8.id)
-        //     game.pieces.push(piece9.id)
-        //     game.pieces.push(piece10.id)
-        //     await game.save()
-        //     return game.serialize
-        //   }
-      
-        //   catch (err) { throw `Error occured while createNewGame(): ${err}` }
+    }
+
+    static async getAllGames() {
+        try {
+            let games = await Game.find({}).populate(playerList).populate(pieceList);
+
+            return games;
+        } catch (e) {
+            throw `Error occured while getAllGames: ${e}`;
+        }
     }
 
     static async getGameById(gameId) {
