@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "immutable": "^4.0.0-rc.12",
+    "lodash": "^4.17.11",
     "mongoose": "^5.4.19",
     "nodemon": "^1.18.10",
     "react": "^16.8.4",

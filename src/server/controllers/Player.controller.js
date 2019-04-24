@@ -4,7 +4,8 @@ class PlayerController {
 
     static async createNewPlayer(name, gameId, socketId, isHost) {
         try {
-            const newPlayer = new PlayerModel({ name, gameId, socketId, isHost });
+            const newPlayer = await new PlayerModel({ name, gameId, socketId, isHost });
+
             await newPlayer.save();
             return newPlayer;
         } catch(e) {
@@ -22,7 +23,8 @@ class PlayerController {
 
     static async getPlayer(playerId) {
         try {
-            const player = PlayerModel.findOne({ name: playerId });
+            const player = await PlayerModel.findOne({ _id: playerId });
+
             return player;
         } catch (e) {
             throw e;
@@ -31,7 +33,12 @@ class PlayerController {
 
     static async updatePlayer(playerId, data) {
         try {
-            const player = PlayerModel.findOneAndUpdate({ id: playerId }, { name: 'batman' }, { new: true });
+            let columnsToUpdate = {};
+            if (data.map) columnsToUpdate.map = data.map;
+            if (data.lost) columnsToUpdate.haveWon = data.lost;
+            if (data.score) columnsToUpdate.score = data.score;
+
+            const player = await PlayerModel.findOneAndUpdate({ _id: playerId }, columnsToUpdate, { new: true });
             return player;
         } catch (e) {
             throw e;

@@ -34,9 +34,7 @@ class GameController {
     static async getGameById(gameId) {
         try {
             let game = await Game.findOne({ _id: gameId }).populate('pieceList').populate('playerList');
-            if (!game) {
-                return null;
-            }
+
             return game;
         } catch (e) {
             throw `Error occured while getGameById: ${e}`;
@@ -46,10 +44,7 @@ class GameController {
     static async getGameByName(gameName) {
         try {
             let game = await Game.findOne({ name: gameName }).populate('pieceList').populate('playerList');
-            console.log(game)
-            if (!game) {
-                return null;
-            }
+
             return game;
         } catch (e) {
             throw `Error occured while getGameByName: ${e}`;
@@ -62,10 +57,8 @@ class GameController {
             if (data.status) columnsToUpdate.status = data.status;
             if (data.pieceList) columnsToUpdate.pieceList = data.pieceList;
             if (data.playerList) columnsToUpdate.playerList = data.playerList;
+
             let game = await Game.findOneAndUpdate({ _id: gameId }, columnsToUpdate, { new: true }).populate('pieceList').populate('playerList');
-            if (!game) {
-                return null;
-            }
             return game;
         } catch (e) {
             throw `Error occured while updateGame: ${e}`;
