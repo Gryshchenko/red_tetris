@@ -7,11 +7,11 @@ import event from './socket/index.js';
 
 require("babel-core/register");
 require("babel-polyfill");
+
+const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-const app = express();
 
 const server = require('http').createServer(app);
 
