@@ -1,0 +1,29 @@
+.waitingRoom {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.waitingRoomPlayer {
+  width: 500px;
+  border-bottom: 5px solid grey;
+  padding: 15px 0;
+}
+
+.waitingRoomPlayers {
+  margin-top: 100px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.waitingRoomButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90px;
+  width: 150px;
+  margin: 0 auto;
+}

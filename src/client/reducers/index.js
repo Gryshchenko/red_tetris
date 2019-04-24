@@ -10,6 +10,7 @@ const intialState = {
 }
 
 const reducer = (state = fromJS(intialState), action) => {
+    console.warn(action);
     switch (action.type) {
         case ACTION_TYPE.CREATE_NEW_PLAYER:
             return state.setIn(['room'], fromJS(action.data));

@@ -31,14 +31,12 @@ const createNewPlayer = async (data, socket) => {
         }
 
         let player = await Player.createNewPlayer(data.name, game._id, socket.id, isHost);
-        game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id)});
+        game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id) });
 
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
-                {
-                    type: 'NEW_PLAYER_CREATED',
-                    data: game
-                }
+                'createNewPlayer',
+                game,
             );
         });
     } catch (e) {
@@ -54,7 +52,7 @@ const startGame = async (data, socket) => {
             throw 'Game does not exists';
         }
 
-        game = Game.updateGame(game.id, {status: constants.gameStatuses['STARTED']});
+        game = Game.updateGame(game.id, { status: constants.gameStatuses['STARTED'] });
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 {
@@ -71,7 +69,7 @@ const startGame = async (data, socket) => {
 const getAllGames = async (data, socket) => {
     try {
         let games = await Game.getAllGames();
-        
+
         global.io.to(socket.id).emit(
             {
                 type: 'GET_ALL_GAMES',
@@ -87,7 +85,7 @@ const endGame = async (data, socket) => {
     try {
         await Player.updatePlayer(data.playerId, { lost: true });
         let game = await Game.updateGame(data.gameId, { status: constants.gameStatuses['FINISHED'] });
-        
+
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 {
