@@ -34,9 +34,10 @@ const createNewPlayer = async (data, socket) => {
         game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id) });
 
         game.playerList.forEach(player => {
-            global.io.to(player.socketId).emit(
-                'createNewPlayer',
-                game,
+            global.io.to(player.socketId).emit('action', {
+                type: 'server/createNewPlayerResponse',
+                data: game,
+            }
             );
         });
     } catch (e) {

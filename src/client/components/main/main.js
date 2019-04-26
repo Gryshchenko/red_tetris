@@ -3,12 +3,12 @@ import './styles.css';
 import CreateGame from '../createGame/createGame';
 import JoinGame from '../joinGame/JoinGame';
 import Collapsible from 'react-collapsible';
-// import { Logo } from '../logo/Logo';
+import { Logo } from '../logo/Logo';
 
 const Main = () => {
     return (
         <section className='main'>
-            {/* <Logo /> */}
+            <Logo />
             <div className='marginRight'>
                 <Collapsible trigger={<div className='collapsibleTrigger'>Join game</div>}>
                     <JoinGame />
