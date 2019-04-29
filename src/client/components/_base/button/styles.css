@@ -14,7 +14,7 @@
 
 .button {
   width: 100%;
-  background-color: #FF4081;
+  background-color: #4a4f4a;
   border: none;
   border-radius: 2px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.26);
@@ -30,6 +30,7 @@
   text-transform: uppercase;
   transition: box-shadow 0.2s cubic-bezier(0.895, 0.03, 0.685, 0.22);
   margin: 10px 0;
+  font-family: 'Press Start 2P', cursive;
 }
 
 .button:hover,

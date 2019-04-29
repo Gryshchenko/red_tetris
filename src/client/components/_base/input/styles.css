@@ -4,11 +4,12 @@ label {
   font-size: 12px;
   margin: 10px;
   padding: 0 10px;
-  background-color: #d91e5e;
+  background-color: #e0ede2;
   -webkit-transition: top .2s ease-in-out,
     font-size .2s ease-in-out;
   transition: top .2s ease-in-out,
     font-size .2s ease-in-out;
+  color: #4a4f4a;
 }
 
 .active {
@@ -19,10 +20,10 @@ label {
 input[type=text] {
   width: 100%;
   padding: 20px 0;
-  border: 1px solid white;
+  border: 1px solid #4a4f4a;
   font-size: 12px;
-  background-color: #d91e5e;
-  color: white;
+  background-color: #e0ede2;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.26);
 }
 
 input[type=text]:focus {

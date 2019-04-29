@@ -1,14 +1,33 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import './styles.css';
-// const logo = require('./Logos.jpg');
 
 const Logo = () => {
+    useEffect(() => {
+        setLogoTextAnimation();
+    });
     return (
         <React.Fragment>
-            <div className={'logo'}>RED TETRIS</div>
+            <div>
+                <span className={'logo'} id={'logo'}/>
+            </div>
         </React.Fragment>
     );
+}
+
+const setLogoTextAnimation = () => {
+    const logo = document.getElementById('logo');
+    const newLogo = 'RED TETRIS';
+    let i = 0;
+    if (logo.innerHTML.length > 0) return ;
+    const interval = setInterval(() => {
+        if (i < newLogo.length) {
+            logo.innerHTML = logo.innerHTML + newLogo[i];
+            i++;
+        } else {
+            clearInterval(interval);
+        }
+    }, 100);
 }
 
 export {
