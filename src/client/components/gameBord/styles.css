@@ -1,7 +1,7 @@
 .block {
   height: 30px;
   width: 30px;
-  background-color: red;
+  background-color: #808080;
 }
 
 .rows {
@@ -12,10 +12,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 10px solid #A9A9A9;
+  border-radius: 5px;
 }
 
 .blockBorder {
-  border: 1px solid black;
+  border: 1px solid #C0C0C0;
 }
 
 .white {

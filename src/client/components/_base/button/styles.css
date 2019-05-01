@@ -29,7 +29,7 @@
   overflow: hidden;
   text-transform: uppercase;
   transition: box-shadow 0.2s cubic-bezier(0.895, 0.03, 0.685, 0.22);
-  margin: 10px 0;
+  /* margin: 10px 0; */
   font-family: 'Press Start 2P', cursive;
 }
 

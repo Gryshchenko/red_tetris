@@ -6,15 +6,22 @@ import { Button } from '../_base/button/Button';
 import { withRouter } from 'react-router';
 import './styles.css';
 import createNewPlayer from '../../actions/createNewPlayer';
+import setCurrentUser from '../../actions/setCurrentUser';
+import { ErrorMsg } from '../_base/errorMsg/ErrorMsg';
 
-const JoinGame = ({ router, createNewPlayer, room }) => {
+const VALID_ID = {
+    JOIN_NAME_VALID: 'joinNameValid',
+}
+const JoinGame = ({ router, createNewPlayer, setCurrentUser }) => {
     return (
         <div className="joinGameWrap">
-            <form onSubmit={(e) => handledSumbit(e, createNewPlayer, router)}>
-                <Input
-                    title={'Your name'}
-                    id={'joinGameName'}
-                />
+            <form onSubmit={(e) => handledSumbit(e, createNewPlayer, router, setCurrentUser)}>
+                <ErrorMsg id={VALID_ID.JOIN_NAME_VALID}>
+                    <Input
+                        title={'Your name'}
+                        id={'joinGameName'}
+                    />
+                </ErrorMsg>
                 <div className='buttonWidth'>
                     <Button
                         title={'Join'}
@@ -25,13 +32,14 @@ const JoinGame = ({ router, createNewPlayer, room }) => {
     );
 }
 
-const handledSumbit = (e, createNewPlayer, router) => {
+const handledSumbit = (e, createNewPlayer, router, setCurrentUser) => {
     e.preventDefault()
     const name = document.getElementById('joinGameName').value
     if (inputValueValid(name)) {
         createNewPlayer({
             name: name,
         });
+        setCurrentUser(name);
         router.history.push(`/waiting-room:[${name}]`)
     }
 
@@ -40,11 +48,11 @@ const handledSumbit = (e, createNewPlayer, router) => {
 const inputValueValid = (name) => {
     let isValid = true;
     if (!/^[a-zA-Z]*$/g.test(name)) {
-        document.getElementById(VALID_ID.NAME_VALID).innerHTML = 'The name should contain the only alphabet character';
+        document.getElementById(VALID_ID.JOIN_NAME_VALID).innerHTML = 'The name should contain the only alphabet character';
         isValid = false;
     }
     if (name === '') {
-        document.getElementById(VALID_ID.NAME_VALID).innerHTML = 'Name is required';
+        document.getElementById(VALID_ID.JOIN_NAME_VALID).innerHTML = 'Name is required';
         isValid = false;
 
     }
@@ -60,7 +68,8 @@ const mapStateToProps = (state, router) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         createNewPlayer: (data) => dispatch(createNewPlayer(data)),
+        setCurrentUser: (data) => dispatch(setCurrentUser(data)),
     }
 }
 
-export default  withRouter(connect(mapStateToProps, mapDispatchToProps)(JoinGame));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JoinGame));
