@@ -1,7 +1,120 @@
 .roomMain {
   display: flex;
+  height: 100%;
   justify-content: space-around;
 }
+
 .roomMainFlex {
   display: flex;
+  background-color: #9ead86;
+  padding: 5px;
+  width: 290px;
+  height: 350px;
+  border: 2px solid black;
+}
+
+.tetrisButtonMiddle {
+  width: 60px;
+  height: 60px;
+  background-color: red;
+}
+
+.tetrisButtonSmall {
+  width: 40px;
+  height: 40px;
+  background-color: green;
+}
+
+.tetrisButtonBig {
+  width: 120px;
+  height: 120px;
+  background-color: blue;
+}
+
+.tetrisButton {
+  display: block;
+  position: relative;
+  border: 1px solid #000;
+  border-radius: 50%;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, .2);
+}
+
+.tetrisButton::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 5px 10px hsla(0, 0%, 100%, .8);
+}
+
+.tetrisButton::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 5px 10px hsla(0, 0%, 100%, .8);
+}
+
+.tetrisViewMain {
+  width: 100%;
+  height: 90%;
+  max-width: 450px;
+  display: flex;
+  padding-top: 50px;
+  background: #efcc19;
+  box-shadow: inset 0 0 10px #fff;
+  border-radius: 20px;
+  align-items: center;
+  flex-direction: column
+}
+
+.control {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
+.moveButton {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  align-items: center;
+}
+
+.generalButton {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+}
+
+.topButton {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.spaceButton {
+  display: flex;
+  justify-content: center
+}
+
+.moveButtonMiddle {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.flex1 {
+  flex: 1;
 }

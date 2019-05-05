@@ -15,8 +15,8 @@
 } */
 
 .block {
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   padding: 2px;
   border: 2px solid #879372;
   margin: 0 2px 2px 0;
@@ -27,8 +27,8 @@
 .block::after {
   display: block;
   content: "";
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   background: #879372;
   overflow: hidden;
 }
