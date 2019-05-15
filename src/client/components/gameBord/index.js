@@ -1,5 +1,6 @@
 import React from 'react'
 import './styles.css';
+import { connect } from 'react-redux';
 
 // 1 - l_Block
 // 2 - j_Block
@@ -19,27 +20,27 @@ const BLOCK_NAME = {
   Z_BLOCK: 7,
 }
 
-const map = [
-  [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 2, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 2, 2, 2, 2, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
-  [0, 3, 3, 3, 3, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 4, 4, 0, 0, 0, 0, 0, 0, 0],
-  [0, 4, 4, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 5, 5, 0, 0, 0, 0, 0, 0],
-  [0, 5, 5, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 6, 0, 0, 7, 7, 0, 0, 0],
-  [0, 6, 6, 6, 0, 0, 7, 7, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
+// const map = [
+//   [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 2, 0, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 2, 2, 2, 2, 0, 0, 0, 0, 0],
+//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+//   [0, 3, 3, 3, 3, 0, 0, 0, 0, 0],
+//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 4, 4, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 4, 4, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 0, 5, 5, 0, 0, 0, 0, 0, 0],
+//   [0, 5, 5, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 0, 6, 0, 0, 7, 7, 0, 0, 0],
+//   [0, 6, 6, 6, 0, 0, 7, 7, 0, 0],
+//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+// ];
 
 const setBlockClassName = (color) => {
   switch (color) {
@@ -80,13 +81,29 @@ const setRows = (map) => {
   return result;
 }
 
-const GameBord = () => {
+const gameBord = ({map}) => {
   return (
     <Wrapper>
       {setRows(map)}
     </Wrapper>
   )
 };
+
+const mapStateToProps = (state, router) => {
+  return {
+    router,
+    // room: state.game.getIn(['room']),
+    map: state.game.getIn(['map']),
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // createNewPlayer: (data) => dispatch(createNewPlayer(data)),
+    // setCurrentUser: (data) => dispatch(setCurrentUser(data)),
+  }
+}
+
 
 const X = ({ color, idx }) => {
   return (
@@ -108,6 +125,7 @@ const Wrapper = ({ children }) => {
   );
 }
 
+const GameBord = connect(mapStateToProps, mapDispatchToProps)(gameBord)
 export {
   GameBord,
 };

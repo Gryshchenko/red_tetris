@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { GameBord } from '../gameBord';
-import { EnemyBord } from '../enemyBord';
+// import { EnemyBord } from '../enemyBord';
 import './styles.css'
 import { GameBordInfo } from '../gameBordInfo/gameBordInfo';
 
@@ -10,6 +11,7 @@ const KEY_TYPE = {
   ARROW_LEFT: 'ArrowLeft',
   ARROW_RIGHT: 'ArrowRight',
   SPACE: 'Space',
+  ENTER: 'Enter',
 };
 
 const Room = () => {
@@ -65,11 +67,26 @@ const keyPressHandler = () => addEventListener('keyup', function (event) {
       case KEY_TYPE.ARROW_LEFT:
       case KEY_TYPE.ARROW_RIGHT:
       case KEY_TYPE.SPACE:
+      case KEY_TYPE.ENTER:
     }
   }
 });
 
-export default (Room);
+const mapStateToProps = (state, router) => {
+  return {
+    router,
+    room: state.game.getIn(['room']),
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    // createNewPlayer: (data) => dispatch(createNewPlayer(data)),
+    // setCurrentUser: (data) => dispatch(setCurrentUser(data)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Room);
 
 { /* <div>
 <EnemyBord />
