@@ -26,6 +26,10 @@ const createNewPlayer = async (data, socket) => {
             isHost = true;
         }
 
+        if (game.playerList.length == 2) {
+            throw 'Game is full';
+        }
+
         if (game.status == constants.gameStatuses.STARTED) {
             throw 'Game already started';
         }
@@ -53,7 +57,7 @@ const startGame = async (data, socket) => {
             throw 'Game does not exists';
         }
 
-        game = Game.updateGame(game.id, { status: constants.gameStatuses['STARTED'] });
+        game = Game.updateGame(game.id, { status: constants.gameStatuses.STARTED });
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 {
@@ -102,11 +106,13 @@ const endGame = async (data, socket) => {
 
 const pieceLand = async (data, socket) => {
     try {
-        await Player.updatePlayer(data.playerId, { map: data.playerMap });
-        let newPieceList = cloneDeepWith(game.pieceList);
+        await Player.updatePlayer(data.playerId, { map: data.playerMap, currentPiece: data.currentPiece + 1 });
+        const game = await Game.getGameById(data.gameId);
 
-        newPieceList.push(await Piece.createPiece().id);
-        let game = await Game.updateGame(gameId, { pieceList: newPieceList });
+        if (data.currentPiece + 1 >= game.pieceList.length) {
+            await Game.updateGame(game.gameId, { pieceList: game.pieceList.push(await Piece.createPiece().id) });
+        }
+
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 {

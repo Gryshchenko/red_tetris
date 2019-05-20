@@ -10,7 +10,8 @@ const PlayerModel = new Schema({
     score: { type: Number, default: 0 },
     gameId: { type: String },
     socketId: { type: String },
-    isHost: { type: Boolean }
+    isHost: { type: Boolean },
+    currentPiece: { type: Number, default: 1 }
 });
 
 const Player = Model('Player', PlayerModel);

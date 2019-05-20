@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { GameBord } from '../gameBord';
-// import { EnemyBord } from '../enemyBord';
+import { GameBoard } from '../gameBoard';
 import './styles.css'
-import { GameBordInfo } from '../gameBordInfo/gameBordInfo';
+import { GameBoardInfo } from '../gameBoardInfo/gameBoardInfo';
 
 const KEY_TYPE = {
   ARROW_UP: 'ArrowUp',
@@ -26,10 +25,10 @@ const Room = () => {
       <div className={'tetrisViewMain'}>
         <div className={'roomMainFlex'}>
           <div>
-            <GameBord />
+            <GameBoard />
           </div>
           <div>
-            <GameBordInfo />
+            <GameBoardInfo />
           </div>
         </div>
         <div className={'control'}>
