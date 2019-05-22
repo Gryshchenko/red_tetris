@@ -40,7 +40,7 @@ const setRows = (map) => {
   return result;
 }
 
-const EnemyBord = () => {
+const EnemyBoard = () => {
   return (
    <Wrapper>
      {setRows(map)}
@@ -50,7 +50,7 @@ const EnemyBord = () => {
 
 const X = ({color, idx}) => {
   return (
-    <div key={idx} className={`block enemyBordBlock ${color === 1 ? 'white' : ''}`} />
+    <div key={idx} className={`block enemyBoardBlock ${color === 1 ? 'white' : ''}`} />
   );
 }
 
@@ -69,5 +69,5 @@ const Wrapper = ({children}) => {
 }
 
 export {
-    EnemyBord,
+    EnemyBoard,
 };

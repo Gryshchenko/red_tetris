@@ -48,21 +48,21 @@ const handledSumbit = (e, createNewPlayer, router) => {
             name: hostName,
             room: roomName,
         });
-        router.history.push(`/game/${roomName}-${hostName}`)
+        router.history.push(`/game/${roomName}-${hostName}`);
     }
 
 }
 
 const inputValueValid = (name, room) => {
     let isValid = true;
-    if (!/^[a-zA-Z]*$/g.test(name)) {
-        document.getElementById(VALID_ID.NAME_VALID).innerHTML = 'The name should contain the only alphabet character';
-        isValid = false;
-    }
-    if (!/^[a-zA-Z]*$/g.test(room)) {
-        document.getElementById(VALID_ID.ROOM_VALID).innerHTML = 'The room name should contain the only alphabet character';
-        isValid = false;
-    }
+    // if (!/^[a-zA-Z]*$/g.test(name)) {
+    //     document.getElementById(VALID_ID.NAME_VALID).innerHTML = 'The name should contain the only alphabet character';
+    //     isValid = false;
+    // }
+    // if (!/^[a-zA-Z]*$/g.test(room)) {
+    //     document.getElementById(VALID_ID.ROOM_VALID).innerHTML = 'The room name should contain the only alphabet character';
+    //     isValid = false;
+    // }
     if (name === '') {
         document.getElementById(VALID_ID.NAME_VALID).innerHTML = 'Name is required';
         isValid = false;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { GameBoard } from '../gameBoard';
+import startGame from '../../actions/startGame';
 import './styles.css'
 import { GameBoardInfo } from '../gameBoardInfo/gameBoardInfo';
 
@@ -13,13 +14,15 @@ const KEY_TYPE = {
   ENTER: 'Enter',
 };
 
-const Room = () => {
+const Room = ( props ) => {
   useEffect(() => {
     keyPressHandler();
     return () => {
       removeEventListener("keyup", keyPressHandler);
     };
   }, []);
+  const { room, startGame } = props;
+console.warn(startGame)
   return (
     <div className={'roomMain'}>
       <div className={'tetrisViewMain'}>
@@ -39,7 +42,7 @@ const Room = () => {
               <div className={'tetrisButton tetrisButtonSmall'} />
             </div>
             <div className={'spaceButton'}>
-              <div className={'tetrisButton tetrisButtonBig'} />
+              <div className={'tetrisButton tetrisButtonBig'} onClick={(event) => onStartGame(event, room, startGame)}/>
             </div>
           </div>
 
@@ -58,6 +61,14 @@ const Room = () => {
   );
 }
 
+const onStartGame = (event, room, startGame) => {
+  console.warn(startGame)
+  const gameId = room.getIn(['_id']);
+  startGame({
+    gameId: gameId
+  })
+}
+
 const keyPressHandler = () => addEventListener('keyup', function (event) {
   if (event) {
     switch (event.code) {
@@ -71,9 +82,9 @@ const keyPressHandler = () => addEventListener('keyup', function (event) {
   }
 });
 
-const mapStateToProps = (state, router) => {
+const mapStateToProps = (state, initialValues) => {
   return {
-    router,
+    initialValues,
     room: state.game.getIn(['room']),
   };
 }
@@ -82,12 +93,13 @@ const mapDispatchToProps = (dispatch) => {
   return {
     // createNewPlayer: (data) => dispatch(createNewPlayer(data)),
     // setCurrentUser: (data) => dispatch(setCurrentUser(data)),
+    startGame: (data) => dispatch(startGame(data))
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Room);
 
 { /* <div>
-<EnemyBord />
+<EnemyBoard />
 </div> */ }
 

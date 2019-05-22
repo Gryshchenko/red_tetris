@@ -26,22 +26,24 @@ const createNewPlayer = async (data, socket) => {
             isHost = true;
         }
 
-        if (game.playerList.length == 2) {
-            throw 'Game is full';
-        }
+        // if (game.playerList.length == 2) {
+        //     throw 'Game is full';
+        // }
 
-        if (game.status == constants.gameStatuses.STARTED) {
-            throw 'Game already started';
-        }
+        // if (game.status == constants.gameStatuses.STARTED) {
+        //     throw 'Game already started';
+        // }
 
         let player = await Player.createNewPlayer(data.name, game._id, socket.id, isHost);
         game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id) });
 
         game.playerList.forEach(player => {
-            global.io.to(player.socketId).emit('action', {
-                type: 'server/createNewPlayerResponse',
-                data: game,
-            }
+            global.io.to(player.socketId).emit(
+                'action',
+                {
+                    type: 'PLAYER_CREATED',
+                    data: game,
+                }
             );
         });
     } catch (e) {
@@ -51,15 +53,18 @@ const createNewPlayer = async (data, socket) => {
 
 const startGame = async (data, socket) => {
     try {
-        let game = await Game.getGameByName(data.room);
+        // let game = await Game.getGameByName(data.room);
 
-        if (!game) {
-            throw 'Game does not exists';
-        }
+        // if (!game) {
+        //     throw 'Game does not exists';
+        // }
 
-        game = Game.updateGame(game.id, { status: constants.gameStatuses.STARTED });
+        // game = Game.updateGame(game.id, { status: constants.gameStatuses.STARTED });
+        const game = await Game.updateGame(data.gameId, { status: constants.gameStatuses.STARTED });
+        console.log(game)
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
+                'action',
                 {
                     type: 'GAME_STARTED',
                     data: game

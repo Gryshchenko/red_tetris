@@ -1,4 +1,4 @@
-.gameBordInfoWidth {
+.gameBoardInfoWidth {
   width: 100px;
   height: 100%;
   display: flex;
@@ -6,7 +6,7 @@
   text-align: right;
 }
 
-.gameBordInfoValue {
+.gameBoardInfoValue {
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;

@@ -15,7 +15,6 @@ class PieceController {
                 flipMatrix(piece.shape);
             }
             const newPiece = await new Piece(piece).save();
-            console.log(newPiece)
             return newPiece;
         } catch (e) {
             throw `Error occured while createPiece(): ${e}`;

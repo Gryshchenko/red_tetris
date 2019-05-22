@@ -10,12 +10,19 @@ import setCurrentUser from '../../actions/setCurrentUser';
 import { ErrorMsg } from '../_base/errorMsg/ErrorMsg';
 
 const VALID_ID = {
-    JOIN_NAME_VALID: 'joinNameValid',
+    JOIN_NAME_VALID: 'joinGameName',
+    JOIN_ROOM_VALID: 'joinRoomName'
 }
 const JoinGame = ({ router, createNewPlayer, setCurrentUser }) => {
     return (
         <div className="joinGameWrap">
             <form onSubmit={(e) => handledSumbit(e, createNewPlayer, router, setCurrentUser)}>
+                <ErrorMsg id={VALID_ID.JOIN_ROOM_VALID}>
+                    <Input
+                        title={'Room name'}
+                        id={'joinRoomName'}
+                    />
+                </ErrorMsg>
                 <ErrorMsg id={VALID_ID.JOIN_NAME_VALID}>
                     <Input
                         title={'Your name'}
@@ -34,30 +41,41 @@ const JoinGame = ({ router, createNewPlayer, setCurrentUser }) => {
 
 const handledSumbit = (e, createNewPlayer, router, setCurrentUser) => {
     e.preventDefault()
-    const name = document.getElementById('joinGameName').value
-    if (inputValueValid(name)) {
+    const hostName = document.getElementById('joinGameName').value;
+    const roomName = document.getElementById('joinRoomName').value;
+    if (inputValueValid(hostName, roomName)) {
         createNewPlayer({
-            name: name,
+            name: hostName,
+            room: roomName,
         });
-        setCurrentUser(name);
-        router.history.push(`/waiting-room:[${name}]`)
+        router.history.push(`/game/${roomName}[${hostName}]`);
     }
 
 }
 
-const inputValueValid = (name) => {
+const inputValueValid = (name, room) => {
     let isValid = true;
-    if (!/^[a-zA-Z]*$/g.test(name)) {
-        document.getElementById(VALID_ID.JOIN_NAME_VALID).innerHTML = 'The name should contain the only alphabet character';
-        isValid = false;
-    }
+    // if (!/^[a-zA-Z]*$/g.test(name)) {
+    //     document.getElementById(VALID_ID.JOIN_NAME_VALID).innerHTML = 'The name should contain the only alphabet character';
+    //     isValid = false;
+    // }
+    // if (!/^[a-zA-Z]*$/g.test(room)) {
+    //     document.getElementById(VALID_ID.JOIN_ROOM_VALID).innerHTML = 'The room name should contain the only alphabet character';
+    //     isValid = false;
+    // }
     if (name === '') {
         document.getElementById(VALID_ID.JOIN_NAME_VALID).innerHTML = 'Name is required';
         isValid = false;
 
     }
+    if (room === '') {
+        document.getElementById(VALID_ID.JOIN_ROOM_VALID).innerHTML = 'Room name is required';
+        isValid = false;
+
+    }
     return isValid;
 }
+
 const mapStateToProps = (state, router) => {
     return {
         router,

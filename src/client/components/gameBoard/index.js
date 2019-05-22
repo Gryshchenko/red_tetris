@@ -81,7 +81,7 @@ const setRows = (map) => {
   return result;
 }
 
-const gameBord = ({map}) => {
+const gameBoard = ({map}) => {
   return (
     <Wrapper>
       {setRows(map)}
@@ -125,7 +125,7 @@ const Wrapper = ({ children }) => {
   );
 }
 
-const GameBord = connect(mapStateToProps, mapDispatchToProps)(gameBord)
+const GameBoard = connect(mapStateToProps, mapDispatchToProps)(gameBoard)
 export {
-  GameBord,
+  GameBoard,
 };
