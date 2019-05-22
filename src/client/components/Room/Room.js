@@ -22,7 +22,6 @@ const Room = ( props ) => {
     };
   }, []);
   const { room, startGame } = props;
-console.warn(startGame)
   return (
     <div className={'roomMain'}>
       <div className={'tetrisViewMain'}>

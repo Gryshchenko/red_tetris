@@ -1,6 +1,9 @@
 import React from 'react'
 import './styles.css';
 import { connect } from 'react-redux';
+import setCurrentUser from '../../actions/setCurrentUser';
+import createNewPlayer from '../../actions/createNewPlayer';
+import { getRoomName, getName } from '../../utils';
 
 // 1 - l_Block
 // 2 - j_Block
@@ -81,7 +84,23 @@ const setRows = (map) => {
   return result;
 }
 
-const gameBoard = ({map}) => {
+const addUser = (createNewPlayer, router) => {
+  const roomName = getRoomName();
+  const name = getName();
+  if (!name || !roomName) {
+    router.history.push(`/`);
+  } else {
+    createNewPlayer({
+      name,
+      room: roomName,
+    });
+  }
+}
+
+const gameBoard = ({ map, room, createNewPlayer, router }) => {
+  if (!room) {
+    addUser(createNewPlayer, router);
+  }
   return (
     <Wrapper>
       {setRows(map)}
@@ -90,20 +109,20 @@ const gameBoard = ({map}) => {
 };
 
 const mapStateToProps = (state, router) => {
+  console.warn(router);
   return {
     router,
-    // room: state.game.getIn(['room']),
+    room: state.game.getIn(['room']),
     map: state.game.getIn(['map']),
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // createNewPlayer: (data) => dispatch(createNewPlayer(data)),
-    // setCurrentUser: (data) => dispatch(setCurrentUser(data)),
+    createNewPlayer: (data) => dispatch(createNewPlayer(data)),
+    setCurrentUser: (data) => dispatch(setCurrentUser(data)),
   }
 }
-
 
 const X = ({ color, idx }) => {
   return (
