@@ -56,7 +56,6 @@ const reducer = (state = fromJS(initialState), action) => {
             return state.setIn(['map'], fromJS(action.data)).setIn(['pieceNotPlaced'], false);
         case ACTION_TYPE.SET_CURRENT_USER:
             return state.setIn(['currentUser'], fromJS(action.data));
-        case ACTION_TYPE.CREATE_NEW_PLAYER:
         case ACTION_TYPE.CREATE_NEW_PLAYER_RESPONSE:
             return state.setIn(['room'], fromJS(action.data));
         case ACTION_TYPE.START_GAME_RESPONSE:
