@@ -45,8 +45,9 @@ const reducer = (state = fromJS(initialState), action) => {
             return state.setIn(['currentUser'], fromJS(action.data));
         case ACTION_TYPE.CREATE_NEW_PLAYER:
         case ACTION_TYPE.CREATE_NEW_PLAYER_RESPONSE:
-        case ACTION_TYPE.START_GAME_RESPONSE:
             return state.setIn(['room'], fromJS(action.data));
+        case ACTION_TYPE.START_GAME_RESPONSE:
+            return state.setIn(['room'], fromJS(action.data)).setIn(['currentPiece'], 1);
         case ACTION_TYPE.PIECE_LANDED:
             return state.setIn(['room'], fromJS(action.data));
         // case ACTION_TYPE.START_GAME:
