@@ -4,7 +4,11 @@ import { connect } from 'react-redux';
 import setCurrentUser from '../../actions/setCurrentUser';
 import createNewPlayer from '../../actions/createNewPlayer';
 import setNewLocalMap from '../../actions/setNewLocalMap';
-import { getRoomName, getName, placePieceOnBoard } from '../../utils';
+import startInterval from '../../actions/startInterval';
+import startMove from '../../actions/startMove';
+import stopMove from '../../actions/stopMove';
+import pieceMove from '../../actions/pieceMove';
+import { getRoomName, getName, placePieceOnBoard, isPossibleToPlace } from '../../utils';
 import { cloneDeepWith } from 'lodash';
 import functional from 'react-functional';
 
@@ -115,30 +119,59 @@ const gameBoard = ({ map, room, createNewPlayer, router, currentPiece, setNewLoc
   )
 };
 
+// gameBoard.componentDidMount = (props) => {
+//   const {
+//     startInterval,
+//     startMove,
+//   } = props;
+  
+//   startInterval(setInterval(() => startMove(), 1000));
+// }
+
 gameBoard.componentDidUpdate = (prevProps, prevState) => {
-  const { currentPiece, pieceNotPlaced } = prevProps;
+  const { currentPiece, pieceNotPlaced, needToMoveDown, stopMove, startInterval, startMove, intervalStarted } = prevProps;
 
   if (pieceNotPlaced && currentPiece) {
     placePiece(prevProps);
   }
+  if (!intervalStarted && currentPiece) {
+    startInterval(setInterval(() => startMove(), 1000));
+  }
+
+  if (needToMoveDown) {
+    moveDown(prevProps);
+    stopMove();
+ }
 }
 
 const placePiece = (props) => {
-  const { map, room, currentPiece, setNewLocalMap } = props;
+  const { map, room, currentPiece, setNewLocalMap, currentPieceX, currentPieceY } = props;
   let newMap = cloneDeepWith(map);
 
-  newMap = placePieceOnBoard(newMap, room.pieceList[currentPiece].shape, 3, 0);
+  newMap = placePieceOnBoard(newMap, room.pieceList[currentPiece - 1].shape, currentPieceY, currentPieceX, currentPiece);
   setNewLocalMap(newMap);
 }
 
+const moveDown = (props) => {
+  const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece } = props;
+// console.warn(isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece));
+//   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece)) {
+    pieceMove({ posX: currentPieceX, posY: currentPieceY + 1 });
+  // }
+}
+
 const mapStateToProps = (state, router) => {
-  console.warn(state);
+  // console.warn(state);
   return {
     router,
     room: state.game.getIn(['room']).toJS(),
     map: state.game.getIn(['map']).toJS(),
     currentPiece: state.game.getIn(['currentPiece']),
-    pieceNotPlaced: state.game.getIn(['pieceNotPlaced'])
+    pieceNotPlaced: state.game.getIn(['pieceNotPlaced']),
+    currentPieceX: state.game.getIn(['currentPieceX']),
+    currentPieceY: state.game.getIn(['currentPieceY']),
+    needToMoveDown: state.game.getIn(['needToMoveDown']),
+    intervalStarted: state.game.getIn(['intervalStarted'])
   };
 }
 
@@ -146,7 +179,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     createNewPlayer: (data) => dispatch(createNewPlayer(data)),
     setCurrentUser: (data) => dispatch(setCurrentUser(data)),
-    setNewLocalMap: (data) => dispatch(setNewLocalMap(data))
+    setNewLocalMap: (data) => dispatch(setNewLocalMap(data)),
+    startInterval: (data) => dispatch(startInterval(data)),
+    startMove: (data) => dispatch(startMove(data)),
+    stopMove: (data) => dispatch(stopMove(data)),
+    pieceMove: (data) => dispatch(pieceMove(data))
   }
 }
 
