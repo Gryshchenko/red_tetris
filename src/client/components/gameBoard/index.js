@@ -104,18 +104,16 @@ const addUser = (createNewPlayer, router) => {
   }
 }
 
-const gameBoard = ({ map, room, createNewPlayer, router, currentPiece, setNewLocalMap, piecePlaced }) => {
+const gameBoard = (props) => {
+  const { map, room, createNewPlayer, router, currentPiece, setNewLocalMap, piecePlaced } = props;
+  
   if (!room) {
     addUser(createNewPlayer, router);
   }
-  console.warn('currentPiece: ', currentPiece)
-  // if (currentPiece && !piecePlaced) {
-  //   placePiece(room, map, currentPiece, setNewLocalMap);
-  // }
   return (
-    <Wrapper>
-      {setRows(map)}
-    </Wrapper>
+      <Wrapper>
+        {setRows(map)}
+      </Wrapper>
   )
 };
 
@@ -154,12 +152,26 @@ const placePiece = (props, posX, posY, map) => {
 
 const moveDown = (props) => {
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece } = props;
-// console.warn(isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece));
-//   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece)) {
+console.warn(isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece));
+  if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece)) {
     pieceMove({ posX: currentPieceX + 1, posY: currentPieceY});
     placePiece(props, currentPieceX + 1, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece));
-  // }
+  }
 };
+
+const moveLeft = (props) => {
+  const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece } = props;
+
+  pieceMove({ posX: currentPieceX, posY: currentPieceY - 1});
+  placePiece(props, currentPieceX, currentPieceY - 1, deletePiece(cloneDeepWith(map), currentPiece));
+}
+
+const moveRight = (props) => {
+  const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece } = props;
+
+  pieceMove({ posX: currentPieceX, posY: currentPieceY + 1});
+  placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece));
+}
 
 const deletePiece = (map, currentPiece) => {
   return map.map((row, i) => {

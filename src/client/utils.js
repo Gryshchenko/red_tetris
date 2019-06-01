@@ -59,17 +59,17 @@ const placePieceOnBoard = (board, shape, posX, posY, currentPiece) => {
 const isPossibleToPlace = (board, shape, posX, posY, currentPiece) => {
 
     try {
-      shape.forEach((row, y) => {
-        row.forEach((cell, x) => {
+      shape.forEach((line, y) => {
+        line.forEach((bloc, x) => {
           const newY = y + posY
           const newX = x + posX
           let onBoard = true
           let free = true
   
-          if (newY >= 21 || newX < 0 || newX >= 10) onBoard = false
-          if (onBoard && newY >= 0 && board && board[newX, newY] != 0) free = false
+          if (newY >= 10 || newY < 0 || newX >= 20) onBoard = false
+        //   if (onBoard && newY >= 0 && board && board[newX, newY] != 0) free = false
   
-          if (shape[y][x] == currentPiece && (!onBoard || !free)) throw null
+          if (shape[y][x] != 0 && (!onBoard || !free)) throw null
         })
       })
       return true
