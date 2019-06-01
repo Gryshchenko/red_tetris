@@ -128,11 +128,11 @@ const gameBoard = ({ map, room, createNewPlayer, router, currentPiece, setNewLoc
 //   startInterval(setInterval(() => startMove(), 1000));
 // }
 
-gameBoard.componentDidUpdate = (prevProps, prevState) => {
-  const { currentPiece, pieceNotPlaced, needToMoveDown, stopMove, startInterval, startMove, intervalStarted } = prevProps;
+gameBoard.componentDidUpdate = (prevProps) => {
+  const { map, currentPiece, pieceNotPlaced, needToMoveDown, stopMove, startInterval, startMove, intervalStarted, currentPieceX, currentPieceY } = prevProps;
 
   if (pieceNotPlaced && currentPiece) {
-    placePiece(prevProps);
+    placePiece(prevProps, currentPieceX, currentPieceY, map);
   }
   if (!intervalStarted && currentPiece) {
     startInterval(setInterval(() => startMove(), 1000));
@@ -142,23 +142,32 @@ gameBoard.componentDidUpdate = (prevProps, prevState) => {
     moveDown(prevProps);
     stopMove();
  }
-}
+};
 
-const placePiece = (props) => {
-  const { map, room, currentPiece, setNewLocalMap, currentPieceX, currentPieceY } = props;
+const placePiece = (props, posX, posY, map) => {
+  const { room, currentPiece, setNewLocalMap } = props;
   let newMap = cloneDeepWith(map);
 
-  newMap = placePieceOnBoard(newMap, room.pieceList[currentPiece - 1].shape, currentPieceY, currentPieceX, currentPiece);
+  newMap = placePieceOnBoard(newMap, room.pieceList[currentPiece - 1].shape, posY, posX, currentPiece);
   setNewLocalMap(newMap);
-}
+};
 
 const moveDown = (props) => {
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece } = props;
 // console.warn(isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece));
 //   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece)) {
-    pieceMove({ posX: currentPieceX, posY: currentPieceY + 1 });
+    pieceMove({ posX: currentPieceX + 1, posY: currentPieceY});
+    placePiece(props, currentPieceX + 1, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece));
   // }
-}
+};
+
+const deletePiece = (map, currentPiece) => {
+  return map.map((row, i) => {
+    return row.map((cell, j) => {
+      if (cell == currentPiece) return 0;
+    });
+  });
+};
 
 const mapStateToProps = (state, router) => {
   // console.warn(state);
