@@ -3,7 +3,10 @@ import './styles.css';
 import { connect } from 'react-redux';
 import setCurrentUser from '../../actions/setCurrentUser';
 import createNewPlayer from '../../actions/createNewPlayer';
-import { getRoomName, getName } from '../../utils';
+import setNewLocalMap from '../../actions/setNewLocalMap';
+import { getRoomName, getName, placePieceOnBoard } from '../../utils';
+import { cloneDeepWith } from 'lodash';
+import functional from 'react-functional';
 
 // 1 - l_Block
 // 2 - j_Block
@@ -97,10 +100,14 @@ const addUser = (createNewPlayer, router) => {
   }
 }
 
-const gameBoard = ({ map, room, createNewPlayer, router }) => {
+const gameBoard = ({ map, room, createNewPlayer, router, currentPiece, setNewLocalMap, piecePlaced }) => {
   if (!room) {
     addUser(createNewPlayer, router);
   }
+  console.warn('currentPiece: ', currentPiece)
+  // if (currentPiece && !piecePlaced) {
+  //   placePiece(room, map, currentPiece, setNewLocalMap);
+  // }
   return (
     <Wrapper>
       {setRows(map)}
@@ -108,12 +115,30 @@ const gameBoard = ({ map, room, createNewPlayer, router }) => {
   )
 };
 
+gameBoard.componentDidUpdate = (prevProps, prevState) => {
+  const { currentPiece, pieceNotPlaced } = prevProps;
+
+  if (pieceNotPlaced && currentPiece) {
+    placePiece(prevProps);
+  }
+}
+
+const placePiece = (props) => {
+  const { map, room, currentPiece, setNewLocalMap } = props;
+  let newMap = cloneDeepWith(map);
+
+  newMap = placePieceOnBoard(newMap, room.pieceList[currentPiece].shape, 3, 0);
+  setNewLocalMap(newMap);
+}
+
 const mapStateToProps = (state, router) => {
-  console.warn(router);
+  console.warn(state);
   return {
     router,
-    room: state.game.getIn(['room']),
-    map: state.game.getIn(['map']),
+    room: state.game.getIn(['room']).toJS(),
+    map: state.game.getIn(['map']).toJS(),
+    currentPiece: state.game.getIn(['currentPiece']),
+    pieceNotPlaced: state.game.getIn(['pieceNotPlaced'])
   };
 }
 
@@ -121,6 +146,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     createNewPlayer: (data) => dispatch(createNewPlayer(data)),
     setCurrentUser: (data) => dispatch(setCurrentUser(data)),
+    setNewLocalMap: (data) => dispatch(setNewLocalMap(data))
   }
 }
 
@@ -144,7 +170,7 @@ const Wrapper = ({ children }) => {
   );
 }
 
-const GameBoard = connect(mapStateToProps, mapDispatchToProps)(gameBoard)
+const GameBoard = connect(mapStateToProps, mapDispatchToProps)(functional(gameBoard));
 export {
   GameBoard,
 };

@@ -23,6 +23,7 @@
     "react": "^16.8.4",
     "react-collapsible": "^2.6.0",
     "react-dom": "^16.8.4",
+    "react-functional": "^3.0.2",
     "react-redux": "^4.4.5",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",

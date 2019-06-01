@@ -6,12 +6,11 @@ const ACTION_TYPE = {
     SET_CURRENT_USER: 'setCurrentUser',
     PIECE_LANDED: 'server/pieceLanded',
     START_GAME: 'server/startGame',
-    START_GAME_RESPONSE: 'GAME_STARTED'
+    START_GAME_RESPONSE: 'GAME_STARTED',
+    SET_NEW_LOCAL_MAP: 'setNewLocalMap'
 };
 
 const map = [
-    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -29,6 +28,9 @@ const map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
 const initialState = {
@@ -36,11 +38,14 @@ const initialState = {
     games: null,
     currentUser: null,
     currentPiece: null,
+    pieceNotPlaced: true,
     map,
 }
 
 const reducer = (state = fromJS(initialState), action) => {
     switch (action.type) {
+        case ACTION_TYPE.SET_NEW_LOCAL_MAP:
+            return state.setIn(['map'], fromJS(action.data)).setIn(['pieceNotPlaced'], false);
         case ACTION_TYPE.SET_CURRENT_USER:
             return state.setIn(['currentUser'], fromJS(action.data));
         case ACTION_TYPE.CREATE_NEW_PLAYER:
