@@ -30,27 +30,6 @@ const BLOCK_NAME = {
   Z_BLOCK: 7,
 }
 
-// const map = [
-//   [0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 2, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 2, 2, 2, 2, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
-//   [0, 3, 3, 3, 3, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 4, 4, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 4, 4, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 5, 5, 0, 0, 0, 0, 0, 0],
-//   [0, 5, 5, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 6, 0, 0, 7, 7, 0, 0, 0],
-//   [0, 6, 6, 6, 0, 0, 7, 7, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// ];
 
 const setBlockClassName = (color) => {
   switch (color) {
@@ -94,6 +73,7 @@ const setRows = (map) => {
 const addUser = (createNewPlayer, router) => {
   const roomName = getRoomName();
   const name = getName();
+  console.warn(roomName, name);
   if (!name || !roomName) {
     router.history.push(`/`);
   } else {
@@ -106,7 +86,7 @@ const addUser = (createNewPlayer, router) => {
 
 const gameBoard = (props) => {
   const { map, room, createNewPlayer, router, currentPiece, setNewLocalMap, piecePlaced } = props;
-  
+
   if (!room) {
     addUser(createNewPlayer, router);
   }
@@ -117,14 +97,6 @@ const gameBoard = (props) => {
   )
 };
 
-// gameBoard.componentDidMount = (props) => {
-//   const {
-//     startInterval,
-//     startMove,
-//   } = props;
-  
-//   startInterval(setInterval(() => startMove(), 1000));
-// }
 
 gameBoard.componentDidUpdate = (prevProps) => {
   const { map, currentPiece, pieceNotPlaced, needToMoveDown, stopMove, startInterval, startMove, intervalStarted, currentPieceX, currentPieceY } = prevProps;
@@ -182,10 +154,10 @@ const deletePiece = (map, currentPiece) => {
 };
 
 const mapStateToProps = (state, router) => {
-  // console.warn(state);
+  const room = state.game.getIn(['room']) ? state.game.getIn(['room']).toJS() : null;
   return {
     router,
-    room: state.game.getIn(['room']).toJS(),
+    room,
     map: state.game.getIn(['map']).toJS(),
     currentPiece: state.game.getIn(['currentPiece']),
     pieceNotPlaced: state.game.getIn(['pieceNotPlaced']),
