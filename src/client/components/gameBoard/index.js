@@ -10,6 +10,7 @@ import stopMove from '../../actions/stopMove';
 import pieceMove from '../../actions/pieceMove';
 import { getRoomName, getName, placePieceOnBoard, isPossibleToPlace } from '../../utils';
 import { cloneDeepWith } from 'lodash';
+import { withRouter } from 'react-router';
 import functional from 'react-functional';
 
 // 1 - l_Block
@@ -73,7 +74,6 @@ const setRows = (map) => {
 const addUser = (createNewPlayer, router) => {
   const roomName = getRoomName();
   const name = getName();
-  console.warn(roomName, name);
   if (!name || !roomName) {
     router.history.push(`/`);
   } else {
@@ -86,7 +86,7 @@ const addUser = (createNewPlayer, router) => {
 
 const gameBoard = (props) => {
   const { map, room, createNewPlayer, router, currentPiece, setNewLocalMap, piecePlaced } = props;
-
+console.warn(props);
   if (!room) {
     addUser(createNewPlayer, router);
   }
@@ -200,7 +200,7 @@ const Wrapper = ({ children }) => {
   );
 }
 
-const GameBoard = connect(mapStateToProps, mapDispatchToProps)(functional(gameBoard));
+const GameBoard = withRouter(connect(mapStateToProps, mapDispatchToProps)(functional(gameBoard)));
 export {
   GameBoard,
 };

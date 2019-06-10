@@ -90,8 +90,6 @@ const mapStateToProps = (state, initialValues) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // createNewPlayer: (data) => dispatch(createNewPlayer(data)),
-    // setCurrentUser: (data) => dispatch(setCurrentUser(data)),
     startGame: (data) => dispatch(startGame(data))
   }
 }
