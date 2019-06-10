@@ -118,16 +118,22 @@ const placePiece = (props, posX, posY, map) => {
   const { room, currentPiece, setNewLocalMap } = props;
   let newMap = cloneDeepWith(map);
 
-  newMap = placePieceOnBoard(newMap, room.pieceList[currentPiece - 1].shape, posY, posX, currentPiece);
+  newMap = placePieceOnBoard(newMap, room.pieceList[currentPiece - 1].shape, posX, posY, currentPiece);
+  console.warn(newMap);
   setNewLocalMap(newMap);
 };
+
+const prepareShape = (shape) => {
+  return shape.unshift();
+}
 
 const moveDown = (props) => {
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece } = props;
 console.warn(isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece));
+  let shape = prepareShape(room.pieceList[currentPiece - 1].shape);
   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece)) {
-    pieceMove({ posX: currentPieceX + 1, posY: currentPieceY});
-    placePiece(props, currentPieceX + 1, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece));
+    pieceMove({ posX: currentPieceX, posY: currentPieceY + 1});
+    placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece));
   }
 };
 
@@ -148,7 +154,9 @@ const moveRight = (props) => {
 const deletePiece = (map, currentPiece) => {
   return map.map((row, i) => {
     return row.map((cell, j) => {
-      if (cell == currentPiece) return 0;
+      if (cell == currentPiece) {
+        return 0;
+      } else return cell;
     });
   });
 };

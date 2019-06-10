@@ -12,7 +12,7 @@ class PieceController {
             piece.shape = constants.pieces[pieceType];
             piece.color = constants.colors[pieceType];
             for (let i = randomNumber(4); i < 4; i++) {
-                flipMatrix(piece.shape);
+                piece.shape = flipMatrix(piece.shape);
             }
             const newPiece = await new Piece(piece).save();
             return newPiece;
