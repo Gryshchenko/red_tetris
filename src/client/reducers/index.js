@@ -11,7 +11,9 @@ const ACTION_TYPE = {
     START_INTERVAL: 'startInterval',
     START_MOVE: 'startMove',
     STOP_MOVE: 'stopMove',
-    PIECE_MOVE: 'pieceMove'
+    PIECE_MOVE: 'pieceMove',
+    MOVE_LEFT: 'moveLeft',
+    MOVE_RIGHT: 'moveRight',
 };
 
 const map = [
@@ -47,11 +49,15 @@ const initialState = {
     pieceNotPlaced: true,
     needToMoveDown: false,
     intervalStarted: null,
+    moveLeft: false,
+    moveRight: false,
     map,
 }
 
 const reducer = (state = fromJS(initialState), action) => {
-    switch (action.type) {
+
+  console.warn(action.type);
+  switch (action.type) {
         case ACTION_TYPE.SET_NEW_LOCAL_MAP:
             return state.setIn(['map'], fromJS(action.data)).setIn(['pieceNotPlaced'], false);
         case ACTION_TYPE.SET_CURRENT_USER:
@@ -66,6 +72,10 @@ const reducer = (state = fromJS(initialState), action) => {
             return state.setIn(['intervalStarted'], fromJS(action.data));
         case ACTION_TYPE.START_MOVE:
             return state.setIn(['needToMoveDown'], true);
+        case ACTION_TYPE.MOVE_LEFT:
+            return state.setIn(['moveLeft'], action.data);
+        case ACTION_TYPE.MOVE_RIGHT:
+            return state.setIn(['moveRight'], action.data);
         case ACTION_TYPE.STOP_MOVE:
             return state.setIn(['needToMoveDown'], false);
         case ACTION_TYPE.PIECE_MOVE:

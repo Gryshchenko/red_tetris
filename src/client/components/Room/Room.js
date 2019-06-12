@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { GameBoard } from '../gameBoard';
 import startGame from '../../actions/startGame';
+import moveLeft from '../../actions/moveLeft';
+import moveRight from '../../actions/moveRight';
 import './styles.css'
 import { GameBoardInfo } from '../gameBoardInfo/gameBoardInfo';
 
@@ -16,7 +18,7 @@ const KEY_TYPE = {
 
 const Room = ( props ) => {
   useEffect(() => {
-    keyPressHandler();
+    keyPressHandler(props);
     return () => {
       removeEventListener("keyup", keyPressHandler);
     };
@@ -68,13 +70,15 @@ const onStartGame = (event, room, startGame) => {
   })
 }
 
-const keyPressHandler = () => addEventListener('keyup', function (event) {
+const keyPressHandler = (props) => addEventListener('keyup', function (event) {
   if (event) {
     switch (event.code) {
       case KEY_TYPE.ARROW_DOWN:
       case KEY_TYPE.ARROW_UP:
       case KEY_TYPE.ARROW_LEFT:
+        return props.moveLeft(true);
       case KEY_TYPE.ARROW_RIGHT:
+        return props.moveRight(true);
       case KEY_TYPE.SPACE:
       case KEY_TYPE.ENTER:
     }
@@ -90,7 +94,9 @@ const mapStateToProps = (state, initialValues) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    startGame: (data) => dispatch(startGame(data))
+    startGame: (data) => dispatch(startGame(data)),
+    moveLeft: (data) => dispatch(moveLeft(data)),
+    moveRight: (data) => dispatch(moveRight(data)),
   }
 }
 

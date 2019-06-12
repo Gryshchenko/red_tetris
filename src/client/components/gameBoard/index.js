@@ -8,6 +8,8 @@ import startInterval from '../../actions/startInterval';
 import startMove from '../../actions/startMove';
 import stopMove from '../../actions/stopMove';
 import pieceMove from '../../actions/pieceMove';
+import moveLeft from '../../actions/moveLeft';
+import moveRight from '../../actions/moveLeft';
 import { getRoomName, getName, placePieceOnBoard, isPossibleToPlace } from '../../utils';
 import { cloneDeepWith } from 'lodash';
 import { withRouter } from 'react-router';
@@ -86,7 +88,6 @@ const addUser = (createNewPlayer, router) => {
 
 const gameBoard = (props) => {
   const { map, room, createNewPlayer, router, currentPiece, setNewLocalMap, piecePlaced } = props;
-console.warn(props);
   if (!room) {
     addUser(createNewPlayer, router);
   }
@@ -99,7 +100,20 @@ console.warn(props);
 
 
 gameBoard.componentDidUpdate = (prevProps) => {
-  const { map, currentPiece, pieceNotPlaced, needToMoveDown, stopMove, startInterval, startMove, intervalStarted, currentPieceX, currentPieceY } = prevProps;
+  const {
+    map,
+    currentPiece,
+    pieceNotPlaced,
+    needToMoveDown,
+    stopMove,
+    startInterval,
+    startMove,
+    intervalStarted,
+    currentPieceX,
+    currentPieceY,
+    left,
+    right,
+  } = prevProps;
 
   if (pieceNotPlaced && currentPiece) {
     placePiece(prevProps, currentPieceX, currentPieceY, map);
@@ -108,6 +122,12 @@ gameBoard.componentDidUpdate = (prevProps) => {
     startInterval(setInterval(() => startMove(), 1000));
   }
 
+  console.warn(prevProps);
+  if (left){
+    moveTetriLeft(prevProps);
+  } else if (right) {
+    moveTetriRight(prevProps);
+  }
   if (needToMoveDown) {
     moveDown(prevProps);
     stopMove();
@@ -124,23 +144,23 @@ const placePiece = (props, posX, posY, map) => {
 
 const moveDown = (props) => {
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece } = props;
-console.warn(isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece));
   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece)) {
     pieceMove({ posX: currentPieceX + 1, posY: currentPieceY});
     placePiece(props, currentPieceX + 1, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece));
   }
 };
 
-const moveLeft = (props) => {
-  const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece } = props;
-
+const moveTetriLeft = (props) => {
+  const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, moveLeft } = props;
   pieceMove({ posX: currentPieceX, posY: currentPieceY - 1});
   placePiece(props, currentPieceX, currentPieceY - 1, deletePiece(cloneDeepWith(map), currentPiece));
+  moveLeft(false);
 }
 
-const moveRight = (props) => {
-  const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece } = props;
+const moveTetriRight = (props) => {
 
+  const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, moveRight } = props;
+  moveRight(false);
   pieceMove({ posX: currentPieceX, posY: currentPieceY + 1});
   placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece));
 }
@@ -164,7 +184,9 @@ const mapStateToProps = (state, router) => {
     currentPieceX: state.game.getIn(['currentPieceX']),
     currentPieceY: state.game.getIn(['currentPieceY']),
     needToMoveDown: state.game.getIn(['needToMoveDown']),
-    intervalStarted: state.game.getIn(['intervalStarted'])
+    intervalStarted: state.game.getIn(['intervalStarted']),
+    left: state.game.getIn(['moveLeft']),
+    right: state.game.getIn(['moveRight']),
   };
 }
 
@@ -176,7 +198,9 @@ const mapDispatchToProps = (dispatch) => {
     startInterval: (data) => dispatch(startInterval(data)),
     startMove: (data) => dispatch(startMove(data)),
     stopMove: (data) => dispatch(stopMove(data)),
-    pieceMove: (data) => dispatch(pieceMove(data))
+    pieceMove: (data) => dispatch(pieceMove(data)),
+    moveLeft: (data) => dispatch(moveLeft(data)),
+    moveRight: (data) => dispatch(moveRight(data)),
   }
 }
 

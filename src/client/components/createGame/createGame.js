@@ -14,7 +14,6 @@ const VALID_ID = {
 
 const CreateGame = (props) => {
   const { router, createNewPlayer } = props;
-  console.warn(1, props);
     return (
         <div className="createGameWrap">
             <form onSubmit={(e) => handledSumbit(e, createNewPlayer, router)}>
