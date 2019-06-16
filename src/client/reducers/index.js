@@ -56,7 +56,6 @@ const initialState = {
 
 const reducer = (state = fromJS(initialState), action) => {
 
-  console.warn(action.type);
   switch (action.type) {
         case ACTION_TYPE.SET_NEW_LOCAL_MAP:
             return state.setIn(['map'], fromJS(action.data)).setIn(['pieceNotPlaced'], false);
@@ -73,6 +72,7 @@ const reducer = (state = fromJS(initialState), action) => {
         case ACTION_TYPE.START_MOVE:
             return state.setIn(['needToMoveDown'], true);
         case ACTION_TYPE.MOVE_LEFT:
+            console.warn(action.type, action.data);
             return state.setIn(['moveLeft'], action.data);
         case ACTION_TYPE.MOVE_RIGHT:
             return state.setIn(['moveRight'], action.data);

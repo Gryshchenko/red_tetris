@@ -9,7 +9,7 @@ import startMove from '../../actions/startMove';
 import stopMove from '../../actions/stopMove';
 import pieceMove from '../../actions/pieceMove';
 import moveLeft from '../../actions/moveLeft';
-import moveRight from '../../actions/moveLeft';
+import moveRight from '../../actions/moveRight';
 import { getRoomName, getName, placePieceOnBoard, isPossibleToPlace } from '../../utils';
 import { cloneDeepWith } from 'lodash';
 import { withRouter } from 'react-router';
@@ -151,6 +151,7 @@ const moveDown = (props) => {
 };
 
 const moveTetriLeft = (props) => {
+  console.warn('left', props);
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, moveLeft } = props;
   pieceMove({ posX: currentPieceX, posY: currentPieceY - 1});
   placePiece(props, currentPieceX, currentPieceY - 1, deletePiece(cloneDeepWith(map), currentPiece));
@@ -158,11 +159,10 @@ const moveTetriLeft = (props) => {
 }
 
 const moveTetriRight = (props) => {
-
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, moveRight } = props;
-  moveRight(false);
   pieceMove({ posX: currentPieceX, posY: currentPieceY + 1});
   placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece));
+  moveRight(false);
 }
 
 const deletePiece = (map, currentPiece) => {

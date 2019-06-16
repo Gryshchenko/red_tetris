@@ -1,5 +1,4 @@
-export default function moveRight(data) {
-  console.warn(data);
+export default function moveRight(data = false) {
   return {
     type: 'moveRight',
     data

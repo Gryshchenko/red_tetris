@@ -63,7 +63,6 @@ const Room = ( props ) => {
 }
 
 const onStartGame = (event, room, startGame) => {
-  console.warn(startGame)
   const gameId = room.getIn(['_id']);
   startGame({
     gameId: gameId
