@@ -73,24 +73,24 @@ const setRows = (map) => {
   return result;
 }
 
-const addUser = (createNewPlayer, router) => {
-  const roomName = getRoomName();
-  const name = getName();
-  if (!name || !roomName) {
-    router.history.push(`/`);
-  } else {
-    createNewPlayer({
-      name,
-      room: roomName,
-    });
-  }
-}
+// const addUser = (createNewPlayer, router) => {
+//   const roomName = getRoomName();
+//   const name = getName();
+//   if (!name || !roomName) {
+//     router.history.push(`/`);
+//   } else {
+//     createNewPlayer({
+//       name,
+//       room: roomName,
+//     });
+//   }
+// }
 
 const gameBoard = (props) => {
   const { map, room, createNewPlayer, router, currentPiece, setNewLocalMap, piecePlaced } = props;
-  if (!room) {
-    addUser(createNewPlayer, router);
-  }
+  // if (!room) {
+  //   addUser(createNewPlayer, router);
+  // }
   return (
       <Wrapper>
         {setRows(map)}
@@ -122,7 +122,6 @@ gameBoard.componentDidUpdate = (prevProps) => {
     startInterval(setInterval(() => startMove(), 1000));
   }
 
-  console.warn(prevProps);
   if (left){
     moveTetriLeft(prevProps);
   } else if (right) {

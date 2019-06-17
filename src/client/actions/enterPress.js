@@ -1,6 +1,6 @@
-export default function moveRight(data = false) {
+export default function enterPress() {
   return {
-    type: 'moveRight',
+    type: 'enterPress',
     data
   };
 }

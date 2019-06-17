@@ -14,6 +14,7 @@ const ACTION_TYPE = {
     PIECE_MOVE: 'pieceMove',
     MOVE_LEFT: 'moveLeft',
     MOVE_RIGHT: 'moveRight',
+    ENTER_PRESS: 'enterPress',
 };
 
 const map = [
@@ -72,7 +73,6 @@ const reducer = (state = fromJS(initialState), action) => {
         case ACTION_TYPE.START_MOVE:
             return state.setIn(['needToMoveDown'], true);
         case ACTION_TYPE.MOVE_LEFT:
-            console.warn(action.type, action.data);
             return state.setIn(['moveLeft'], action.data);
         case ACTION_TYPE.MOVE_RIGHT:
             return state.setIn(['moveRight'], action.data);
@@ -80,7 +80,9 @@ const reducer = (state = fromJS(initialState), action) => {
             return state.setIn(['needToMoveDown'], false);
         case ACTION_TYPE.PIECE_MOVE:
             return state.setIn(['currentPieceX'], action.data.posX).setIn(['currentPieceY'], action.data.posY);
-        default:
+        case ACTION_TYPE.ENTER_PRESS:
+            return state.setIn(['currentPieceX'], action.data.posX).setIn(['currentPieceY'], action.data.posY);
+            default:
             return state
     }
 }

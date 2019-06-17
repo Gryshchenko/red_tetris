@@ -11,6 +11,7 @@ import './styles.css';
 import { Provider } from 'react-redux'
 
 import { HashRouter, Route } from 'react-router-dom';
+import WaitingRoom from './components/waitingRoom/WaitingRoom';
 
 
 require("babel-core/register");
@@ -37,7 +38,7 @@ ReactDom.render((
       <React.Fragment>
          {/*<Router history={history}> */}
         <Route exact path='/' component={Main} />
-        <Route path='/game' component={Room} />
+        <Route path='/game' component={WaitingRoom} />
       </React.Fragment>
        {/*</Router> */}
     </Provider>

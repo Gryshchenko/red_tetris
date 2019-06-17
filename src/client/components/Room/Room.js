@@ -43,7 +43,7 @@ const Room = ( props ) => {
               <div className={'tetrisButton tetrisButtonSmall'} />
             </div>
             <div className={'spaceButton'}>
-              <div className={'tetrisButton tetrisButtonBig'} onClick={(event) => onStartGame(event, room, startGame)}/>
+              <div className={'tetrisButton tetrisButtonBig'} onClick={(event) => onStartGame(room, startGame)}/>
             </div>
           </div>
 
@@ -62,14 +62,16 @@ const Room = ( props ) => {
   );
 }
 
-const onStartGame = (event, room, startGame) => {
+const onStartGame = (room, startGame) => {
   const gameId = room.getIn(['_id']);
+  console.warn(gameId);
   startGame({
     gameId: gameId
   })
 }
 
 const keyPressHandler = (props) => addEventListener('keyup', function (event) {
+  const { room, startGame } = props;
   if (event) {
     switch (event.code) {
       case KEY_TYPE.ARROW_DOWN:
@@ -80,6 +82,7 @@ const keyPressHandler = (props) => addEventListener('keyup', function (event) {
         return props.moveRight(true);
       case KEY_TYPE.SPACE:
       case KEY_TYPE.ENTER:
+        return onStartGame( room, startGame)
     }
   }
 });
