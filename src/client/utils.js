@@ -56,20 +56,20 @@ const placePieceOnBoard = (board, shape, posX, posY, currentPiece) => {
     return board;
 };
 
-const prepareShape = (shape) => {
-    let newShape = [];
+// const prepareShape = (shape) => {
+//     let newShape = [];
 
-    shape.forEach(row => {
-        if (row.includes(1)) {
-            newShape.push(row);
-        }
-    })
-    return newShape;
-}
+//     shape.forEach(row => {
+//         if (row.includes(1)) {
+//             newShape.push(row);
+//         }
+//     });
+//     return newShape;
+// }
 
 const isPossibleToPlace = (board, shape, posX, posY, currentPiece) => {
-    let prepearedShape = prepareShape(shape);
-
+    // let prepearedShape = prepareShape(shape);
+let prepearedShape = shape
     try {
         prepearedShape.forEach((line, y) => {
           line.forEach((bloc, x) => {

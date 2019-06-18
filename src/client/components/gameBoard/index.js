@@ -158,15 +158,19 @@ const moveDown = (props) => {
 const moveTetriLeft = (props) => {
   console.warn('left', props);
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, moveLeft } = props;
-  pieceMove({ posX: currentPieceX, posY: currentPieceY - 1});
-  placePiece(props, currentPieceX, currentPieceY - 1, deletePiece(cloneDeepWith(map), currentPiece));
+  if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX - 1, currentPieceY, currentPiece)) {
+    pieceMove({ posX: currentPieceX - 1, posY: currentPieceY});
+    placePiece(props, currentPieceX - 1, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece));
+  }
   moveLeft(false);
 }
 
 const moveTetriRight = (props) => {
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, moveRight } = props;
-  pieceMove({ posX: currentPieceX, posY: currentPieceY + 1});
-  placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece));
+  if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX + 1, currentPieceY, currentPiece)) {
+    pieceMove({ posX: currentPieceX + 1, posY: currentPieceY});
+    placePiece(props, currentPieceX + 1, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece));
+  }
   moveRight(false);
 }
 
