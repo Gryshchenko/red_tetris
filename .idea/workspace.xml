@@ -227,8 +227,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="npm.srv-dev" />
       <item itemvalue="npm.client-dev" />
+      <item itemvalue="npm.srv-dev" />
     </list>
   </component>
   <component name="SvnConfiguration">

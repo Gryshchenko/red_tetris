@@ -1,8 +1,8 @@
-const flipMatrix = matrix => (
-    matrix[0].map((column, index) => (
+const flipMatrix = matrix => {
+    return matrix[0].map((column, index) => (
       matrix.map(row => row[index])
     ))
-);
+}
 
 const randomNumber = (num) => Math.floor(Math.random() * num)
 

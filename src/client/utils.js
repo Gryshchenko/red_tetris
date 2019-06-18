@@ -56,28 +56,41 @@ const placePieceOnBoard = (board, shape, posX, posY, currentPiece) => {
     return board;
 };
 
+const prepareShape = (shape) => {
+    let newShape = [];
+
+    shape.forEach(row => {
+        if (row.includes(1)) {
+            newShape.push(row);
+        }
+    })
+    return newShape;
+}
+
 const isPossibleToPlace = (board, shape, posX, posY, currentPiece) => {
+    let prepearedShape = prepareShape(shape);
 
     try {
-      shape.forEach((line, y) => {
-        line.forEach((bloc, x) => {
-          const newY = y + posY
-          const newX = x + posX
-          let onBoard = true
-          let free = true
-  
-          if (newY >= 10 || newY < 0 || newX >= 20) onBoard = false
-        //   if (onBoard && newY >= 0 && board && board[newX, newY] != 0) free = false
-  
-          if (shape[y][x] != 0 && (!onBoard || !free)) throw null
+        prepearedShape.forEach((line, y) => {
+          line.forEach((bloc, x) => {
+            const newY = y + posY
+            const newX = x + posX
+            let onBoard = true
+            let free = true
+    
+            if (newY >= 21 || newX < 0 || newX >= 10) onBoard = false
+            if (onBoard && newY >= 0 && board && board[newY][newX] != 0 && board[newY][newX] != currentPiece) free = false
+            console.warn(onBoard, newY, board[newY][newX]);
+            if (prepearedShape[y][x] == 1 && (!onBoard || !free)) {
+
+                throw null
+            }
+          })
         })
-      })
-      return true
-    }
-  
-    catch (e) {
-      return false
-    }
+        return true
+      } catch (e) {
+          return false;
+      }    
   }
 
 // const movePiece = (board, piece, currentPiece)
