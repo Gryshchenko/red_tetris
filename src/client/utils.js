@@ -80,7 +80,6 @@ let prepearedShape = shape
     
             if (newY >= 21 || newX < 0 || newX >= 10) onBoard = false
             if (onBoard && newY >= 0 && board && board[newY][newX] != 0 && board[newY][newX] != currentPiece) free = false
-            console.warn(onBoard, newY, board[newY][newX]);
             if (prepearedShape[y][x] == 1 && (!onBoard || !free)) {
 
                 throw null

@@ -15,6 +15,7 @@ const ACTION_TYPE = {
     MOVE_LEFT: 'moveLeft',
     MOVE_RIGHT: 'moveRight',
     ENTER_PRESS: 'enterPress',
+    PIECE_PLACED: 'piecePlaced'
 };
 
 const map = [
@@ -67,7 +68,7 @@ const reducer = (state = fromJS(initialState), action) => {
         case ACTION_TYPE.START_GAME_RESPONSE:
             return state.setIn(['room'], fromJS(action.data)).setIn(['currentPiece'], 1);
         case ACTION_TYPE.PIECE_LANDED:
-            return state.setIn(['room'], fromJS(action.data));
+            return state.setIn(['room'], fromJS(action.data)).setIn(['pieceNotPlaced'], true).setIn(['currentPieceX'], 3).setIn(['currentPieceY'], 0);
         case ACTION_TYPE.START_INTERVAL:
             return state.setIn(['intervalStarted'], fromJS(action.data));
         case ACTION_TYPE.START_MOVE:
@@ -82,7 +83,9 @@ const reducer = (state = fromJS(initialState), action) => {
             return state.setIn(['currentPieceX'], action.data.posX).setIn(['currentPieceY'], action.data.posY);
         case ACTION_TYPE.ENTER_PRESS:
             return state.setIn(['currentPieceX'], action.data.posX).setIn(['currentPieceY'], action.data.posY);
-            default:
+        case ACTION_TYPE.PIECE_PLACED:
+            return state.setIn(['pieceNotPlaced'], false);
+        default:
             return state
     }
 }

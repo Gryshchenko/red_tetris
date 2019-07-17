@@ -10,6 +10,7 @@ import stopMove from '../../actions/stopMove';
 import pieceMove from '../../actions/pieceMove';
 import moveLeft from '../../actions/moveLeft';
 import moveRight from '../../actions/moveRight';
+import pieceLanded from '../../actions/pieceLanded';
 import { getRoomName, getName, placePieceOnBoard, isPossibleToPlace } from '../../utils';
 import { cloneDeepWith } from 'lodash';
 import { withRouter } from 'react-router';
@@ -138,7 +139,6 @@ const placePiece = (props, posX, posY, map) => {
   let newMap = cloneDeepWith(map);
 
   newMap = placePieceOnBoard(newMap, room.pieceList[currentPiece - 1].shape, posX, posY, currentPiece);
-  console.warn(newMap);
   setNewLocalMap(newMap);
 };
 
@@ -147,16 +147,22 @@ const prepareShape = (shape) => {
 }
 
 const moveDown = (props) => {
-  const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece } = props;
+  const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, pieceLanded } = props;
   let shape = prepareShape(room.pieceList[currentPiece - 1].shape);
   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece)) {
     pieceMove({ posX: currentPieceX, posY: currentPieceY + 1});
     placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece));
+  } else {
+    pieceLanded({
+      playerId: 123, // currentUser in redux is null!
+      gameId: room._id,
+      playerMap: map,
+      currentPiece
+    });
   }
 };
 
 const moveTetriLeft = (props) => {
-  console.warn('left', props);
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, moveLeft } = props;
   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX - 1, currentPieceY, currentPiece)) {
     pieceMove({ posX: currentPieceX - 1, posY: currentPieceY});
@@ -212,6 +218,7 @@ const mapDispatchToProps = (dispatch) => {
     pieceMove: (data) => dispatch(pieceMove(data)),
     moveLeft: (data) => dispatch(moveLeft(data)),
     moveRight: (data) => dispatch(moveRight(data)),
+    pieceLanded: (data) => dispatch(pieceLanded(data))
   }
 }
 

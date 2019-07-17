@@ -13,7 +13,7 @@ export default socket => {
 
     socket.on('endGame', data => endGame(data, socket));
 
-    socket.on('pieceLand', data => pieceLand(data, socket));
+    socket.on('pieceLanded', data => pieceLand(data, socket));
 }
 
 const createNewPlayer = async (data, socket) => {
@@ -61,7 +61,6 @@ const startGame = async (data, socket) => {
 
         // game = Game.updateGame(game.id, { status: constants.gameStatuses.STARTED });
         const game = await Game.updateGame(data.gameId, { status: constants.gameStatuses.STARTED });
-        console.log(game)
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 'action',
