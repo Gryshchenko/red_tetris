@@ -39,7 +39,7 @@ const rotatePiece = (shape) => {
         shape.map((row, i) => {
             row.map((cell, j) => {
             if (!newShape[j]) newShape[j] = []
-            newShape[j][row.length - i - 1] = shape[i][j]
+                newShape[j][row.length - i - 1] = shape[i][j]
             })
         })
     return newShape;
@@ -98,5 +98,6 @@ export {
     getRoomName,
     getName,
     placePieceOnBoard,
-    isPossibleToPlace
+    isPossibleToPlace,
+    rotatePiece
 };

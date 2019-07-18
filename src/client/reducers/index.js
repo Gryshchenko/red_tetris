@@ -17,9 +17,10 @@ const ACTION_TYPE = {
     MOVE_RIGHT: 'moveRight',
     MOVE_DOWN: 'moveDown',
     FORCE_MOVE_DOWN: 'forceMoveDown',
-    ROTATE_PIECE: 'rotatePiece',
+    ROTATE_PIECE: 'needToRotatePiece',
     ENTER_PRESS: 'enterPress',
-    PIECE_PLACED: 'piecePlaced'
+    PIECE_PLACED: 'piecePlaced',
+    SET_CURRENT_SHAPE: 'setCurrentShape'
 };
 
 const map = [
@@ -59,7 +60,7 @@ const initialState = {
     moveRight: false,
     moveDown: false,
     forceMoveDown: false,
-    rotatePiece: false,
+    needToRotatePiece: false,
     map,
 }
 
@@ -91,7 +92,7 @@ const reducer = (state = fromJS(initialState), action) => {
         case ACTION_TYPE.FORCE_MOVE_DOWN:
             return state.setIn(['forceMoveDown'], action.data);
         case ACTION_TYPE.ROTATE_PIECE:
-            return state.setIn(['rotatePiece'], action.data);
+            return state.setIn(['needToRotatePiece'], action.data);
         case ACTION_TYPE.STOP_MOVE:
             return state.setIn(['needToMoveDown'], false);
         case ACTION_TYPE.PIECE_MOVE:
@@ -100,6 +101,8 @@ const reducer = (state = fromJS(initialState), action) => {
             return state.setIn(['currentPieceX'], action.data.posX).setIn(['currentPieceY'], action.data.posY);
         case ACTION_TYPE.PIECE_PLACED:
             return state.setIn(['pieceNotPlaced'], false);
+        case ACTION_TYPE.SET_CURRENT_SHAPE:
+            return state.setIn(['room'], fromJS(action.data));
         default:
             return state
     }
