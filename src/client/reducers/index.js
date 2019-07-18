@@ -5,6 +5,7 @@ const ACTION_TYPE = {
     CREATE_NEW_PLAYER_RESPONSE: 'PLAYER_CREATED',
     SET_CURRENT_USER: 'setCurrentUser',
     PIECE_LANDED: 'server/pieceLanded',
+    PIECE_LANDED_RESPONSE: 'PIECE_LANDED',
     START_GAME: 'server/startGame',
     START_GAME_RESPONSE: 'GAME_STARTED',
     SET_NEW_LOCAL_MAP: 'setNewLocalMap',
@@ -14,6 +15,9 @@ const ACTION_TYPE = {
     PIECE_MOVE: 'pieceMove',
     MOVE_LEFT: 'moveLeft',
     MOVE_RIGHT: 'moveRight',
+    MOVE_DOWN: 'moveDown',
+    FORCE_MOVE_DOWN: 'forceMoveDown',
+    ROTATE_PIECE: 'rotatePiece',
     ENTER_PRESS: 'enterPress',
     PIECE_PLACED: 'piecePlaced'
 };
@@ -53,6 +57,9 @@ const initialState = {
     intervalStarted: null,
     moveLeft: false,
     moveRight: false,
+    moveDown: false,
+    forceMoveDown: false,
+    rotatePiece: false,
     map,
 }
 
@@ -64,11 +71,13 @@ const reducer = (state = fromJS(initialState), action) => {
         case ACTION_TYPE.SET_CURRENT_USER:
             return state.setIn(['currentUser'], fromJS(action.data));
         case ACTION_TYPE.CREATE_NEW_PLAYER_RESPONSE:
-            return state.setIn(['room'], fromJS(action.data));
+            return state.setIn(['room'], fromJS(action.data)).setIn(['currentUser'], fromJS(action.currentUser));
         case ACTION_TYPE.START_GAME_RESPONSE:
             return state.setIn(['room'], fromJS(action.data)).setIn(['currentPiece'], 1);
-        case ACTION_TYPE.PIECE_LANDED:
-            return state.setIn(['room'], fromJS(action.data)).setIn(['pieceNotPlaced'], true).setIn(['currentPieceX'], 3).setIn(['currentPieceY'], 0);
+        // case ACTION_TYPE.PIECE_LANDED:
+        //     return state.setIn(['room'], fromJS(action.data)).setIn(['pieceNotPlaced'], true).setIn(['currentPieceX'], 3).setIn(['currentPieceY'], 0);
+        case ACTION_TYPE.PIECE_LANDED_RESPONSE:
+            return state.setIn(['room'], fromJS(action.data)).setIn(['pieceNotPlaced'], true).setIn(['currentPieceX'], 3).setIn(['currentPieceY'], 0).setIn(['currentPiece'], fromJS(action.currentPiece));
         case ACTION_TYPE.START_INTERVAL:
             return state.setIn(['intervalStarted'], fromJS(action.data));
         case ACTION_TYPE.START_MOVE:
@@ -77,6 +86,12 @@ const reducer = (state = fromJS(initialState), action) => {
             return state.setIn(['moveLeft'], action.data);
         case ACTION_TYPE.MOVE_RIGHT:
             return state.setIn(['moveRight'], action.data);
+        case ACTION_TYPE.MOVE_DOWN:
+            return state.setIn(['moveDown'], action.data);
+        case ACTION_TYPE.FORCE_MOVE_DOWN:
+            return state.setIn(['forceMoveDown'], action.data);
+        case ACTION_TYPE.ROTATE_PIECE:
+            return state.setIn(['rotatePiece'], action.data);
         case ACTION_TYPE.STOP_MOVE:
             return state.setIn(['needToMoveDown'], false);
         case ACTION_TYPE.PIECE_MOVE:

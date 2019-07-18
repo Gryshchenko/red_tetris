@@ -5,7 +5,8 @@ import thunk from 'redux-thunk'
 import io from 'socket.io-client';
 import { socketIoMiddleWare } from './middleware/socketIoMiddleWare';
 import reducer from './reducers';
-import Room from './components/Room/Room';
+// import Room from './components/Room/Room';
+// import { Room } from './components/Room/Room';
 import Main from './components/main/main';
 import './styles.css';
 import { Provider } from 'react-redux'

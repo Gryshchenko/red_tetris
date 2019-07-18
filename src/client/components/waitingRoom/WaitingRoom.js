@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import createNewPlayer from '../../actions/createNewPlayer';
 import './styles.css'
 import { Button } from '../_base/button/Button';
-import Room from '../Room/Room';
+import { Room } from '../Room/Room';
 import { getRoomName, getName } from '../../utils';
 
 

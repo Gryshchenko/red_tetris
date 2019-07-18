@@ -43,6 +43,7 @@ const createNewPlayer = async (data, socket) => {
                 {
                     type: 'PLAYER_CREATED',
                     data: game,
+                    currentUser: player
                 }
             );
         });
@@ -110,18 +111,26 @@ const endGame = async (data, socket) => {
 
 const pieceLand = async (data, socket) => {
     try {
-        await Player.updatePlayer(data.playerId, { map: data.playerMap, currentPiece: data.currentPiece + 1 });
-        const game = await Game.getGameById(data.gameId);
+        const updatedPlayer = await Player.updatePlayer(data.playerId, { map: data.playerMap, currentPiece: data.currentPiece + 1 });
+        let game = await Game.getGameById(data.gameId);
 
-        if (data.currentPiece + 1 >= game.pieceList.length) {
-            await Game.updateGame(game.gameId, { pieceList: game.pieceList.push(await Piece.createPiece().id) });
+        if (data.currentPiece >= game.pieceList.length - 4) {
+            const piece = await Piece.createPiece()
+            game.pieceList.push(piece.id);
         }
 
-        game.playerList.forEach(player => {
+        const updatedGame = await Game.updateGame(game.id, { pieceList: game.pieceList });
+
+        updatedGame.playerList.forEach(player => {
+            console.log(player._id);
+            console.log('----------------------------------------------');
+            console.log(updatedPlayer.id);
             global.io.to(player.socketId).emit(
+                'action',
                 {
-                    type: 'PIECE_LANDED',
-                    data: game
+                    type: updatedPlayer.id == player._id ? 'PIECE_LANDED' : 'ENEMIES_PIECE_LANDED',
+                    data: game,
+                    currentPiece: data.currentPiece + 1
                 }
             );
         });
