@@ -39,7 +39,7 @@ const rotatePiece = (shape) => {
         shape.map((row, i) => {
             row.map((cell, j) => {
             if (!newShape[j]) newShape[j] = []
-                newShape[j][row.length - i - 1] = shape[i][j]
+            newShape[j][row.length - i - 1] = shape[i][j]
             })
         })
     return newShape;
@@ -92,6 +92,18 @@ let prepearedShape = shape
       }    
   }
 
+  const clearFullRows = (board) => {
+    let newBoard = board;
+    for (let i = newBoard.length - 1; i >= 0; i--) {
+        if (!newBoard[i].includes(0)) {
+            newBoard.splice(i, 1);
+            newBoard.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+            i++;
+        }
+    }
+    return newBoard;
+}
+
 // const movePiece = (board, piece, currentPiece)
 
 export {
@@ -99,5 +111,6 @@ export {
     getName,
     placePieceOnBoard,
     isPossibleToPlace,
-    rotatePiece
+    rotatePiece,
+    clearFullRows
 };

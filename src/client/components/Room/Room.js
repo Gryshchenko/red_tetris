@@ -20,7 +20,7 @@ import forceMoveDown from '../../actions/forceMoveDown';
 import needToRotatePiece from '../../actions/needToRotatePiece';
 import pieceLanded from '../../actions/pieceLanded';
 import setCurrentShape from '../../actions/setCurrentShape';
-import { getRoomName, getName, placePieceOnBoard, isPossibleToPlace, rotatePiece } from '../../utils';
+import { getRoomName, getName, placePieceOnBoard, isPossibleToPlace, rotatePiece, clearFullRows } from '../../utils';
 import { cloneDeepWith } from 'lodash';
 import functional from 'react-functional';
 import { withRouter } from 'react-router';
@@ -51,6 +51,7 @@ const RoomComponent = ( props ) => {
     if (pieceNotPlaced && currentPiece) {
       placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
     }
+
     if (!intervalStarted && currentPiece) {
       startInterval(setInterval(() => startMove(), 1000));
     }
@@ -66,6 +67,7 @@ const RoomComponent = ( props ) => {
     } else if (forceDown) {
       forceMoveDownTetri(props);
     }
+
     if (needToMoveDown) {
       moveTetriDown(props);
       stopMove();
@@ -137,11 +139,14 @@ const keyPressHandler = (props) => addEventListener('keyup', function (event) {
   }
 });
 
-const placePiece = (props, posX, posY, map, shape) => {
-  const { room, currentPiece, setNewLocalMap } = props;
+const placePiece = (props, posX, posY, map, shape, needToClearFullRows = false) => {
+  const { currentPiece, setNewLocalMap } = props;
   let newMap = cloneDeepWith(map);
 
   newMap = placePieceOnBoard(newMap, shape, posX, posY, currentPiece);
+  if (needToClearFullRows) {
+    newMap = clearFullRows(newMap);
+  }
   setNewLocalMap(newMap);
 };
 
@@ -177,8 +182,8 @@ const forceMoveDownTetri = (props) => {
   while (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, y, currentPiece)) {
     y++;
   }
-  placePiece(props, currentPieceX, y - 1, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape);
-  
+  placePiece(props, currentPieceX, y - 1, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
+
   pieceLanded({
     playerId: currentUser._id,
     gameId: room._id,
@@ -191,10 +196,9 @@ const forceMoveDownTetri = (props) => {
 
 const moveTetriDown = (props) => {
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, pieceLanded, moveDown, currentUser } = props;
-  // console.log(props)
   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece)) {
     pieceMove({ posX: currentPieceX, posY: currentPieceY + 1});
-    placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape);
+    placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
   } else {
     pieceLanded({
       playerId: currentUser._id,
