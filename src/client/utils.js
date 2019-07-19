@@ -1,3 +1,5 @@
+import { cloneDeepWith } from 'lodash';
+
 const getRoomName = () => {
     const hash = window.location.hash;
     const roomNameStart = hash.indexOf("e/");
@@ -42,6 +44,7 @@ const rotatePiece = (shape) => {
             newShape[j][row.length - i - 1] = shape[i][j]
             })
         })
+
     return newShape;
 };
   
@@ -56,20 +59,36 @@ const placePieceOnBoard = (board, shape, posX, posY, currentPiece) => {
     return board;
 };
 
-// const prepareShape = (shape) => {
-//     let newShape = [];
+const prepareShape = (shape) => {
+//     let newShape = cloneDeepWith(shape);
 
-//     shape.forEach(row => {
-//         if (row.includes(1)) {
-//             newShape.push(row);
+//     // newShape.forEach((row, index) => {
+//     //     if (!row.includes(1)) {
+//     //     }
+//     // });
+// console.log(newShape)
+//     for (let i = newShape.length - 1; i >= 2; i--) {
+//         if (!newShape[i].includes(1)) {
+//             newShape.unshift(i, 1);
 //         }
-//     });
+//     }
 //     return newShape;
-// }
+    let newShape = [];
+
+    shape.forEach((row, index) => {
+        if (row.includes(1)) {
+            newShape.push(row);
+        }
+    });
+
+    console.log(newShape)
+
+    return newShape;
+}
 
 const isPossibleToPlace = (board, shape, posX, posY, currentPiece) => {
     // let prepearedShape = prepareShape(shape);
-let prepearedShape = shape
+let prepearedShape = shape;
     try {
         prepearedShape.forEach((line, y) => {
           line.forEach((bloc, x) => {
@@ -78,7 +97,7 @@ let prepearedShape = shape
             let onBoard = true
             let free = true
     
-            if (newY >= 21 || newX < 0 || newX >= 10) onBoard = false
+            if (newY >= 20 || newX < 0 || newX >= 10) onBoard = false
             if (onBoard && newY >= 0 && board && board[newY][newX] != 0 && board[newY][newX] != currentPiece) free = false
             if (prepearedShape[y][x] == 1 && (!onBoard || !free)) {
 

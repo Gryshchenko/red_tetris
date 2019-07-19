@@ -198,8 +198,10 @@ const moveTetriDown = (props) => {
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, pieceLanded, moveDown, currentUser } = props;
   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece)) {
     pieceMove({ posX: currentPieceX, posY: currentPieceY + 1});
-    placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
+    placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape);
   } else {
+    placePiece(props, currentPieceX, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
+
     pieceLanded({
       playerId: currentUser._id,
       gameId: room._id,
@@ -246,7 +248,6 @@ const mapStateToProps = (state, router) => {
     room,
     map: state.game.getIn(['map']).toJS(),
     currentPiece: state.game.getIn(['currentPiece']),
-    currentShape: state.game.getIn(['currentShape']),
     currentUser: state.game.getIn(['currentUser']).toJS(),
     pieceNotPlaced: state.game.getIn(['pieceNotPlaced']),
     currentPieceX: state.game.getIn(['currentPieceX']),
