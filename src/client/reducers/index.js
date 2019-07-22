@@ -7,6 +7,8 @@ const ACTION_TYPE = {
     PIECE_LANDED: 'server/pieceLanded',
     PIECE_LANDED_RESPONSE: 'PIECE_LANDED',
     START_GAME: 'server/startGame',
+    END_GAME: 'server/endGame',
+    GAME_ENDED: 'GAME_ENDED',
     START_GAME_RESPONSE: 'GAME_STARTED',
     SET_NEW_LOCAL_MAP: 'setNewLocalMap',
     START_INTERVAL: 'startInterval',
@@ -103,6 +105,8 @@ const reducer = (state = fromJS(initialState), action) => {
             return state.setIn(['pieceNotPlaced'], false);
         case ACTION_TYPE.SET_CURRENT_SHAPE:
             return state.setIn(['room'], fromJS(action.data));
+        case ACTION_TYPE.GAME_ENDED:
+          return state.setIn(['room'], fromJS(action.data));
         default:
             return state
     }

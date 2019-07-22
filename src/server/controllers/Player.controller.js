@@ -5,6 +5,11 @@ class PlayerController {
     static async createNewPlayer(name, gameId, socketId, isHost) {
         try {
             const newPlayer = await new PlayerModel({ name, gameId, socketId, isHost });
+            const oldPlayer = await this.getPlayerByName(newPlayer.name);
+            if (oldPlayer.name) {
+                await this.deletePlayer(oldPlayer._id);
+                console.error("Prev player deleted: " + oldPlayer.name + ", _id: " + oldPlayer._id);
+            }
 
             await newPlayer.save();
             return newPlayer;
@@ -15,7 +20,7 @@ class PlayerController {
 
     static async deletePlayer(playerId) {
         try {
-            await PlayerModel.remove({ id: playerId });
+            await PlayerModel.remove({ _id: playerId });
         } catch (e) {
             throw e;
         }
@@ -30,6 +35,15 @@ class PlayerController {
             throw e;
         }
     }
+  static async getPlayerByName(playerName) {
+    try {
+      const player = await PlayerModel.findOne({ name: playerName });
+
+      return player;
+    } catch (e) {
+      throw e;
+    }
+  }
 
     static async updatePlayer(playerId, data) {
         try {

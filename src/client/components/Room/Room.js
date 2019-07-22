@@ -24,6 +24,7 @@ import { getRoomName, getName, placePieceOnBoard, isPossibleToPlace, rotatePiece
 import { cloneDeepWith } from 'lodash';
 import functional from 'react-functional';
 import { withRouter } from 'react-router';
+import endGame from '../../actions/endGame';
 
 const KEY_TYPE = {
   ARROW_UP: 'ArrowUp',
@@ -49,13 +50,27 @@ const RoomComponent = ( props ) => {
 
   useEffect(() => {
     if (pieceNotPlaced && currentPiece) {
-      placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
-    }
+      const {
+        endGame,
+        map,
+        room,
+        currentPieceX,
+        currentPieceY,
+        currentPiece,
+        startMove,
+        currentUser,
+      } = props;
+      // if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY, currentPiece)) {
+        placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
+      // } else {
+      //   const gameId = room._id;
+      //   endGame({playerId: currentUser._id, gameId: room._id});
+      }
+    // }
 
     if (!intervalStarted && currentPiece) {
       startInterval(setInterval(() => startMove(), 1000));
     }
-  
     if (left){
       moveTetriLeft(props);
     } else if (right) {
@@ -264,6 +279,7 @@ const mapStateToProps = (state, router) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    endGame: (data) => dispatch(endGame(data)),
     startGame: (data) => dispatch(startGame(data)),
     createNewPlayer: (data) => dispatch(createNewPlayer(data)),
     setCurrentUser: (data) => dispatch(setCurrentUser(data)),

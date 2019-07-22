@@ -96,6 +96,7 @@ const endGame = async (data, socket) => {
         await Player.updatePlayer(data.playerId, { lost: true });
         let game = await Game.updateGame(data.gameId, { status: constants.gameStatuses['FINISHED'] });
 
+      console.log(game);
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 {
@@ -122,9 +123,9 @@ const pieceLand = async (data, socket) => {
         const updatedGame = await Game.updateGame(game.id, { pieceList: game.pieceList });
 
         updatedGame.playerList.forEach(player => {
-            console.log(player._id);
-            console.log('----------------------------------------------');
-            console.log(updatedPlayer.id);
+            // console.log(player._id);
+            // console.log('----------------------------------------------');
+            // console.log(updatedPlayer.id);
             global.io.to(player.socketId).emit(
                 'action',
                 {
