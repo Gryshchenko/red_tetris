@@ -6,9 +6,9 @@ class PlayerController {
         try {
             const newPlayer = await new PlayerModel({ name, gameId, socketId, isHost });
             const oldPlayer = await this.getPlayerByName(newPlayer.name);
-            if (oldPlayer.name) {
+            if (oldPlayer) {
                 await this.deletePlayer(oldPlayer._id);
-                console.error("Prev player deleted: " + oldPlayer.name + ", _id: " + oldPlayer._id);
+                // console.error("Prev player deleted: " + oldPlayer.name + ", _id: " + oldPlayer._id);
             }
 
             await newPlayer.save();

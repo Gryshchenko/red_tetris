@@ -6,6 +6,7 @@ import startGame from '../../actions/startGame';
 // import moveRight from '../../actions/moveRight';
 import './styles.css'
 import { GameBoardInfo } from '../gameBoardInfo/gameBoardInfo';
+import {ModalWindow} from '../modal/Modal'
 import setCurrentUser from '../../actions/setCurrentUser';
 import createNewPlayer from '../../actions/createNewPlayer';
 import setNewLocalMap from '../../actions/setNewLocalMap';
@@ -25,6 +26,19 @@ import { cloneDeepWith } from 'lodash';
 import functional from 'react-functional';
 import { withRouter } from 'react-router';
 import endGame from '../../actions/endGame';
+import constants from '../../../server/const';
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)',
+    backgroundColor        : 'red',
+  }
+};
 
 const KEY_TYPE = {
   ARROW_UP: 'ArrowUp',
@@ -36,10 +50,25 @@ const KEY_TYPE = {
 };
 
 const RoomComponent = ( props ) => {
-  const { room, startGame, map, currentPiece,
-    pieceNotPlaced, needToMoveDown, stopMove,
-    startInterval, startMove, intervalStarted,
-    currentPieceX, currentPieceY, left, right, down, rotate, forceDown } = props;
+  const {
+    room,
+    startGame,
+    map,
+    currentPiece,
+    pieceNotPlaced,
+    needToMoveDown,
+    stopMove,
+    startInterval,
+    startMove,
+    intervalStarted,
+    currentPieceX,
+    currentPieceY,
+    left,
+    right,
+    down,
+    rotate,
+    forceDown,
+  } = props;
 
   useEffect(() => {
     keyPressHandler(props);
@@ -88,8 +117,29 @@ const RoomComponent = ( props ) => {
       stopMove();
    }
   });
-
+  const isWaitingPlayer = room && room.playerList && room.playerList.length != 2;
+  const isGameStarted = room && room.status === constants.gameStatuses.STARTED;
   return (
+    <React.Fragment>
+      <ModalWindow
+        style={customStyles}
+        isOpen={isWaitingPlayer || !isGameStarted}
+      >
+        {
+          isWaitingPlayer && !isGameStarted && (
+            <div>
+              wait pls another player...
+            </div>
+          )
+        }
+        {
+          !isWaitingPlayer && !isGameStarted && (
+            <div>
+              Enemy player connected, don't forget press 'Enter' to start game
+            </div>
+          )
+        }
+      </ModalWindow>
     <div className={'roomMain'}>
       <div className={'tetrisViewMain'}>
         <div className={'roomMainFlex'}>
@@ -124,6 +174,7 @@ const RoomComponent = ( props ) => {
         </div>
       </div>
     </div>
+    </React.Fragment>
   );
 }
 
@@ -136,7 +187,8 @@ const onStartGame = (room, startGame) => {
 
 const keyPressHandler = (props) => addEventListener('keyup', function (event) {
   const { room, startGame } = props;
-  if (event) {
+  console.error(room, event.code)
+  if (event && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.STARTED) {
     switch (event.code) {
       case KEY_TYPE.ARROW_DOWN:
         return props.moveDown(true);
@@ -148,9 +200,9 @@ const keyPressHandler = (props) => addEventListener('keyup', function (event) {
         return props.moveRight(true);
       case KEY_TYPE.SPACE:
         return props.forceMoveDown(true);
-      case KEY_TYPE.ENTER:
-        return onStartGame( room, startGame)
     }
+  } else if (event && event.code === KEY_TYPE.ENTER && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.NOT_STARTED) {
+    return onStartGame( room, startGame)
   }
 });
 

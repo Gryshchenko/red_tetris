@@ -8,7 +8,7 @@ class GameController {
         try {
             let newGame = await new Game({ name }).save();
             let pieceArray = [];
-    
+
             for (let i = 0; i < 10; i++) {
                 let piece = await Piece.createPiece();
                 await pieceArray.push(piece);
@@ -57,7 +57,16 @@ class GameController {
             if (data.status) columnsToUpdate.status = data.status;
             if (data.pieceList) columnsToUpdate.pieceList = data.pieceList;
             if (data.playerList) columnsToUpdate.playerList = data.playerList;
-
+          // if (data.status) {
+          //   Object.assign({}, columnsToUpdate, {status: data.status})
+          // }
+          // if (data.pieceList) {
+          //   Object.assign({}, columnsToUpdate, {pieceList: data.pieceList})
+          // }
+          // if (data.playerList) {
+          //   Object.assign({}, columnsToUpdate, {playerList: data.playerList})
+          // }
+          // console.error(columnsToUpdate);
             let game = await Game.findOneAndUpdate({ _id: gameId }, columnsToUpdate, { new: true }).populate('pieceList').populate('playerList');
             return game;
         } catch (e) {
