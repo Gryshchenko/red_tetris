@@ -113,14 +113,20 @@ let prepearedShape = shape;
 
   const clearFullRows = (board) => {
     let newBoard = board;
+    let clearedRows = 0;
+
     for (let i = newBoard.length - 1; i >= 0; i--) {
         if (!newBoard[i].includes(0)) {
             newBoard.splice(i, 1);
             newBoard.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+            clearedRows++;
             i++;
         }
     }
-    return newBoard;
+    return {
+        clearedRows,
+        newBoard
+    };
 }
 
 // const movePiece = (board, piece, currentPiece)

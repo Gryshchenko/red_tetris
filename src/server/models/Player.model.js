@@ -8,6 +8,7 @@ const PlayerModel = new Schema({
     map: { type: [[Number]], default: [[]] },
     lost: { type: Boolean, default: false },
     score: { type: Number, default: 0 },
+    clearedRows: { type: Number, default: 0 },
     gameId: { type: String },
     socketId: { type: String },
     isHost: { type: Boolean },

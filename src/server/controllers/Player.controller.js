@@ -51,6 +51,7 @@ class PlayerController {
             if (data.map) columnsToUpdate.map = data.map;
             if (data.lost) columnsToUpdate.haveWon = data.lost;
             if (data.score) columnsToUpdate.score = data.score;
+            if (data.clearedRows) columnsToUpdate.clearedRows = data.clearedRows;
             if (data.currentPiece) columnsToUpdate.currentPiece = data.currentPiece;
 
             const player = await PlayerModel.findOneAndUpdate({ _id: playerId }, columnsToUpdate, { new: true });

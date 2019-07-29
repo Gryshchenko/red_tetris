@@ -37,18 +37,29 @@ const setRows = (map) => {
     );
   }
 
+  const _formatGameboardInfo = (number) => {
+    let result = '';
+    let stringScore = number.toString();
+
+    for (let i = 0; i < 4 - stringScore.length; i++) {
+      result += '0';
+    }
+    result += stringScore;
+    return result;
+  }
+
 const gameBoardInfo = (props) => {
-    const { currentPiece, room } = props;
+    const { currentPiece, room, currentUser } = props;
 
     return (
         <div className={'gameBoardInfoWidth'}>
             <div className={'gameBoardInfoValue'}>
                 <span className={'textMargin'}>Score</span>
-                <span className={'textMargin'}>0000</span>
+                <span className={'textMargin'}>{_formatGameboardInfo(currentUser.score)}</span>
             </div>
             <div className={'gameBoardInfoValue'}>
                 <span className={'textMargin'}>Cleans</span>
-                <span className={'textMargin'}>0000</span>
+                <span className={'textMargin'}>{_formatGameboardInfo(currentUser.clearedRows)}</span>
             </div>
             {/* <div className={'gameBoardInfoValue'}>
                 <span className={'textMargin'}>Level</span>
@@ -97,6 +108,7 @@ const mapStateToProps = (state, router) => {
       router,
       room,
       currentPiece: state.game.getIn(['currentPiece']),
+      currentUser: state.game.getIn(['currentUser']).toJS(),
     };
   }
   

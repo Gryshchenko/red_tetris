@@ -111,7 +111,7 @@ const endGame = async (data, socket) => {
 
 const pieceLand = async (data, socket) => {
     try {
-        const updatedPlayer = await Player.updatePlayer(data.playerId, { map: data.playerMap, currentPiece: data.currentPiece + 1 });
+        const updatedPlayer = await Player.updatePlayer(data.playerId, { map: data.playerMap, currentPiece: data.currentPiece + 1, score: data.score, clearedRows: data.clearedRows });
         let game = await Game.getGameById(data.gameId);
 
         if (data.currentPiece >= game.pieceList.length - 4) {

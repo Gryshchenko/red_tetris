@@ -71,49 +71,36 @@ const RoomComponent = ( props ) => {
   } = props;
 
   useEffect(() => {
-    keyPressHandler(props);
+    _keyPressHandler(props);
     return () => {
-      removeEventListener("keyup", keyPressHandler);
+      removeEventListener("keyup", _keyPressHandler);
     };
   }, []);
 
   useEffect(() => {
+
     if (pieceNotPlaced && currentPiece) {
-      const {
-        endGame,
-        map,
-        room,
-        currentPieceX,
-        currentPieceY,
-        currentPiece,
-        startMove,
-        currentUser,
-      } = props;
-      // if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY, currentPiece)) {
-        placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
-      // } else {
-      //   const gameId = room._id;
-      //   endGame({playerId: currentUser._id, gameId: room._id});
-      }
-    // }
+      _placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
+    }
 
     if (!intervalStarted && currentPiece) {
       startInterval(setInterval(() => startMove(), 1000));
     }
+
     if (left){
-      moveTetriLeft(props);
+      _moveTetriLeft(props);
     } else if (right) {
-      moveTetriRight(props);
+      _moveTetriRight(props);
     } else if (down) {
-      moveTetriDown(props);
+      _moveTetriDown(props);
     } else if (rotate) {
-      rotateTetri(props);
+      _rotateTetri(props);
     } else if (forceDown) {
-      forceMoveDownTetri(props);
+      _forceMoveDownTetri(props);
     }
 
     if (needToMoveDown) {
-      moveTetriDown(props);
+      _moveTetriDown(props);
       stopMove();
    }
   });
@@ -158,7 +145,7 @@ const RoomComponent = ( props ) => {
               <div className={'tetrisButton tetrisButtonSmall'} />
             </div>
             <div className={'spaceButton'}>
-              <div className={'tetrisButton tetrisButtonBig'} onClick={(event) => onStartGame(room, startGame)}/>
+              <div className={'tetrisButton tetrisButtonBig'} onClick={(event) => _onStartGame(room, startGame)}/>
             </div>
           </div>
 
@@ -178,14 +165,14 @@ const RoomComponent = ( props ) => {
   );
 }
 
-const onStartGame = (room, startGame) => {
+const _onStartGame = (room, startGame) => {
   const gameId = room._id;
   startGame({
     gameId: gameId
   })
 }
 
-const keyPressHandler = (props) => addEventListener('keyup', function (event) {
+const _keyPressHandler = (props) => addEventListener('keyup', function (event) {
   const { room, startGame } = props;
   console.error(room, event.code)
   if (event && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.STARTED) {
@@ -202,28 +189,31 @@ const keyPressHandler = (props) => addEventListener('keyup', function (event) {
         return props.forceMoveDown(true);
     }
   } else if (event && event.code === KEY_TYPE.ENTER && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.NOT_STARTED) {
-    return onStartGame( room, startGame)
+    return _onStartGame( room, startGame)
   }
 });
 
-const placePiece = (props, posX, posY, map, shape, needToClearFullRows = false) => {
+const _placePiece = (props, posX, posY, map, shape, needToClearFullRows = false) => {
   const { currentPiece, setNewLocalMap } = props;
+  let resultOfClearing;
   let newMap = cloneDeepWith(map);
 
   newMap = placePieceOnBoard(newMap, shape, posX, posY, currentPiece);
   if (needToClearFullRows) {
-    newMap = clearFullRows(newMap);
+    resultOfClearing = clearFullRows(newMap);
+    newMap = resultOfClearing.newBoard;
   }
   setNewLocalMap(newMap);
+  return resultOfClearing ? resultOfClearing.clearedRows : null;
 };
 
-const rotateTetri = (props) => {
+const _rotateTetri = (props) => {
   const { room, map, currentPiece, currentPieceX, currentPieceY, needToRotatePiece, setCurrentShape } = props;
 
   let newShape = rotatePiece(room.pieceList[currentPiece - 1].shape);
 
   if (isPossibleToPlace(map, newShape, currentPieceX, currentPieceY, currentPiece)) {
-    placePiece(props, currentPieceX, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece), newShape);
+    _placePiece(props, currentPieceX, currentPieceY, _deletePiece(cloneDeepWith(map), currentPiece), newShape);
     let newPieceList = cloneDeepWith(room.pieceList.map((piece, index) => {
       if (index == currentPiece - 1) {
         return {
@@ -241,7 +231,26 @@ const rotateTetri = (props) => {
   needToRotatePiece(false);
 }
 
-const forceMoveDownTetri = (props) => {
+const _calculateScore = (clearedRows) => {
+  let score = 0;
+
+  switch (clearedRows) {
+    case 1:
+      score = 20;
+      break ;
+    case 2:
+      score = 50;
+      break ;
+    case 3:
+      score = 80;
+      break ;
+    default:
+      score = -42;
+  }
+  return score;
+}
+
+const _forceMoveDownTetri = (props) => {
   const { forceMoveDown, map, room, currentPieceX, currentPieceY, currentPiece, pieceLanded, currentUser } = props;
 
   let y = currentPieceY + 1;
@@ -249,55 +258,61 @@ const forceMoveDownTetri = (props) => {
   while (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, y, currentPiece)) {
     y++;
   }
-  placePiece(props, currentPieceX, y - 1, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
+  let clearedRows = _placePiece(props, currentPieceX, y - 1, _deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
+  let score = _calculateScore(clearedRows);
 
   pieceLanded({
     playerId: currentUser._id,
     gameId: room._id,
     playerMap: map,
-    currentPiece
+    currentPiece,
+    score,
+    clearedRows
   });
 
   forceMoveDown(false);
 }
 
-const moveTetriDown = (props) => {
+const _moveTetriDown = (props) => {
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, pieceLanded, moveDown, currentUser } = props;
   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY + 1, currentPiece)) {
     pieceMove({ posX: currentPieceX, posY: currentPieceY + 1});
-    placePiece(props, currentPieceX, currentPieceY + 1, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape);
+    _placePiece(props, currentPieceX, currentPieceY + 1, _deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape);
   } else {
-    placePiece(props, currentPieceX, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
+    let clearedRows = _placePiece(props, currentPieceX, currentPieceY, _deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
+    let score = _calculateScore(clearedRows);
 
     pieceLanded({
       playerId: currentUser._id,
       gameId: room._id,
       playerMap: map,
-      currentPiece
+      currentPiece,
+      score,
+      clearedRows
     });
   }
   moveDown(false);
 };
 
-const moveTetriLeft = (props) => {
+const _moveTetriLeft = (props) => {
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, moveLeft } = props;
   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX - 1, currentPieceY, currentPiece)) {
     pieceMove({ posX: currentPieceX - 1, posY: currentPieceY});
-    placePiece(props, currentPieceX - 1, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape);
+    _placePiece(props, currentPieceX - 1, currentPieceY, _deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape);
   }
   moveLeft(false);
 }
 
-const moveTetriRight = (props) => {
+const _moveTetriRight = (props) => {
   const { pieceMove, map, room, currentPieceX, currentPieceY, currentPiece, moveRight } = props;
   if (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX + 1, currentPieceY, currentPiece)) {
     pieceMove({ posX: currentPieceX + 1, posY: currentPieceY});
-    placePiece(props, currentPieceX + 1, currentPieceY, deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape);
+    _placePiece(props, currentPieceX + 1, currentPieceY, _deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape);
   }
   moveRight(false);
 }
 
-const deletePiece = (map, currentPiece) => {
+const _deletePiece = (map, currentPiece) => {
   return map.map((row, i) => {
     return row.map((cell, j) => {
       if (cell == currentPiece) {
