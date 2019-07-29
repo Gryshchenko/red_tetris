@@ -22,7 +22,9 @@ const ACTION_TYPE = {
     ROTATE_PIECE: 'needToRotatePiece',
     ENTER_PRESS: 'enterPress',
     PIECE_PLACED: 'piecePlaced',
-    SET_CURRENT_SHAPE: 'setCurrentShape'
+    SET_CURRENT_SHAPE: 'setCurrentShape',
+    DISCONNECT: 'server/disconnect',
+    DISCONNECT_RESPONSE: 'PLAYER_DISCONNECTED'
 };
 
 const map = [
@@ -106,7 +108,7 @@ const reducer = (state = fromJS(initialState), action) => {
         case ACTION_TYPE.SET_CURRENT_SHAPE:
             return state.setIn(['room'], fromJS(action.data));
         case ACTION_TYPE.GAME_ENDED:
-          return state.setIn(['room'], fromJS(action.data));
+          return state.setIn(['room'], fromJS(action.data)).setIn(['currentPiece'], null);
         default:
             return state
     }

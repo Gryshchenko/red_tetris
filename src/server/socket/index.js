@@ -2,7 +2,6 @@ import Game from '../controllers/Game.controller.js';
 import Player from '../controllers/Player.controller.js';
 import Piece from '../controllers/Piece.controller.js';
 import constants from '../const';
-import { cloneDeepWith } from 'lodash';
 
 export default socket => {
     socket.on('createNewPlayer', data => createNewPlayer(data, socket));
@@ -14,6 +13,38 @@ export default socket => {
     socket.on('endGame', data => endGame(data, socket));
 
     socket.on('pieceLanded', data => pieceLand(data, socket));
+
+    socket.on('disconnect', data => disconnect(data, socket));
+}
+
+const disconnect = async (data, socket) => {
+    try {
+        let player = await Player.getPlayer(data.playerId);
+
+        if (player) {
+            player.remove().exec();
+        } else {
+            throw "This player does not exists";
+        }
+
+        let game = await Game.getGameById(data.gameId);
+
+        if (!game) {
+            throw "This room does not exists";
+        }
+
+        game.playerList.forEach(player => {
+            global.io.to(player.socketId).emit(
+                'action',
+                {
+                    type: 'PLAYER_DISCONNECTED',
+                    data: game
+                }
+            );
+        });
+    } catch (e) {
+        throw `Error occured while disconnect event: ${e}`;
+    }
 }
 
 const createNewPlayer = async (data, socket) => {
@@ -53,14 +84,13 @@ const createNewPlayer = async (data, socket) => {
 
 const startGame = async (data, socket) => {
     try {
-        // let game = await Game.getGameByName(data.room);
+        let game = await Game.getGameById(data.gameId);
 
-        // if (!game) {
-        //     throw 'Game does not exists';
-        // }
+        if (!game) {
+            throw 'Game does not exists';
+        }
 
-        // game = Game.updateGame(game.id, { status: constants.gameStatuses.STARTED });
-        const game = await Game.updateGame(data.gameId, { status: constants.gameStatuses.STARTED });
+        game = await Game.updateGame(data.gameId, { status: constants.gameStatuses.STARTED });
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 'action',
@@ -122,9 +152,6 @@ const pieceLand = async (data, socket) => {
         const updatedGame = await Game.updateGame(game.id, { pieceList: game.pieceList });
 
         updatedGame.playerList.forEach(player => {
-            // console.log(player._id);
-            // console.log('----------------------------------------------');
-            // console.log(updatedPlayer.id);
             global.io.to(player.socketId).emit(
                 'action',
                 {

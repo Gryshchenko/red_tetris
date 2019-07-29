@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { GameBoard } from '../gameBoard';
 import startGame from '../../actions/startGame';
-// import moveLeft from '../../actions/moveLeft';
-// import moveRight from '../../actions/moveRight';
 import './styles.css'
 import { GameBoardInfo } from '../gameBoardInfo/gameBoardInfo';
 import {ModalWindow} from '../modal/Modal'
@@ -21,10 +19,8 @@ import forceMoveDown from '../../actions/forceMoveDown';
 import needToRotatePiece from '../../actions/needToRotatePiece';
 import pieceLanded from '../../actions/pieceLanded';
 import setCurrentShape from '../../actions/setCurrentShape';
-import { getRoomName, getName, placePieceOnBoard, isPossibleToPlace, rotatePiece, clearFullRows } from '../../utils';
+import { placePieceOnBoard, isPossibleToPlace, rotatePiece, clearFullRows } from '../../utils';
 import { cloneDeepWith } from 'lodash';
-import functional from 'react-functional';
-import { withRouter } from 'react-router';
 import endGame from '../../actions/endGame';
 import constants from '../../../server/const';
 
@@ -68,7 +64,8 @@ const RoomComponent = ( props ) => {
     down,
     rotate,
     forceDown,
-    currentUser
+    currentUser,
+    endGame
   } = props;
 
   useEffect(() => {
@@ -86,9 +83,13 @@ const RoomComponent = ( props ) => {
 
     if (pieceNotPlaced && currentPiece) {
       if (_gameIsOver(map)) {
-        // request to end game here
+        endGame({
+          playerId: currentUser._id,
+          gameId: room._id
+        });
+      } else {
+        _placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
       }
-      _placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
     }
 
     if (!intervalStarted && currentPiece) {
@@ -112,8 +113,10 @@ const RoomComponent = ( props ) => {
       stopMove();
    }
   });
+
   const isWaitingPlayer = room && room.playerList && room.playerList.length != 2;
   const isGameStarted = room && room.status === constants.gameStatuses.STARTED;
+
   return (
     <React.Fragment>
       <ModalWindow
@@ -174,7 +177,8 @@ const RoomComponent = ( props ) => {
 }
 
 const _gameIsOver = (map) => {
-  return map[0].find(cell => cell != 0);
+  console.log(map[0].find(cell => cell != 0))
+  return map[0].find(cell => cell != 0) != undefined;
 }
 
 const _enemyLost = (playerList, currentUser) => {
