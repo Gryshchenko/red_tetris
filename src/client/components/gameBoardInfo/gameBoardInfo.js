@@ -55,11 +55,11 @@ const gameBoardInfo = (props) => {
         <div className={'gameBoardInfoWidth'}>
             <div className={'gameBoardInfoValue'}>
                 <span className={'textMargin'}>Score</span>
-                <span className={'textMargin'}>{_formatGameboardInfo(currentUser.score)}</span>
+                <span className={'textMargin'}>{_formatGameboardInfo(room.playerList.find(player => player._id == currentUser._id).score)}</span>
             </div>
             <div className={'gameBoardInfoValue'}>
                 <span className={'textMargin'}>Cleans</span>
-                <span className={'textMargin'}>{_formatGameboardInfo(currentUser.clearedRows)}</span>
+                <span className={'textMargin'}>{_formatGameboardInfo(room.playerList.find(player => player._id == currentUser._id).clearedRows)}</span>
             </div>
             {/* <div className={'gameBoardInfoValue'}>
                 <span className={'textMargin'}>Level</span>

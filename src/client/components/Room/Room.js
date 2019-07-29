@@ -68,6 +68,7 @@ const RoomComponent = ( props ) => {
     down,
     rotate,
     forceDown,
+    currentUser
   } = props;
 
   useEffect(() => {
@@ -79,7 +80,14 @@ const RoomComponent = ( props ) => {
 
   useEffect(() => {
 
+    if (room.playerList.length == 2 && _enemyLost(room.playerList, currentUser)) {
+      // announce current player as winner
+    }
+
     if (pieceNotPlaced && currentPiece) {
+      if (_gameIsOver(map)) {
+        // request to end game here
+      }
       _placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
     }
 
@@ -165,6 +173,14 @@ const RoomComponent = ( props ) => {
   );
 }
 
+const _gameIsOver = (map) => {
+  return map[0].find(cell => cell != 0);
+}
+
+const _enemyLost = (playerList, currentUser) => {
+  return playerList.find(player => player._id != currentUser._id).lost;
+}
+
 const _onStartGame = (room, startGame) => {
   const gameId = room._id;
   startGame({
@@ -174,8 +190,9 @@ const _onStartGame = (room, startGame) => {
 
 const _keyPressHandler = (props) => addEventListener('keyup', function (event) {
   const { room, startGame } = props;
-  console.error(room, event.code)
-  if (event && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.STARTED) {
+  // console.error(room, event.code)
+  // if (event && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.STARTED) {
+  if (event) {    
     switch (event.code) {
       case KEY_TYPE.ARROW_DOWN:
         return props.moveDown(true);
@@ -187,9 +204,11 @@ const _keyPressHandler = (props) => addEventListener('keyup', function (event) {
         return props.moveRight(true);
       case KEY_TYPE.SPACE:
         return props.forceMoveDown(true);
+      case KEY_TYPE.ENTER:
+        return _onStartGame( room, startGame)
     }
-  } else if (event && event.code === KEY_TYPE.ENTER && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.NOT_STARTED) {
-    return _onStartGame( room, startGame)
+  // } else if (event && event.code === KEY_TYPE.ENTER && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.NOT_STARTED) {
+      // return _onStartGame( room, startGame)
   }
 });
 
@@ -244,8 +263,6 @@ const _calculateScore = (clearedRows) => {
     case 3:
       score = 80;
       break ;
-    default:
-      score = -42;
   }
   return score;
 }
@@ -266,8 +283,8 @@ const _forceMoveDownTetri = (props) => {
     gameId: room._id,
     playerMap: map,
     currentPiece,
-    score,
-    clearedRows
+    score: room.playerList.find(player => player._id == currentUser._id).score + score,
+    clearedRows: room.playerList.find(player => player._id == currentUser._id).clearedRows + clearedRows
   });
 
   forceMoveDown(false);
@@ -287,8 +304,8 @@ const _moveTetriDown = (props) => {
       gameId: room._id,
       playerMap: map,
       currentPiece,
-      score,
-      clearedRows
+      score: room.playerList.find(player => player._id == currentUser._id).score + score,
+      clearedRows: room.playerList.find(player => player._id == currentUser._id).clearedRows + clearedRows
     });
   }
   moveDown(false);
