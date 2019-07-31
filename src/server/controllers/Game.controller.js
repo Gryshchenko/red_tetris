@@ -23,7 +23,7 @@ class GameController {
 
     static async getAllGames() {
         try {
-            let games = await Game.find({}).populate(playerList).populate(pieceList);
+            let games = await Game.find({}).populate('playerList').populate('pieceList');
 
             return games;
         } catch (e) {

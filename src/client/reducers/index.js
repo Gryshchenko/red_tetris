@@ -24,7 +24,8 @@ const ACTION_TYPE = {
     PIECE_PLACED: 'piecePlaced',
     SET_CURRENT_SHAPE: 'setCurrentShape',
     DISCONNECT: 'server/disconnect',
-    DISCONNECT_RESPONSE: 'PLAYER_DISCONNECTED'
+    DISCONNECT_RESPONSE: 'PLAYER_DISCONNECTED',
+    GET_ALL_GAMES: 'GET_ALL_GAMES',
 };
 
 const map = [
@@ -109,6 +110,8 @@ const reducer = (state = fromJS(initialState), action) => {
             return state.setIn(['room'], fromJS(action.data));
         case ACTION_TYPE.GAME_ENDED:
           return state.setIn(['room'], fromJS(action.data)).setIn(['currentPiece'], null);
+        case ACTION_TYPE.GET_ALL_GAMES:
+          return state.setIn(['games'], fromJS(action.data));
         default:
             return state
     }

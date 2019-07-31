@@ -57,14 +57,6 @@ const createNewPlayer = async (data, socket) => {
             isHost = true;
         }
 
-        // if (game.playerList.length == 2) {
-        //     throw 'Game is full';
-        // }
-
-        // if (game.status == constants.gameStatuses.STARTED) {
-        //     throw 'Game already started';
-        // }
-
         let player = await Player.createNewPlayer(data.name, game._id, socket.id, isHost);
         game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id), status: constants.gameStatuses.NOT_STARTED });
         game.playerList.forEach(player => {
@@ -108,11 +100,24 @@ const startGame = async (data, socket) => {
 const getAllGames = async (data, socket) => {
     try {
         let games = await Game.getAllGames();
+        let result = {};
+        if (games) {
+          games.map((game) => {
+            const isGameNotStart = game.status === constants.gameStatuses.NOT_STARTED;
+            const isOnlyHost = game.playerList.length === 1 && game.playerList[0].isHost;
+            if ( isGameNotStart && isOnlyHost) {
+              Object.assign( result, {
+                game,
+              });
+            }
+          })
+        }
 
         global.io.to(socket.id).emit(
+            'action',
             {
                 type: 'GET_ALL_GAMES',
-                data: games
+                data: result,
             }
         );
     } catch (e) {

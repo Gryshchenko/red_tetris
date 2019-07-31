@@ -7,22 +7,26 @@ import { withRouter } from 'react-router';
 import './styles.css';
 import createNewPlayer from '../../actions/createNewPlayer';
 import setCurrentUser from '../../actions/setCurrentUser';
+import getGames from '../../actions/getGames';
 import { ErrorMsg } from '../_base/errorMsg/ErrorMsg';
 
 const VALID_ID = {
     JOIN_NAME_VALID: 'joinGameName',
     JOIN_ROOM_VALID: 'joinRoomName'
 }
-const JoinGame = ({ router, createNewPlayer, setCurrentUser }) => {
+const JoinGame = ({ router, createNewPlayer, setCurrentUser, games }) => {
+    if (!games) {
+      return null;
+    }
     return (
         <div className="joinGameWrap">
-            <form onSubmit={(e) => handledSumbit(e, createNewPlayer, router, setCurrentUser)}>
-                <ErrorMsg id={VALID_ID.JOIN_ROOM_VALID}>
-                    <Input
-                        title={'Room name'}
-                        id={'joinRoomName'}
-                    />
-                </ErrorMsg>
+            <form onSubmit={(e) => handledSumbit(e, createNewPlayer, router, setCurrentUser, games)}>
+                {/*<ErrorMsg id={VALID_ID.JOIN_ROOM_VALID}>*/}
+                {/*    <Input*/}
+                {/*        title={'Room name'}*/}
+                {/*        id={'joinRoomName'}*/}
+                {/*    />*/}
+                {/*</ErrorMsg>*/}
                 <ErrorMsg id={VALID_ID.JOIN_NAME_VALID}>
                     <Input
                         title={'Your name'}
@@ -39,10 +43,10 @@ const JoinGame = ({ router, createNewPlayer, setCurrentUser }) => {
     );
 }
 
-const handledSumbit = (e, createNewPlayer, router, setCurrentUser) => {
-    e.preventDefault()
+const handledSumbit = (e, createNewPlayer, router, setCurrentUser, games) => {
+    e.preventDefault();
     const hostName = document.getElementById('joinGameName').value;
-    const roomName = document.getElementById('joinRoomName').value;
+    const roomName = games.game.name;
     if (inputValueValid(hostName, roomName)) {
         createNewPlayer({
             name: hostName,
@@ -77,9 +81,11 @@ const inputValueValid = (name, room) => {
 }
 
 const mapStateToProps = (state, router) => {
+  const games = state.game.getIn(['games']) ? state.game.getIn(['games']).toJS() : null;
     return {
         router,
         room: state.game.getIn(['room']),
+        games,
     };
 }
 

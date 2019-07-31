@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import getGames from '../../actions/getGames';
 import './styles.css';
 import CreateGame from '../createGame/createGame';
 import JoinGame from '../joinGame/JoinGame';
 import Collapsible from 'react-collapsible';
 import { Logo } from '../logo/Logo';
-const Main = () => {
+const Main = ({getGames}) => {
     const [openJoinGame, setOpenJoinGame] = useState(false);
     const [openCreateGame, setOpenCreateGame] = useState(false);
     const [topPosition, setTopPosition] = useState('-110');
@@ -12,6 +14,7 @@ const Main = () => {
         setTimeout(() => setTopPosition('10%'), 1000);
         setTimeout(() => setOpenJoinGame(true), 1500);
         setTimeout(() => setOpenCreateGame(true), 2000);
+        getGames();
     });
     return (
         <section className='main'>
@@ -29,5 +32,11 @@ const Main = () => {
 }
 
 
-export default Main;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getGames: () => dispatch(getGames()),
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Main);
 
