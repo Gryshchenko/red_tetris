@@ -102,12 +102,12 @@ const getAllGames = async (data, socket) => {
         let games = await Game.getAllGames();
         let result = {};
         if (games) {
-          games.map((game) => {
+          games.map((game, idx) => {
             const isGameNotStart = game.status === constants.gameStatuses.NOT_STARTED;
             const isOnlyHost = game.playerList.length === 1 && game.playerList[0].isHost;
             if ( isGameNotStart && isOnlyHost) {
               Object.assign( result, {
-                game,
+                [idx]: game,
               });
             }
           })
