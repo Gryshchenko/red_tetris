@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import getGames from '../../actions/getGames';
+import { withRouter } from 'react-router';
 import './styles.css';
+import getGames from '../../actions/getGames';
 import CreateGame from '../createGame/createGame';
 import JoinGame from '../joinGame/JoinGame';
 import Collapsible from 'react-collapsible';
 import { Logo } from '../logo/Logo';
-const Main = ({getGames}) => {
+const Main = ({getGames, currentUser, games, router, room}) => {
     const [openJoinGame, setOpenJoinGame] = useState(false);
     const [openCreateGame, setOpenCreateGame] = useState(false);
     const [topPosition, setTopPosition] = useState('-110');
@@ -14,7 +15,12 @@ const Main = ({getGames}) => {
         setTimeout(() => setTopPosition('10%'), 1000);
         setTimeout(() => setOpenJoinGame(true), 1500);
         setTimeout(() => setOpenCreateGame(true), 2000);
-        getGames();
+        if (!games) {
+          getGames();
+        }
+        if (currentUser) {
+          router.history.push(`/game/${room.name}[${currentUser.name}]`);
+        }
     });
     return (
         <section className='main'>
@@ -32,11 +38,20 @@ const Main = ({getGames}) => {
 }
 
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getGames: () => dispatch(getGames()),
-  }
-}
 
-export default connect(null, mapDispatchToProps)(Main);
+export default withRouter(connect((state, router) => {
+  const currentUser = state.game.getIn(['currentUser']) ? state.game.getIn(['currentUser']).toJS() : null;
+  const games = state.game.getIn(['games']) ? state.game.getIn(['games']).toJS() : null;
+  const room = state.game.getIn(['room']) ? state.game.getIn(['room']).toJS() : null;
+  return {
+    router,
+    currentUser,
+    games,
+    room,
+  };
+
+}, (dispatch) => ({
+  getGames: () => dispatch(getGames()),
+}))(Main));
+
 

@@ -49,7 +49,6 @@ const handledSumbit = (e, createNewPlayer, router) => {
             name: hostName,
             room: roomName,
         });
-        router.history.push(`/game/${roomName}[${hostName}]`);
     }
 
 }

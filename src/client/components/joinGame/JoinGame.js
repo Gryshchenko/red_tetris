@@ -22,11 +22,12 @@ const customStyles = {
     bottom                : 'auto',
     marginRight           : '-50%',
     transform             : 'translate(-50%, -50%)',
-    backgroundColor        : '#d9e476',
+    backgroundColor       : '#d9e476',
+    maxHeight             :  'calc(100% - 100px)',
   }
 };
 
-const JoinGame = ({ router, games }) => {
+const JoinGame = ({ router, games, createNewPlayer }) => {
     const [isModal, setModal] = useState(false);
     const [currentUser, setCurrentUser] = useState('');
     const setModalOff = () => setModal(false);
@@ -37,12 +38,6 @@ const JoinGame = ({ router, games }) => {
     return (
         <div className="joinGameWrap">
             <form onSubmit={(e) => handledSumbit(e, setModalOn, setCurrentUser)}>
-                {/*<ErrorMsg id={VALID_ID.JOIN_ROOM_VALID}>*/}
-                {/*    <Input*/}
-                {/*        title={'Room name'}*/}
-                {/*        id={'joinRoomName'}*/}
-                {/*    />*/}
-                {/*</ErrorMsg>*/}
                 <ErrorMsg id={VALID_ID.JOIN_NAME_VALID}>
                     <Input
                         title={'Your name'}
@@ -71,7 +66,12 @@ const JoinGame = ({ router, games }) => {
                       <div className={'waitingRoomButton'}>
                       <Button
                         title={'Join'}
-                        onClick={() => router.history.push(`/game/${games[key].name}[${currentUser}]`)}/>
+                        onClick={() => {
+                          createNewPlayer({
+                            name: games[key].name,
+                            room: currentUser,
+                          });
+                        }}/>
                       </div>
                     </div>
                   </React.Fragment >
@@ -89,35 +89,17 @@ const handledSumbit = (e, setModalOn, setCurrentUser) => {
     if (inputValueValid(currentUser)) {
       setModalOn();
       setCurrentUser(currentUser);
-        // createNewPlayer({
-        //     name: hostName,
-        //     room: roomName,
-        // });
-        // router.history.push(`/game/${roomName}[${hostName}]`);
     }
 
 }
 
 const inputValueValid = (name) => {
     let isValid = true;
-    // if (!/^[a-zA-Z]*$/g.test(name)) {
-    //     document.getElementById(VALID_ID.JOIN_NAME_VALID).innerHTML = 'The name should contain the only alphabet character';
-    //     isValid = false;
-    // }
-    // if (!/^[a-zA-Z]*$/g.test(room)) {
-    //     document.getElementById(VALID_ID.JOIN_ROOM_VALID).innerHTML = 'The room name should contain the only alphabet character';
-    //     isValid = false;
-    // }
     if (name === '') {
         document.getElementById(VALID_ID.JOIN_NAME_VALID).innerHTML = 'Name is required';
         isValid = false;
 
     }
-    // if (room === '') {
-    //     document.getElementById(VALID_ID.JOIN_ROOM_VALID).innerHTML = 'Room name is required';
-    //     isValid = false;
-
-    // }
     return isValid;
 }
 
@@ -133,7 +115,6 @@ const mapStateToProps = (state, router) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         createNewPlayer: (data) => dispatch(createNewPlayer(data)),
-        setCurrentUser: (data) => dispatch(setCurrentUser(data)),
     }
 }
 
