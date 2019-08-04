@@ -196,7 +196,7 @@ const _keyPressHandler = (props) => addEventListener('keyup', function (event) {
   const { room, startGame } = props;
   // console.error(room, event.code)
   // if (event && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.STARTED) {
-  if (event) {    
+  if (event) {
     switch (event.code) {
       case KEY_TYPE.ARROW_DOWN:
         return props.moveDown(true);
@@ -345,13 +345,14 @@ const _deletePiece = (map, currentPiece) => {
 
 const mapStateToProps = (state, router) => {
   const room = state.game.getIn(['room']) ? state.game.getIn(['room']).toJS() : null;
-
+  const map = state.game.getIn(['map']) ? state.game.getIn(['map']).toJS() : null;
+  const currentUser = state.game.getIn(['currentUser']) ?  state.game.getIn(['currentUser']).toJS() : null;
   return {
     router,
     room,
-    map: state.game.getIn(['map']).toJS(),
+    map,
     currentPiece: state.game.getIn(['currentPiece']),
-    currentUser: state.game.getIn(['currentUser']).toJS(),
+    currentUser,
     pieceNotPlaced: state.game.getIn(['pieceNotPlaced']),
     currentPieceX: state.game.getIn(['currentPieceX']),
     currentPieceY: state.game.getIn(['currentPieceY']),

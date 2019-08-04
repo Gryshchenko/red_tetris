@@ -6,6 +6,8 @@ import constants from '../const';
 export default socket => {
     socket.on('createNewPlayer', data => createNewPlayer(data, socket));
 
+    socket.on('createNewGame', data => createNewGame(data, socket));
+
     socket.on('startGame', data => startGame(data, socket));
 
     socket.on('getAllGames', data => getAllGames(data, socket));
@@ -45,6 +47,32 @@ const disconnect = async (data, socket) => {
     } catch (e) {
         throw `Error occured while disconnect event: ${e}`;
     }
+}
+
+const createNewGame = async (data, socket) => {
+  try {
+    console.error(data);
+    const game = await Game.getGameByName(data.room);
+    const player = await Player.getPlayerByName(data.name);
+    if (!game && !player) {
+      createNewPlayer(data,socket);
+    } else {
+      const playerErrorCode = player ? constants.gameErrorCode.PLAYER_EXIST : null;
+      const gameErrorCode = game ? constants.gameErrorCode.GAME_EXIST : null;
+      global.io.to(socket.id).emit(
+        'action',
+        {
+          type: 'GAME_CREATED',
+          data: null,
+          currentUser: null,
+          errorCode: playerErrorCode && gameErrorCode ? constants.gameErrorCode.BOTH_EXIST : playerErrorCode || gameErrorCode,
+        });
+
+    }
+  } catch (e) {
+    throw `Error occured while createNewPlayer event: ${e}`;
+  }
+
 }
 
 const createNewPlayer = async (data, socket) => {

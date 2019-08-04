@@ -7,6 +7,14 @@ import CreateGame from '../createGame/createGame';
 import JoinGame from '../joinGame/JoinGame';
 import Collapsible from 'react-collapsible';
 import { Logo } from '../logo/Logo';
+import constants from '../../../server/const';
+
+const createGameErrors = {
+  [constants.gameErrorCode.BOTH_EXIST]: "Selected name and room name are exist",
+  [constants.gameErrorCode.GAME_EXIST]: 'Selected room name are exist',
+  [constants.gameErrorCode.PLAYER_EXIST]: 'Selected name and room name are exist',
+}
+
 const Main = ({getGames, currentUser, games, router, room}) => {
     const [openJoinGame, setOpenJoinGame] = useState(false);
     const [openCreateGame, setOpenCreateGame] = useState(false);
@@ -18,10 +26,11 @@ const Main = ({getGames, currentUser, games, router, room}) => {
         if (!games) {
           getGames();
         }
-        if (currentUser) {
+        if (currentUser && !currentUser.errorCode) {
           router.history.push(`/game/${room.name}[${currentUser.name}]`);
         }
     });
+    console.error(currentUser);
     return (
         <section className='main'>
             <Logo />
@@ -31,6 +40,9 @@ const Main = ({getGames, currentUser, games, router, room}) => {
                 </Collapsible>
                 <Collapsible open={openCreateGame} trigger={<div className='collapsibleTrigger'>Create game</div>}>
                     <CreateGame />
+                    {currentUser && currentUser.errorCode && (
+                      <span>{createGameErrors[currentUser.errorCode]}</span>
+                    )}
                 </Collapsible>
             </div>
         </section>

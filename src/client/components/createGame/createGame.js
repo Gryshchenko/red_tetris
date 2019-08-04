@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './styles.css';
-import createNewPlayer from '../../actions/createNewPlayer';
+// import createNewPlayer from '../../actions/createNewPlayer';
+import createNewGame from '../../actions/createNewGame';
 import { Input } from '../_base/input/input';
 import { Button } from '../_base/button/Button';
 import { withRouter } from 'react-router';
@@ -13,10 +14,10 @@ const VALID_ID = {
 }
 
 const CreateGame = (props) => {
-  const { router, createNewPlayer } = props;
+  const { router, createNewGame } = props;
     return (
         <div className="createGameWrap">
-            <form onSubmit={(e) => handledSumbit(e, createNewPlayer, router)}>
+            <form onSubmit={(e) => handledSumbit(e, createNewGame, router)}>
                 <ErrorMsg id={VALID_ID.NAME_VALID}>
                     <Input
                         title={'Room name'}
@@ -40,12 +41,12 @@ const CreateGame = (props) => {
     );
 }
 
-const handledSumbit = (e, createNewPlayer, router) => {
+const handledSumbit = (e, createNewGame, router) => {
     e.preventDefault()
     const hostName = document.getElementById('name').value
     const roomName = document.getElementById('roomName').value
     if (inputValueValid(hostName, roomName)) {
-        createNewPlayer({
+        createNewGame({
             name: hostName,
             room: roomName,
         });
@@ -77,7 +78,7 @@ const mapStateToProps = (state, router) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createNewPlayer: (data) => dispatch(createNewPlayer(data)),
+        createNewGame: (data) => dispatch(createNewGame(data)),
     }
 }
 

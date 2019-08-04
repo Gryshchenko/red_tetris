@@ -52,6 +52,11 @@ const constants = {
         NOT_STARTED: 0,
         STARTED: 1,
         FINISHED: 2
+    },
+    gameErrorCode: {
+      GAME_EXIST: 1,
+      PLAYER_EXIST: 2,
+      BOTH_EXIST: 3,
     }
 
 };

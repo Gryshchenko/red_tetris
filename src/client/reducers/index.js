@@ -3,6 +3,8 @@ import { fromJS } from 'immutable';
 const ACTION_TYPE = {
     CREATE_NEW_PLAYER: 'server/createNewPlayer',
     CREATE_NEW_PLAYER_RESPONSE: 'PLAYER_CREATED',
+    CREATE_NEW_GAME: 'server/createNewGame',
+    GAME_CREATED: 'GAME_CREATED',
     SET_CURRENT_USER: 'setCurrentUser',
     PIECE_LANDED: 'server/pieceLanded',
     PIECE_LANDED_RESPONSE: 'PIECE_LANDED',
@@ -72,6 +74,8 @@ const initialState = {
 const reducer = (state = fromJS(initialState), action) => {
 
   switch (action.type) {
+    case ACTION_TYPE.GAME_CREATED:
+          return state.setIn(['room'], fromJS(action.data)).setIn(['currentUser'], fromJS({...action.data, errorCode: action.errorCode}));
         case ACTION_TYPE.SET_NEW_LOCAL_MAP:
             return state.setIn(['map'], fromJS(action.data)).setIn(['pieceNotPlaced'], false);
         case ACTION_TYPE.SET_CURRENT_USER:
