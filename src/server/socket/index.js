@@ -8,6 +8,10 @@ export default socket => {
 
     socket.on('createNewGame', data => createNewGame(data, socket));
 
+    socket.on('checkUser', data => checkUser(data, socket));
+
+    socket.on('joinGame', data => joinGame(data, socket));
+
     socket.on('startGame', data => startGame(data, socket));
 
     socket.on('getAllGames', data => getAllGames(data, socket));
@@ -67,8 +71,53 @@ const createNewGame = async (data, socket) => {
           currentUser: null,
           errorCode: playerErrorCode && gameErrorCode ? constants.gameErrorCode.BOTH_EXIST : playerErrorCode || gameErrorCode,
         });
-
     }
+  } catch (e) {
+    throw `Error occured while createNewPlayer event: ${e}`;
+  }
+
+}
+const checkUser = async (data, socket) => {
+  try {
+    console.error(data);
+    const player = await Player.getPlayerByName(data);
+    if (!player) {
+        global.io.to(socket.id).emit(
+          'action',
+          {
+            type: 'CHECK_USER',
+            data: true,
+          }
+        );
+    } else {
+      global.io.to(socket.id).emit(
+        'action',
+        {
+          type: 'CHECK_USER',
+          data: false,
+        });
+    }
+  } catch (e) {
+    throw `Error occured while createNewPlayer event: ${e}`;
+  }
+
+}
+const joinGame = async (data, socket) => {
+  try {
+      let game = await Game.getGameByName(data.room);
+      let player = await Player.createNewPlayer(data.name, game._id, socket.id, false);
+      game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id), status: constants.gameStatuses.NOT_STARTED });
+      game.playerList.forEach(player => {
+        global.io.to(player.socketId).emit(
+          'action',
+          {
+            type: 'JOIN_GAME',
+            data: game,
+            currentUser: player,
+            errorCode: 0,
+          }
+        );
+      });
   } catch (e) {
     throw `Error occured while createNewPlayer event: ${e}`;
   }
@@ -78,12 +127,8 @@ const createNewGame = async (data, socket) => {
 const createNewPlayer = async (data, socket) => {
     try {
         let game = await Game.getGameByName(data.room);
-        let isHost = false;
+        const isHost = true;
 
-        if (!game) {
-            game = await Game.createNewGame(data.room);
-            isHost = true;
-        }
 
         let player = await Player.createNewPlayer(data.name, game._id, socket.id, isHost);
         game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id), status: constants.gameStatuses.NOT_STARTED });

@@ -12,7 +12,7 @@ import constants from '../../../server/const';
 const createGameErrors = {
   [constants.gameErrorCode.BOTH_EXIST]: "Selected name and room name are exist",
   [constants.gameErrorCode.GAME_EXIST]: 'Selected room name are exist',
-  [constants.gameErrorCode.PLAYER_EXIST]: 'Selected name and room name are exist',
+  [constants.gameErrorCode.PLAYER_EXIST]: 'Selected name are exist',
 }
 
 const Main = ({getGames, currentUser, games, router, room}) => {
@@ -30,7 +30,6 @@ const Main = ({getGames, currentUser, games, router, room}) => {
           router.history.push(`/game/${room.name}[${currentUser.name}]`);
         }
     });
-    console.error(currentUser);
     return (
         <section className='main'>
             <Logo />

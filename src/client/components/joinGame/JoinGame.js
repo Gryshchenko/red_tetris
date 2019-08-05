@@ -7,7 +7,10 @@ import { Button } from '../_base/button/Button';
 import { withRouter } from 'react-router';
 import './styles.css';
 import createNewPlayer from '../../actions/createNewPlayer';
+import joinGame from '../../actions/joinGame';
+import checkUser from '../../actions/checkUser';
 import { ErrorMsg } from '../_base/errorMsg/ErrorMsg';
+import constants from '../../../server/const';
 
 const VALID_ID = {
     JOIN_NAME_VALID: 'joinGameName',
@@ -27,7 +30,11 @@ const customStyles = {
   }
 };
 
-const JoinGame = ({ router, games, createNewPlayer }) => {
+const joinGameErrors = {
+  [constants.gameErrorCode.PLAYER_EXIST]: 'Selected name are exist',
+}
+
+const JoinGame = ({ router, games, createNewPlayer, joinGame, joinGameResponse, checkUser, checkUserData }) => {
     const [isModal, setModal] = useState(false);
     const [currentUser, setCurrentUser] = useState('');
     const setModalOff = () => setModal(false);
@@ -37,13 +44,16 @@ const JoinGame = ({ router, games, createNewPlayer }) => {
     }
     return (
         <div className="joinGameWrap">
-            <form onSubmit={(e) => handledSumbit(e, setModalOn, setCurrentUser)}>
+            <form onSubmit={(e) => handledSumbit(e, setModalOn, setCurrentUser, checkUser, checkUserData)}>
                 <ErrorMsg id={VALID_ID.JOIN_NAME_VALID}>
                     <Input
                         title={'Your name'}
                         id={'joinGameName'}
                     />
                 </ErrorMsg>
+                {checkUserData.isExistUserName === false && (
+                  <span>Selected name are exist</span>
+                )}
                 <div className='buttonWidth'>
                     <Button
                         title={'Join'}
@@ -67,9 +77,9 @@ const JoinGame = ({ router, games, createNewPlayer }) => {
                       <Button
                         title={'Join'}
                         onClick={() => {
-                          createNewPlayer({
-                            name: games[key].name,
-                            room: currentUser,
+                          joinGame({
+                            room: games[key].name,
+                            name: currentUser,
                           });
                         }}/>
                       </div>
@@ -83,12 +93,16 @@ const JoinGame = ({ router, games, createNewPlayer }) => {
     );
 }
 
-const handledSumbit = (e, setModalOn, setCurrentUser) => {
+const handledSumbit = (e, setModalOn, setCurrentUser, checkUser, checkUserData) => {
     e.preventDefault();
     const currentUser = document.getElementById('joinGameName').value;
+
     if (inputValueValid(currentUser)) {
-      setModalOn();
-      setCurrentUser(currentUser);
+        checkUser(currentUser);
+      if (checkUserData.isExistUserName) {
+        setModalOn();
+        setCurrentUser(currentUser);
+      }
     }
 
 }
@@ -105,16 +119,22 @@ const inputValueValid = (name) => {
 
 const mapStateToProps = (state, router) => {
   const games = state.game.getIn(['games']) ? state.game.getIn(['games']).toJS() : null;
+  const checkUserData = state.game.getIn(['checkUser']) ? state.game.getIn(['checkUser']).toJS() : null;
+  const joinGameResponse = state.game.getIn(['joinGame']) ? state.game.getIn(['joinGame']).toJS() : null;
     return {
         router,
         room: state.game.getIn(['room']),
         games,
+        joinGameResponse,
+        checkUserData,
     };
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         createNewPlayer: (data) => dispatch(createNewPlayer(data)),
+        joinGame: (date) => dispatch(joinGame(date)),
+        checkUser: (data) => dispatch(checkUser(data)),
     }
 }
 
