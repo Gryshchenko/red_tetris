@@ -1,6 +1,8 @@
 import { fromJS } from 'immutable';
 
 const ACTION_TYPE = {
+    PING_PONG: 'server/pingPong',
+    PING_PONG_RESPONSE: 'PING_PONG',
     CHECK_USER: 'server/checkUser',
     CHECK_USER_RESPONSE: 'CHECK_USER',
     CREATE_NEW_PLAYER: 'server/createNewPlayer',
@@ -58,6 +60,7 @@ const map = [
 ];
 
 const initialState = {
+    pingPong: false,
     room: null,
     games: null,
     checkUser: {
@@ -85,6 +88,10 @@ const initialState = {
 const reducer = (state = fromJS(initialState), action) => {
 
   switch (action.type) {
+    case ACTION_TYPE.PING_PONG:
+      return state.setIn(['pingPong'], fromJS(true));
+    case ACTION_TYPE.PING_PONG_RESPONSE:
+      return state.setIn(['pingPong'], fromJS(false))
     case ACTION_TYPE.CHECK_USER:
       return state.setIn(['checkUser'], fromJS({pending: true}));
     case ACTION_TYPE.CHECK_USER_RESPONSE:
@@ -92,7 +99,6 @@ const reducer = (state = fromJS(initialState), action) => {
     case ACTION_TYPE.JOIN_GAME:
       return state.setIn(['joinGame'], fromJS({pending: true}));
     case ACTION_TYPE.JOIN_GAME_RESPONSE:
-      console.error(action)
       return state.setIn(['room'], fromJS(action.data)).setIn(['currentUser'], fromJS(action.currentUser)).setIn(['joinGame'], fromJS({errorCode: action.errorCode, pending: false}));
     case ACTION_TYPE.GAME_CREATED:
       return state.setIn(['room'], fromJS(action.data)).setIn(['currentUser'], fromJS({errorCode: action.errorCode}));

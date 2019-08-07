@@ -23,6 +23,7 @@ import { placePieceOnBoard, isPossibleToPlace, rotatePiece, clearFullRows } from
 import { cloneDeepWith } from 'lodash';
 import endGame from '../../actions/endGame';
 import constants from '../../../server/const';
+import pingPong from '../../actions/pingPong';
 
 const customStyles = {
   content : {
@@ -65,9 +66,14 @@ const RoomComponent = ( props ) => {
     rotate,
     forceDown,
     currentUser,
-    endGame
+    endGame,
+    pingPong,
+    setPingPong,
   } = props;
 
+  if (!pingPong) {
+    setPingPong({playerId: currentUser._id, isOnline: true});
+  }
   useEffect(() => {
     _keyPressHandler(props);
     return () => {
@@ -363,11 +369,13 @@ const mapStateToProps = (state, router) => {
     down: state.game.getIn(['moveDown']),
     forceDown: state.game.getIn(['forceMoveDown']),
     rotate: state.game.getIn(['needToRotatePiece']),
+    pingPong: state.game.getIn(['pingPong']),
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    setPingPong: (data) => dispatch(pingPong(data)),
     endGame: (data) => dispatch(endGame(data)),
     startGame: (data) => dispatch(startGame(data)),
     createNewPlayer: (data) => dispatch(createNewPlayer(data)),

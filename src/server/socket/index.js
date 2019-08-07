@@ -21,6 +21,8 @@ export default socket => {
     socket.on('pieceLanded', data => pieceLand(data, socket));
 
     socket.on('disconnect', data => disconnect(data, socket));
+
+    socket.on('pingPong', data => pingPong(data, socket));
 }
 
 const disconnect = async (data, socket) => {
@@ -55,11 +57,10 @@ const disconnect = async (data, socket) => {
 
 const createNewGame = async (data, socket) => {
   try {
-    console.error(data);
     const game = await Game.getGameByName(data.room);
     const player = await Player.getPlayerByName(data.name);
     if (!game && !player) {
-      createNewPlayer(data,socket);
+      await createNewPlayer(data,socket);
     } else {
       const playerErrorCode = player ? constants.gameErrorCode.PLAYER_EXIST : null;
       const gameErrorCode = game ? constants.gameErrorCode.GAME_EXIST : null;
@@ -73,13 +74,29 @@ const createNewGame = async (data, socket) => {
         });
     }
   } catch (e) {
-    throw `Error occured while createNewPlayer event: ${e}`;
+    throw `Error occured while createNewGame event: ${e}`;
+  }
+
+}
+const pingPong = async (data, socket) => {
+  try {
+    await Player.updatePlayerOnlineStatus(data)
+    setTimeout(() => {
+      global.io.to(socket.id).emit(
+        'action',
+        {
+          type: 'PING_PONG',
+          data: true,
+        }
+      );
+    }, 3000);
+  } catch (e) {
+    throw `Error occured while pingPong event: ${e}`;
   }
 
 }
 const checkUser = async (data, socket) => {
   try {
-    console.error(data);
     const player = await Player.getPlayerByName(data);
     if (!player) {
         global.io.to(socket.id).emit(
@@ -98,7 +115,7 @@ const checkUser = async (data, socket) => {
         });
     }
   } catch (e) {
-    throw `Error occured while createNewPlayer event: ${e}`;
+    throw `Error occured while checkUser event: ${e}`;
   }
 
 }
@@ -119,16 +136,15 @@ const joinGame = async (data, socket) => {
         );
       });
   } catch (e) {
-    throw `Error occured while createNewPlayer event: ${e}`;
+    throw `Error occured while joinGame event: ${e}`;
   }
 
 }
 
 const createNewPlayer = async (data, socket) => {
     try {
-        let game = await Game.getGameByName(data.room);
+        let game = await Game.createNewGame(data.room);
         const isHost = true;
-
 
         let player = await Player.createNewPlayer(data.name, game._id, socket.id, isHost);
         game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id), status: constants.gameStatuses.NOT_STARTED });

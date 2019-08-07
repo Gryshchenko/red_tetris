@@ -45,6 +45,17 @@ class PlayerController {
     }
   }
 
+  static async updatePlayerOnlineStatus(data) {
+    try {
+      let columnsToUpdate = {};
+      if (data.isOnline) columnsToUpdate.map = data.isOnline;
+      const player = await PlayerModel.findOneAndUpdate({ _id: data.playerId }, columnsToUpdate, { new: true });
+      return player;
+    } catch (e) {
+      throw e;
+    }
+  }
+
     static async updatePlayer(playerId, data) {
         try {
             let columnsToUpdate = {};
