@@ -19,11 +19,12 @@ import forceMoveDown from '../../actions/forceMoveDown';
 import needToRotatePiece from '../../actions/needToRotatePiece';
 import pieceLanded from '../../actions/pieceLanded';
 import setCurrentShape from '../../actions/setCurrentShape';
-import { placePieceOnBoard, isPossibleToPlace, rotatePiece, clearFullRows } from '../../utils';
+import { placePieceOnBoard, isPossibleToPlace, rotatePiece, clearFullRows, getEnemyTime } from '../../utils';
 import { cloneDeepWith } from 'lodash';
 import endGame from '../../actions/endGame';
 import constants from '../../../server/const';
 import pingPong from '../../actions/pingPong';
+import { Button } from '../_base/button/Button';
 
 const customStyles = {
   content : {
@@ -44,6 +45,13 @@ const KEY_TYPE = {
   ARROW_RIGHT: 'ArrowRight',
   SPACE: 'Space',
   ENTER: 'Enter',
+};
+
+const _onStartGame = (room, startGame) => {
+  const gameId = room._id;
+  startGame({
+    gameId: gameId
+  })
 };
 
 const RoomComponent = ( props ) => {
@@ -71,18 +79,23 @@ const RoomComponent = ( props ) => {
     setPingPong,
   } = props;
 
-  if (!pingPong) {
-    setPingPong({playerId: currentUser._id, isOnline: true});
+  if (!pingPong.pending) {
+    setPingPong({playerId: currentUser._id, lastActiveTime: Math.floor((new Date()).getTime() / 1000)});
+  }
+  if (pingPong && (getEnemyTime(room.playerList, currentUser.name) + 380) < Math.floor((new Date()).getTime() / 1000)) {
+    console.error("time out");
   }
   useEffect(() => {
     _keyPressHandler(props);
     return () => {
-      removeEventListener("keyup", _keyPressHandler);
+        removeEventListener("keyup", _keyPressHandler);
     };
   }, []);
 
   useEffect(() => {
-
+    // if (room.status === constants.gameStatuses.STARTED && !window.keyPressHandler) {
+    //   _keyPressHandler(props);
+    // }
     if (room.playerList.length == 2 && _enemyLost(room.playerList, currentUser)) {
       // announce current player as winner
     }
@@ -121,25 +134,40 @@ const RoomComponent = ( props ) => {
   });
 
   const isWaitingPlayer = room && room.playerList && room.playerList.length != 2;
-  const isGameStarted = room && room.status === constants.gameStatuses.STARTED;
+  const isGameStarted = room && room.status === constants.gameStatuses.NOT_STARTED && currentUser.isHost === false;
+  const isHost = room && room.status === constants.gameStatuses.NOT_STARTED && currentUser.isHost === true;
 
   return (
     <React.Fragment>
       <ModalWindow
         style={customStyles}
-        isOpen={isWaitingPlayer || !isGameStarted}
+        isOpen={isWaitingPlayer || isGameStarted || isHost}
       >
         {
-          isWaitingPlayer && !isGameStarted && (
+          isWaitingPlayer && (
             <div>
               wait pls another player...
             </div>
           )
         }
         {
-          !isWaitingPlayer && !isGameStarted && (
+          !isWaitingPlayer && isGameStarted && (
             <div>
-              Enemy player connected, don't forget press 'Enter' to start game
+              Wait until anouther user start game...
+            </div>
+          )
+        }
+        {
+          !isWaitingPlayer && isHost && (
+            <div>
+              Press button to begin start game...
+              <div className='buttonWidth'>
+                <Button
+                  onClick={() => _onStartGame(room, startGame)}
+                  type={'submit'}
+                  title={'Start'}
+                />
+              </div>
             </div>
           )
         }
@@ -183,7 +211,6 @@ const RoomComponent = ( props ) => {
 }
 
 const _gameIsOver = (map) => {
-  console.log(map[0].find(cell => cell != 0))
   return map[0].find(cell => cell != 0) != undefined;
 }
 
@@ -191,34 +218,45 @@ const _enemyLost = (playerList, currentUser) => {
   return playerList.find(player => player._id != currentUser._id).lost;
 }
 
-const _onStartGame = (room, startGame) => {
-  const gameId = room._id;
-  startGame({
-    gameId: gameId
-  })
-}
 
 const _keyPressHandler = (props) => addEventListener('keyup', function (event) {
-  const { room, startGame } = props;
-  // console.error(room, event.code)
-  // if (event && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.STARTED) {
-  if (event) {
-    switch (event.code) {
-      case KEY_TYPE.ARROW_DOWN:
-        return props.moveDown(true);
-      case KEY_TYPE.ARROW_UP:
-        return props.needToRotatePiece(true);
-      case KEY_TYPE.ARROW_LEFT:
-        return props.moveLeft(true);
-      case KEY_TYPE.ARROW_RIGHT:
-        return props.moveRight(true);
-      case KEY_TYPE.SPACE:
-        return props.forceMoveDown(true);
-      case KEY_TYPE.ENTER:
-        return _onStartGame( room, startGame)
-    }
-  // } else if (event && event.code === KEY_TYPE.ENTER && room && room.playerList && room.playerList.length == 2 && room.status === constants.gameStatuses.NOT_STARTED) {
-      // return _onStartGame( room, startGame)
+  // window.keyPressHandler = true;
+  // console.error(event.code);
+  // const { room, startGame, currentUser } = props
+  // if (event && room && room.playerList && room.playerList.length == 2) {
+  //   const isGameStarted = room && room.status === constants.gameStatuses.STARTED;
+  switch (event.code) {
+    case KEY_TYPE.ARROW_DOWN:
+      // if (isGameStarted) {
+      props.dispatch(moveDown(true));
+      // }
+      break;
+    case KEY_TYPE.ARROW_UP:
+      // if (isGameStarted) {
+      props.dispatch(needToRotatePiece(true));
+      // }
+      break;
+    case KEY_TYPE.ARROW_LEFT:
+      // if (isGameStarted) {
+      props.dispatch(moveLeft(true));
+      // }
+      break;
+    case KEY_TYPE.ARROW_RIGHT:
+      // if (isGameStarted) {
+      props.dispatch(moveRight(true));
+      // }
+      break;
+    case KEY_TYPE.SPACE:
+      // if (isGameStarted) {
+      props.dispatch(forceMoveDown(true));
+      // }
+      break;
+    // case KEY_TYPE.ENTER:
+    //   // if (currentUser.isHost && !isGameStarted) {
+    //     return _onStartGame( room, startGame)
+    //   }
+    // }
+    // }
   }
 });
 
@@ -353,6 +391,7 @@ const mapStateToProps = (state, router) => {
   const room = state.game.getIn(['room']) ? state.game.getIn(['room']).toJS() : null;
   const map = state.game.getIn(['map']) ? state.game.getIn(['map']).toJS() : null;
   const currentUser = state.game.getIn(['currentUser']) ?  state.game.getIn(['currentUser']).toJS() : null;
+  console.error(state.game);
   return {
     router,
     room,
@@ -369,7 +408,7 @@ const mapStateToProps = (state, router) => {
     down: state.game.getIn(['moveDown']),
     forceDown: state.game.getIn(['forceMoveDown']),
     rotate: state.game.getIn(['needToRotatePiece']),
-    pingPong: state.game.getIn(['pingPong']),
+    pingPong: state.game.getIn(['pingPong']).toJS(),
   };
 }
 
@@ -392,6 +431,7 @@ const mapDispatchToProps = (dispatch) => {
     needToRotatePiece: (data) => dispatch(needToRotatePiece(data)),
     pieceLanded: (data) => dispatch(pieceLanded(data)),
     setCurrentShape: (data) => dispatch(setCurrentShape(data)),
+    dispatch,
   }
 }
 

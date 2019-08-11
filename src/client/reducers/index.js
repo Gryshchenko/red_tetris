@@ -1,6 +1,8 @@
 import { fromJS } from 'immutable';
+import { isCanMove } from '../utils';
 
 const ACTION_TYPE = {
+    QUERY_GAME_RESPONSE: 'QUERY_GAME_RESPONSE',
     PING_PONG: 'server/pingPong',
     PING_PONG_RESPONSE: 'PING_PONG',
     CHECK_USER: 'server/checkUser',
@@ -60,7 +62,9 @@ const map = [
 ];
 
 const initialState = {
-    pingPong: false,
+    pingPong: {
+      pending: false,
+    },
     room: null,
     games: null,
     checkUser: {
@@ -83,15 +87,18 @@ const initialState = {
     forceMoveDown: false,
     needToRotatePiece: false,
     map,
+    errorCode: 0,
 }
 
 const reducer = (state = fromJS(initialState), action) => {
 
   switch (action.type) {
+    case ACTION_TYPE.QUERY_GAME_RESPONSE:
+      return state.setIn(['errorCode'], fromJS(action.errorCode));
     case ACTION_TYPE.PING_PONG:
-      return state.setIn(['pingPong'], fromJS(true));
+      return state.setIn(['pingPong'], fromJS({pending: true, lastActiveTime: Math.floor((new Date()).getTime() / 1000)}));
     case ACTION_TYPE.PING_PONG_RESPONSE:
-      return state.setIn(['pingPong'], fromJS(false))
+      return state.setIn(['pingPong'], fromJS({pending: false, lastActiveTime: action.data}))
     case ACTION_TYPE.CHECK_USER:
       return state.setIn(['checkUser'], fromJS({pending: true}));
     case ACTION_TYPE.CHECK_USER_RESPONSE:
@@ -119,15 +126,35 @@ const reducer = (state = fromJS(initialState), action) => {
     case ACTION_TYPE.START_MOVE:
       return state.setIn(['needToMoveDown'], true);
     case ACTION_TYPE.MOVE_LEFT:
-      return state.setIn(['moveLeft'], action.data);
+      if (isCanMove(state)) {
+        return state.setIn(['moveLeft'], action.data);
+      } else {
+        return state;
+      }
     case ACTION_TYPE.MOVE_RIGHT:
-      return state.setIn(['moveRight'], action.data);
+      if (isCanMove(state)) {
+        return state.setIn(['moveRight'], action.data);
+      } else {
+        return state;
+      }
     case ACTION_TYPE.MOVE_DOWN:
-      return state.setIn(['moveDown'], action.data);
+      if (isCanMove(state)) {
+        return state.setIn(['moveDown'], action.data);
+      } else {
+        return state;
+      }
     case ACTION_TYPE.FORCE_MOVE_DOWN:
-      return state.setIn(['forceMoveDown'], action.data);
+      if (isCanMove(state)) {
+        return state.setIn(['forceMoveDown'], action.data);
+      } else {
+        return state;
+      }
     case ACTION_TYPE.ROTATE_PIECE:
-      return state.setIn(['needToRotatePiece'], action.data);
+      if (isCanMove(state)) {
+        return state.setIn(['needToRotatePiece'], action.data);
+      } else {
+        return state;
+      }
     case ACTION_TYPE.STOP_MOVE:
       return state.setIn(['needToMoveDown'], false);
     case ACTION_TYPE.PIECE_MOVE:

@@ -4,6 +4,9 @@ import Piece from '../controllers/Piece.controller.js';
 import constants from '../const';
 
 export default socket => {
+
+    socket.on('createGameFromQueryString', data => createGameFromQueryString(data, socket));
+
     socket.on('createNewPlayer', data => createNewPlayer(data, socket));
 
     socket.on('createNewGame', data => createNewGame(data, socket));
@@ -55,6 +58,29 @@ const disconnect = async (data, socket) => {
     }
 }
 
+const createGameFromQueryString = async (data, socket) => {
+  try {
+    const game = await Game.getGameByName(data.room);
+    const player = await Player.getPlayerByName(data.name);
+    console.error(data, socket.id);
+    if (!game && !player) {
+      await createNewPlayer(data,socket);
+    } else {
+      global.io.to(socket.id).emit(
+        'action',
+        {
+          type: 'QUERY_GAME_RESPONSE',
+          data: null,
+          currentUser: null,
+          errorCode: constants.gameErrorCode.CANT_CREATE,
+        });
+    }
+
+  } catch (e) {
+    throw `Error occured while createGameFromQueryString event: ${e}`;
+  }
+}
+
 const createNewGame = async (data, socket) => {
   try {
     const game = await Game.getGameByName(data.room);
@@ -86,7 +112,7 @@ const pingPong = async (data, socket) => {
         'action',
         {
           type: 'PING_PONG',
-          data: true,
+          data: data.lastActiveTime,
         }
       );
     }, 3000);
@@ -192,12 +218,15 @@ const getAllGames = async (data, socket) => {
         let result = {};
         if (games) {
           games.map((game, idx) => {
-            const isGameNotStart = game.status === constants.gameStatuses.NOT_STARTED;
-            const isOnlyHost = game.playerList.length === 1 && game.playerList[0].isHost;
-            if ( isGameNotStart && isOnlyHost) {
-              Object.assign( result, {
-                [idx]: game,
-              });
+            if (game && game.playerList[0]) {
+              const isGameNotStart = game.status === constants.gameStatuses.NOT_STARTED;
+              const isOnlyHost = game.playerList.length === 1 && game.playerList[0].isHost;
+              const isPlayerOnline = game.playerList[0].lastActiveTime + 360 > Math.floor((new Date()).getTime() / 1000);
+              if (isGameNotStart && isOnlyHost && isPlayerOnline) {
+                Object.assign( result, {
+                  [idx]: game,
+                });
+              }
             }
           })
         }

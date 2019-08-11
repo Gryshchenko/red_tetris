@@ -12,7 +12,7 @@ const PlayerModel = new Schema({
     gameId: { type: String },
     socketId: { type: String },
     isHost: { type: Boolean },
-    isOnline: { type: Boolean },
+    lastActiveTime: { type: Number, default: 0 },
     currentPiece: { type: Number, default: 1 }
 });
 

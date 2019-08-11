@@ -1,4 +1,5 @@
 import { cloneDeepWith } from 'lodash';
+import constants from '../server/const';
 
 const getRoomName = () => {
     const hash = window.location.hash;
@@ -35,7 +36,7 @@ const isPartOfPiece = (i, j, shape, posX, posY) => {
         return false;
     }
 };
-  
+
 const rotatePiece = (shape) => {
     let newShape = [];
         shape.map((row, i) => {
@@ -47,7 +48,7 @@ const rotatePiece = (shape) => {
 
     return newShape;
 };
-  
+
 const placePieceOnBoard = (board, shape, posX, posY, currentPiece) => {
     board.map((row, j) => {
         row.map((cell, i) => {
@@ -96,7 +97,7 @@ let prepearedShape = shape;
             const newX = x + posX
             let onBoard = true
             let free = true
-    
+
             if (newY >= 20 || newX < 0 || newX >= 10) onBoard = false
             if (onBoard && newY >= 0 && board && board[newY][newX] != 0 && board[newY][newX] != currentPiece) free = false
             if (prepearedShape[y][x] == 1 && (!onBoard || !free)) {
@@ -108,7 +109,17 @@ let prepearedShape = shape;
         return true
       } catch (e) {
           return false;
-      }    
+      }
+  }
+
+  const getEnemyTime = (playerList, currentUser) => {
+    let result = null;
+    playerList.forEach((player) => {
+      if (player.lastActiveTime && player.name !== currentUser) {
+        return player.lastActiveTime;
+      }
+    })
+    return 0;
   }
 
   const clearFullRows = (board) => {
@@ -129,13 +140,23 @@ let prepearedShape = shape;
     };
 }
 
-// const movePiece = (board, piece, currentPiece)
+const isCanMove = (state) => {
+  const room = state.getIn(['room']) ? state.getIn(['room']).toJS() : null;
+  const currentUser = state.getIn(['currentUser']) ?  state.getIn(['currentUser']).toJS() : null;
+  if (room && room.playerList && room.playerList.length === 2) {
+    const isGameStarted = room && room.status === constants.gameStatuses.STARTED;
+    return isGameStarted ? true : false;
+  }
+  return false;
+}
 
 export {
+    isCanMove,
     getRoomName,
     getName,
     placePieceOnBoard,
     isPossibleToPlace,
     rotatePiece,
-    clearFullRows
+    clearFullRows,
+    getEnemyTime,
 };

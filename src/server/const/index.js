@@ -57,6 +57,7 @@ const constants = {
       GAME_EXIST: 1,
       PLAYER_EXIST: 2,
       BOTH_EXIST: 3,
+      CANT_CREATE: 4,
     }
 
 };

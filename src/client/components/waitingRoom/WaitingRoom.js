@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import createNewPlayer from '../../actions/createNewPlayer';
+import createGameFromQueryString from '../../actions/createGameFromQueryString';
 import './styles.css'
-import { Button } from '../_base/button/Button';
 import { Room } from '../Room/Room';
 import { getRoomName, getName } from '../../utils';
+import constants from '../../../server/const';
 
 
-const addUser = (createNewPlayer, router) => {
+const addUser = (createGameFromQueryString, router) => {
   const roomName = getRoomName();
   const name = getName();
   if (!name || !roomName) {
     router.history.push(`/`);
   } else {
-    createNewPlayer({
+    createGameFromQueryString({
       name,
       room: roomName,
     });
@@ -22,11 +22,14 @@ const addUser = (createNewPlayer, router) => {
 }
 
 
-const WaitingRoom = ({ router, room, createNewPlayer }) => {
+const WaitingRoom = ({ router, room, createGameFromQueryString, errorCode }) => {
     if (room) {
       return <Room />;
     } else {
-      addUser(createNewPlayer, router);
+      if (errorCode === constants.gameErrorCode.CANT_CREATE) {
+        router.history.push(`/`);
+      }
+      addUser(createGameFromQueryString, router);
       return (
         <div style={{
           width: '100%',
@@ -46,13 +49,14 @@ const mapStateToProps = (state, router) => {
     return {
         router,
         room: state.game.getIn(['room']),
+        errorCode: state.game.getIn(['errorCode']),
         // currentUser: state.game.getIn(['currentUser']),
     };
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        createNewPlayer: (data) => dispatch(createNewPlayer(data)),
+        createGameFromQueryString: (data) => dispatch(createGameFromQueryString(data)),
     }
 }
 
