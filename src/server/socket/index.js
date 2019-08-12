@@ -248,7 +248,7 @@ const endGame = async (data, socket) => {
         await Player.updatePlayer(data.playerId, { lost: true });
         let game = await Game.updateGame(data.gameId, { status: constants.gameStatuses['FINISHED'] });
 
-      console.log(game);
+      // console.log(game);
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 {

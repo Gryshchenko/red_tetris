@@ -65,12 +65,24 @@ const RoomComponent = ( props ) => {
     stopMove,
     pingPong,
     setPingPong,
+    startInterval,
+    startMove,
+    intervalStarted,
+    currentPieceX,
+    currentPieceY,
+    left,
+    right,
+    down,
+    rotate,
+    forceDown,
+    currentUser,
+    endGame,
   } = props;
 
   if (!pingPong.pending) {
     setPingPong({playerId: currentUser._id, lastActiveTime: Math.floor((new Date()).getTime() / 1000)});
   }
- console.error((getEnemyTime(room.playerList, currentUser.name) + 160), Math.floor((new Date()).getTime() / 1000));
+//  console.error((getEnemyTime(room.playerList, currentUser.name) + 160), Math.floor((new Date()).getTime() / 1000));
   if (room.status === constants.gameStatuses.STARTED && (getEnemyTime(room.playerList, currentUser.name) + 160) < Math.floor((new Date()).getTime() / 1000)) {
     endGame({
       playerId: getName(room.playerList, currentUser.name)._id,
