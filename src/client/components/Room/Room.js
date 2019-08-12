@@ -63,18 +63,6 @@ const RoomComponent = ( props ) => {
     pieceNotPlaced,
     needToMoveDown,
     stopMove,
-    startInterval,
-    startMove,
-    intervalStarted,
-    currentPieceX,
-    currentPieceY,
-    left,
-    right,
-    down,
-    rotate,
-    forceDown,
-    currentUser,
-    endGame,
     pingPong,
     setPingPong,
   } = props;
@@ -82,8 +70,14 @@ const RoomComponent = ( props ) => {
   if (!pingPong.pending) {
     setPingPong({playerId: currentUser._id, lastActiveTime: Math.floor((new Date()).getTime() / 1000)});
   }
-  if (pingPong && (getEnemyTime(room.playerList, currentUser.name) + 380) < Math.floor((new Date()).getTime() / 1000)) {
-    console.error("time out");
+ console.error((getEnemyTime(room.playerList, currentUser.name) + 160), Math.floor((new Date()).getTime() / 1000));
+  if (room.status === constants.gameStatuses.STARTED && (getEnemyTime(room.playerList, currentUser.name) + 160) < Math.floor((new Date()).getTime() / 1000)) {
+    endGame({
+      playerId: getName(room.playerList, currentUser.name)._id,
+      gameId: room._id
+    });
+    startMove(false);
+
   }
   useEffect(() => {
     _keyPressHandler(props);
@@ -93,9 +87,6 @@ const RoomComponent = ( props ) => {
   }, []);
 
   useEffect(() => {
-    // if (room.status === constants.gameStatuses.STARTED && !window.keyPressHandler) {
-    //   _keyPressHandler(props);
-    // }
     if (room.playerList.length == 2 && _enemyLost(room.playerList, currentUser)) {
       // announce current player as winner
     }
@@ -391,7 +382,6 @@ const mapStateToProps = (state, router) => {
   const room = state.game.getIn(['room']) ? state.game.getIn(['room']).toJS() : null;
   const map = state.game.getIn(['map']) ? state.game.getIn(['map']).toJS() : null;
   const currentUser = state.game.getIn(['currentUser']) ?  state.game.getIn(['currentUser']).toJS() : null;
-  console.error(state.game);
   return {
     router,
     room,

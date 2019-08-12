@@ -111,15 +111,24 @@ let prepearedShape = shape;
           return false;
       }
   }
+const getEnemy = (playerList, currentUser) => {
+  let result = null;
+  playerList.forEach((player) => {
+    if (player.lastActiveTime && player.name !== currentUser) {
+      result = player;
+    }
+  })
+  return result;
+}
 
   const getEnemyTime = (playerList, currentUser) => {
-    let result = null;
+    let result = 0;
     playerList.forEach((player) => {
       if (player.lastActiveTime && player.name !== currentUser) {
-        return player.lastActiveTime;
+        result = player.lastActiveTime;
       }
     })
-    return 0;
+    return result;
   }
 
   const clearFullRows = (board) => {
@@ -159,4 +168,5 @@ export {
     rotatePiece,
     clearFullRows,
     getEnemyTime,
+    getEnemy,
 };
