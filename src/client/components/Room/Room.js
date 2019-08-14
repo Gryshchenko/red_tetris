@@ -87,7 +87,7 @@ const RoomComponent = ( props ) => {
     setPause
   } = props;
 //  console.error((getEnemyTime(room.playerList, currentUser.name) + 160), Math.floor((new Date()).getTime() / 1000));
-  
+
   useEffect(() => {
     _keyPressHandler(props);
     return () => {
@@ -115,7 +115,7 @@ const RoomComponent = ( props ) => {
     //   startInterval(setInterval(() => startMove(), 1000));
     // }
 
-    if (room && room.status == 3) {
+    if (room && room.status === constants.gameStatuses.PAUSED) {
       if (interval) {
         clearInterval(interval);
         interval = null;
@@ -123,7 +123,7 @@ const RoomComponent = ( props ) => {
       if (needToMoveDown) {
         stopMove();
       }
-    } else if (room && room.status == 2) {
+    } else if (room && room.status === constants.gameStatuses.FINISHED) {
       // display results of the game
       if (interval) {
         clearInterval(interval);

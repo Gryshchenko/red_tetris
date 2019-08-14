@@ -93,9 +93,10 @@ const createGameFromQueryString = async (data, socket) => {
   try {
     const game = await Game.getGameByName(data.room);
     const player = await Player.getPlayerByName(data.name);
-    console.error(data, socket.id);
     if (!game && !player) {
       await createNewPlayer(data,socket);
+    } else if (game && !player) {
+      await joinGame(data, socket);
     } else {
       global.io.to(socket.id).emit(
         'action',
