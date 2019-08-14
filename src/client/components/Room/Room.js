@@ -54,6 +54,8 @@ const _onStartGame = (room, startGame) => {
   })
 };
 
+let interval;
+
 const RoomComponent = ( props ) => {
   const {
     room,
@@ -78,19 +80,8 @@ const RoomComponent = ( props ) => {
     currentUser,
     endGame,
   } = props;
-
-  if (!pingPong.pending) {
-    setPingPong({playerId: currentUser._id, lastActiveTime: Math.floor((new Date()).getTime() / 1000)});
-  }
 //  console.error((getEnemyTime(room.playerList, currentUser.name) + 160), Math.floor((new Date()).getTime() / 1000));
-  if (room.status === constants.gameStatuses.STARTED && (getEnemyTime(room.playerList, currentUser.name) + 160) < Math.floor((new Date()).getTime() / 1000)) {
-    endGame({
-      playerId: getName(room.playerList, currentUser.name)._id,
-      gameId: room._id
-    });
-    startMove(false);
-
-  }
+  
   useEffect(() => {
     _keyPressHandler(props);
     return () => {
@@ -99,41 +90,81 @@ const RoomComponent = ( props ) => {
   }, []);
 
   useEffect(() => {
-    if (room.playerList.length == 2 && _enemyLost(room.playerList, currentUser)) {
-      // announce current player as winner
+    if (!pingPong.pending) {
+      setPingPong({playerId: currentUser._id, lastActiveTime: Math.floor((new Date()).getTime() / 1000)});
     }
 
-    if (pieceNotPlaced && currentPiece) {
-      if (_gameIsOver(map)) {
+    if (!interval && currentPiece && room.status != 2) {
+      interval = setInterval(() => startMove(), 1000);
+    }
+
+    // if (!intervalStarted && currentPiece) {
+    //   startInterval(setInterval(() => startMove(), 1000));
+    // }
+    
+    if (room && room.status == 2) {
+      // display results of the game
+      // if (intervalStarted) {
+      //   clearInterval(intervalStarted);
+      //   startInterval(null);
+      //   console.log('Interval cleared')
+      // }
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+        console.log(interval);
+        console.log('Interval cleared');
+      }
+
+      if (needToMoveDown) {
+        stopMove();
+      }
+
+    } else if (room && room.status == 1) {
+      if ((getEnemyTime(room.playerList, currentUser.name) + 160) < Math.floor((new Date()).getTime() / 1000)) {
         endGame({
           playerId: currentUser._id,
           gameId: room._id
         });
-      } else {
-        _placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
+        console.log('Ended game due to disconnect')
+        // startMove(false);
       }
-    }
 
-    if (!intervalStarted && currentPiece) {
-      startInterval(setInterval(() => startMove(), 1000));
-    }
+      if (pieceNotPlaced && currentPiece) {
+        if (_gameIsOver(map)) {
+          endGame({
+            playerId: currentUser._id,
+            gameId: room._id
+          });
+          console.log('Ended game due to full map')
+        } else {
+          _placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
+        }
+      }
 
-    if (left){
-      _moveTetriLeft(props);
-    } else if (right) {
-      _moveTetriRight(props);
-    } else if (down) {
-      _moveTetriDown(props);
-    } else if (rotate) {
-      _rotateTetri(props);
-    } else if (forceDown) {
-      _forceMoveDownTetri(props);
-    }
+      if (left){
+        _moveTetriLeft(props);
+      } else if (right) {
+        _moveTetriRight(props);
+      } else if (down) {
+        _moveTetriDown(props);
+      } else if (rotate) {
+        _rotateTetri(props);
+      } else if (forceDown) {
+        _forceMoveDownTetri(props);
+      }
 
-    if (needToMoveDown) {
-      _moveTetriDown(props);
-      stopMove();
-   }
+      if (needToMoveDown) {
+        _moveTetriDown(props);
+        stopMove();
+     }
+    } else if (room && room.status == 0) {
+
+    }
+    // if (room.playerList.length == 2 && _enemyLost(room.playerList, currentUser)) {
+    //   // announce current player as winner
+    // }
+
   });
 
   const isWaitingPlayer = room && room.playerList && room.playerList.length != 2;
