@@ -51,7 +51,8 @@ const constants = {
     gameStatuses: {
         NOT_STARTED: 0,
         STARTED: 1,
-        FINISHED: 2
+        FINISHED: 2,
+        PAUSED: 3
     },
     gameErrorCode: {
       GAME_EXIST: 1,

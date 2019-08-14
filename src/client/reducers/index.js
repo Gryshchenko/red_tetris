@@ -36,6 +36,8 @@ const ACTION_TYPE = {
     DISCONNECT: 'server/disconnect',
     DISCONNECT_RESPONSE: 'PLAYER_DISCONNECTED',
     GET_ALL_GAMES: 'GET_ALL_GAMES',
+    GAME_PAUSED_RESPONSE: 'GAME_PAUSED',
+    NEED_TO_PAUSE: 'needToPause'
 };
 
 const map = [
@@ -88,6 +90,7 @@ const initialState = {
     needToRotatePiece: false,
     map,
     errorCode: 0,
+    needToPause: false
 }
 
 const reducer = (state = fromJS(initialState), action) => {
@@ -169,6 +172,10 @@ const reducer = (state = fromJS(initialState), action) => {
       return state.setIn(['room'], fromJS(action.data)).setIn(['currentPiece'], null);
     case ACTION_TYPE.GET_ALL_GAMES:
       return state.setIn(['games'], fromJS(action.data));
+    case ACTION_TYPE.GAME_PAUSED_RESPONSE:
+      return state.setIn(['room'], fromJS(action.data));
+    case ACTION_TYPE.NEED_TO_PAUSE:
+      return state.setIn(['needToPause'], action.data);
     default:
       return state
     }

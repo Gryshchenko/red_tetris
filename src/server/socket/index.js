@@ -26,6 +26,37 @@ export default socket => {
     socket.on('disconnect', data => disconnect(data, socket));
 
     socket.on('pingPong', data => pingPong(data, socket));
+
+    socket.on('pauseGame', data => pauseGame(data, socket));
+}
+
+const pauseGame = async (data, socket) => {
+  try {
+    let game = await Game.getGameById(data.gameId);
+
+    if (!game) {
+      throw `Game ${data.gameId} not found`;
+    }
+
+    if (game.status == 2) {
+      throw `Game ${data.gameId} was already finished`;
+    }
+
+    game = await Game.updateGame(game.id, {  status: game.status == 3 ? 1 : constants.gameStatuses.PAUSED });
+
+    game.playerList.forEach(player => {
+      global.io.to(player.socketId).emit(
+          'action',
+          {
+              type: 'GAME_PAUSED',
+              data: game
+          }
+      );
+  });
+
+  } catch (e) {
+    throw `Error occured while pauseGame event: ${e}`;
+  }
 }
 
 const disconnect = async (data, socket) => {

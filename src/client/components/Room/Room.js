@@ -19,6 +19,8 @@ import forceMoveDown from '../../actions/forceMoveDown';
 import needToRotatePiece from '../../actions/needToRotatePiece';
 import pieceLanded from '../../actions/pieceLanded';
 import setCurrentShape from '../../actions/setCurrentShape';
+import needToPause from '../../actions/needToPause';
+import pauseGame from '../../actions/pauseGame';
 import { placePieceOnBoard, isPossibleToPlace, rotatePiece, clearFullRows, getEnemyTime } from '../../utils';
 import { cloneDeepWith } from 'lodash';
 import endGame from '../../actions/endGame';
@@ -45,6 +47,7 @@ const KEY_TYPE = {
   ARROW_RIGHT: 'ArrowRight',
   SPACE: 'Space',
   ENTER: 'Enter',
+  PAUSE: 'KeyP'
 };
 
 const _onStartGame = (room, startGame) => {
@@ -79,6 +82,9 @@ const RoomComponent = ( props ) => {
     forceDown,
     currentUser,
     endGame,
+    needToPause,
+    pauseGame,
+    setPause
   } = props;
 //  console.error((getEnemyTime(room.playerList, currentUser.name) + 160), Math.floor((new Date()).getTime() / 1000));
   
@@ -94,21 +100,31 @@ const RoomComponent = ( props ) => {
       setPingPong({playerId: currentUser._id, lastActiveTime: Math.floor((new Date()).getTime() / 1000)});
     }
 
-    if (!interval && currentPiece && room.status != 2) {
+    if (!interval && currentPiece && room.status != 2 && room.status != 3) {
       interval = setInterval(() => startMove(), 1000);
+    }
+
+    if (needToPause) {
+      pauseGame({
+        gameId: room._id
+      });
+      setPause(false);
     }
 
     // if (!intervalStarted && currentPiece) {
     //   startInterval(setInterval(() => startMove(), 1000));
     // }
-    
-    if (room && room.status == 2) {
+
+    if (room && room.status == 3) {
+      if (interval) {
+        clearInterval(interval);
+        interval = null;
+      }
+      if (needToMoveDown) {
+        stopMove();
+      }
+    } else if (room && room.status == 2) {
       // display results of the game
-      // if (intervalStarted) {
-      //   clearInterval(intervalStarted);
-      //   startInterval(null);
-      //   console.log('Interval cleared')
-      // }
       if (interval) {
         clearInterval(interval);
         interval = null;
@@ -161,9 +177,6 @@ const RoomComponent = ( props ) => {
     } else if (room && room.status == 0) {
 
     }
-    // if (room.playerList.length == 2 && _enemyLost(room.playerList, currentUser)) {
-    //   // announce current player as winner
-    // }
 
   });
 
@@ -285,6 +298,8 @@ const _keyPressHandler = (props) => addEventListener('keyup', function (event) {
       props.dispatch(forceMoveDown(true));
       // }
       break;
+    case KEY_TYPE.PAUSE:
+      props.dispatch(needToPause(true));
     // case KEY_TYPE.ENTER:
     //   // if (currentUser.isHost && !isGameStarted) {
     //     return _onStartGame( room, startGame)
@@ -442,6 +457,7 @@ const mapStateToProps = (state, router) => {
     forceDown: state.game.getIn(['forceMoveDown']),
     rotate: state.game.getIn(['needToRotatePiece']),
     pingPong: state.game.getIn(['pingPong']).toJS(),
+    needToPause: state.game.getIn(['needToPause'])
   };
 }
 
@@ -464,6 +480,8 @@ const mapDispatchToProps = (dispatch) => {
     needToRotatePiece: (data) => dispatch(needToRotatePiece(data)),
     pieceLanded: (data) => dispatch(pieceLanded(data)),
     setCurrentShape: (data) => dispatch(setCurrentShape(data)),
+    setPause: (data) => dispatch(needToPause(data)),
+    pauseGame: (data) => dispatch(pauseGame(data)),
     dispatch,
   }
 }
