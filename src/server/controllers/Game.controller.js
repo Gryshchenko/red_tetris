@@ -76,10 +76,12 @@ class GameController {
 
     static async deleteGame(gameId) {
         try {
-            let game = await Game.findOne({ _id: gameId });
-            game.pieceList.map(piece => {
-                Piece.deletePiece(piece._id);
-            });
+            console.error(gameId)
+            let game = await Game.findOne({ name: gameId });
+            console.error(game);
+            // game.pieceList.map(piece => {
+            //     Piece.deletePiece(piece._id);
+            // });
             game.playerList.map(player => {
                 Player.deletePlayer(player._id);
             });

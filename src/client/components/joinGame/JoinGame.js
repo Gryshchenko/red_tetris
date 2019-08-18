@@ -39,7 +39,7 @@ const JoinGame = ({ router, games, createNewPlayer, joinGame, joinGameResponse, 
     const [currentUser, setCurrentUser] = useState('');
     const setModalOff = () => setModal(false);
     const setModalOn = () => setModal(true);
-    if (!games) {
+    if (!games || Object.keys(games).length < 1) {
       return null;
     }
     return (

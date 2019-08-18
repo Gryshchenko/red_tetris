@@ -27,6 +27,7 @@ import endGame from '../../actions/endGame';
 import constants from '../../../server/const';
 import pingPong from '../../actions/pingPong';
 import { Button } from '../_base/button/Button';
+import retry from '../../actions/retry';
 
 const customStyles = {
   content : {
@@ -84,7 +85,8 @@ const RoomComponent = ( props ) => {
     endGame,
     needToPause,
     pauseGame,
-    setPause
+    setPause,
+    dispatch,
   } = props;
 //  console.error((getEnemyTime(room.playerList, currentUser.name) + 160), Math.floor((new Date()).getTime() / 1000));
 
@@ -183,12 +185,14 @@ const RoomComponent = ( props ) => {
   const isWaitingPlayer = room && room.playerList && room.playerList.length != 2;
   const isGameStarted = room && room.status === constants.gameStatuses.NOT_STARTED && currentUser.isHost === false;
   const isHost = room && room.status === constants.gameStatuses.NOT_STARTED && currentUser.isHost === true;
+  const isFinish = room && room.status === constants.gameStatuses.FINISHED;
+  const isPaused = room && room.status === constants.gameStatuses.PAUSED;
 
   return (
     <React.Fragment>
       <ModalWindow
         style={customStyles}
-        isOpen={isWaitingPlayer || isGameStarted || isHost}
+        isOpen={isWaitingPlayer || isGameStarted || isHost || isFinish}
       >
         {
           isWaitingPlayer && (
@@ -215,6 +219,31 @@ const RoomComponent = ( props ) => {
                   title={'Start'}
                 />
               </div>
+            </div>
+          )
+        }
+        {
+          isFinish && (
+            <div>
+              Press button to begin start game...
+              <div className='buttonWidth'>
+                <Button
+                  onClick={() => dispatch(retry({
+                    gameId: room._id,
+                    playerList: room.playerList,
+                    room: room.name,
+                  }))}
+                  type={'submit'}
+                  title={'Retry'}
+                />
+              </div>
+            </div>
+          )
+        }
+        {
+          isPaused && (
+            <div>
+              PAUSE
             </div>
           )
         }

@@ -7,6 +7,8 @@ export default socket => {
 
     socket.on('createGameFromQueryString', data => createGameFromQueryString(data, socket));
 
+    socket.on('retry', data => retry(data, socket));
+
     socket.on('createNewPlayer', data => createNewPlayer(data, socket));
 
     socket.on('createNewGame', data => createNewGame(data, socket));
@@ -28,6 +30,20 @@ export default socket => {
     socket.on('pingPong', data => pingPong(data, socket));
 
     socket.on('pauseGame', data => pauseGame(data, socket));
+}
+
+const retry = async (data, socket) => {
+    await Game.deleteGame(data.room);
+    data.playerList.forEach(async player => {
+      if (player.isHost) {
+        await createNewPlayer({name: player.name, room: data.room}, player.socketId)
+      }
+    });
+     data.playerList.forEach(async player => {
+        if (!player.isHost) {
+          await joinGame({name: player.name, room: data.room}, player.socketId)
+        }
+      });
 }
 
 const pauseGame = async (data, socket) => {
@@ -180,6 +196,7 @@ const checkUser = async (data, socket) => {
 const joinGame = async (data, socket) => {
   try {
       let game = await Game.getGameByName(data.room);
+      console.error(1, data.room);
       let player = await Player.createNewPlayer(data.name, game._id, socket.id, false);
       game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id), status: constants.gameStatuses.NOT_STARTED });
       game.playerList.forEach(player => {

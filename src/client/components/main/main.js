@@ -23,7 +23,7 @@ const Main = ({getGames, currentUser, games, router, room}) => {
         setTimeout(() => setTopPosition('10%'), 1000);
         setTimeout(() => setOpenJoinGame(true), 1500);
         setTimeout(() => setOpenCreateGame(true), 2000);
-        if (!games) {
+        if (!games || Object.keys(games).length < 1) {
           getGames();
         }
         if (currentUser && !currentUser.errorCode) {
@@ -34,9 +34,13 @@ const Main = ({getGames, currentUser, games, router, room}) => {
         <section className='main'>
             <Logo />
             <div className='centerMain' style={{top: topPosition}}>
-                <Collapsible open={openJoinGame} trigger={<div className='collapsibleTrigger'>Join game</div>}>
+              {
+                ( games && Object.keys(games).length > 0)  && (
+                  <Collapsible open={openJoinGame} trigger={<div className='collapsibleTrigger'>Join game</div>}>
                     <JoinGame />
-                </Collapsible>
+                  </Collapsible>
+                )
+              }
                 <Collapsible open={openCreateGame} trigger={<div className='collapsibleTrigger'>Create game</div>}>
                     <CreateGame />
                     {currentUser && currentUser.errorCode && (
