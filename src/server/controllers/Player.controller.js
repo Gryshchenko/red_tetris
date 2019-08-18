@@ -61,9 +61,9 @@ class PlayerController {
             let columnsToUpdate = {};
             if (data.map) columnsToUpdate.map = data.map;
             if (data.lost) columnsToUpdate.haveWon = data.lost;
-            if (data.score) columnsToUpdate.score = data.score;
-            if (data.clearedRows) columnsToUpdate.clearedRows = data.clearedRows;
-            if (data.currentPiece) columnsToUpdate.currentPiece = data.currentPiece;
+            if (data.score > -1) columnsToUpdate.score = data.score;
+            if (data.clearedRows > -1) columnsToUpdate.clearedRows = data.clearedRows;
+            if (data.currentPiece > -1) columnsToUpdate.currentPiece = data.currentPiece;
 
             const player = await PlayerModel.findOneAndUpdate({ _id: playerId }, columnsToUpdate, { new: true });
             return player;

@@ -2,6 +2,7 @@ import Game from '../controllers/Game.controller.js';
 import Player from '../controllers/Player.controller.js';
 import Piece from '../controllers/Piece.controller.js';
 import constants from '../const';
+import {map as clearMap} from "../../client/reducers/index"
 
 export default socket => {
 
@@ -33,17 +34,44 @@ export default socket => {
 }
 
 const retry = async (data, socket) => {
-    await Game.deleteGame(data.room);
-    data.playerList.forEach(async player => {
+  try {
+    const newGame = await Game.updateGame(data.gameId,{status: constants.gameStatuses.NOT_STARTED});
+    await data.playerList.forEach(async player => {
       if (player.isHost) {
-        await createNewPlayer({name: player.name, room: data.room}, player.socketId)
+        await Player.updatePlayer(player._id,{
+          map: clearMap,
+          lost: false,
+          score: 0,
+          clearedRows: 0,
+          currentPiece: 1,
+          isHost: player.isHost,
+        });
+      } else {
+        await Player.updatePlayer(player._id, {
+          map: clearMap,
+          lost: false,
+          score: 0,
+          clearedRows: 0,
+          currentPiece: 1,
+          isHost: false,
+        });
       }
     });
-     data.playerList.forEach(async player => {
-        if (!player.isHost) {
-          await joinGame({name: player.name, room: data.room}, player.socketId)
+
+    let game = await Game.getGameByName(data.room);
+    data.playerList.forEach(player => {
+      global.io.to(player.socketId).emit(
+        'action',
+        {
+          type: 'RETRY',
+          data: game,
+          currentUser: player,
         }
-      });
+      );
+    });
+  } catch (e) {
+    throw `Error occured in retry event: ${e}`;
+  }
 }
 
 const pauseGame = async (data, socket) => {

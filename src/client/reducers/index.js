@@ -2,6 +2,7 @@ import { fromJS } from 'immutable';
 import { isCanMove } from '../utils';
 
 const ACTION_TYPE = {
+    RETRY_RESPONSE: 'RETRY',
     QUERY_GAME_RESPONSE: 'QUERY_GAME_RESPONSE',
     PING_PONG: 'server/pingPong',
     PING_PONG_RESPONSE: 'PING_PONG',
@@ -40,7 +41,7 @@ const ACTION_TYPE = {
     NEED_TO_PAUSE: 'needToPause'
 };
 
-const map = [
+export const map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -96,6 +97,18 @@ const initialState = {
 const reducer = (state = fromJS(initialState), action) => {
 
   switch (action.type) {
+    case ACTION_TYPE.RETRY_RESPONSE:
+      return state.setIn(['room'], fromJS(action.data))
+        .setIn(['map'], fromJS(map))
+        .setIn(['currentUser'], fromJS(action.currentUser))
+        .setIn(['pieceNotPlaced'], fromJS(false))
+        .setIn(['needToMoveDown'], fromJS(false))
+        .setIn(['currentPieceY'], fromJS(0))
+        .setIn(['currentPieceX'], fromJS(3))
+        .setIn(['moveLeft'], fromJS(false))
+        .setIn(['moveRight'], fromJS(false))
+        .setIn(['currentPiece'], fromJS(null))
+        .setIn(['moveDown'], fromJS(false));
     case ACTION_TYPE.QUERY_GAME_RESPONSE:
       return state.setIn(['errorCode'], fromJS(action.errorCode));
     case ACTION_TYPE.PING_PONG:

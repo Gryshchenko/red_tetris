@@ -223,9 +223,9 @@ const RoomComponent = ( props ) => {
           )
         }
         {
-          isFinish && (
+          isFinish && currentUser.isHost && (
             <div>
-              Press button to begin start game...
+              Press button to begin game...
               <div className='buttonWidth'>
                 <Button
                   onClick={() => dispatch(retry({
@@ -237,6 +237,13 @@ const RoomComponent = ( props ) => {
                   title={'Retry'}
                 />
               </div>
+            </div>
+          )
+        }
+        {
+          isFinish && !currentUser.isHost && (
+            <div>
+              game is over...
             </div>
           )
         }

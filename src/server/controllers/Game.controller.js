@@ -54,7 +54,7 @@ class GameController {
     static async updateGame(gameId, data) {
         try {
             let columnsToUpdate = {};
-            if (data.status) columnsToUpdate.status = data.status;
+            if (data.status > -1) columnsToUpdate.status = data.status;
             if (data.pieceList) columnsToUpdate.pieceList = data.pieceList;
             if (data.playerList) columnsToUpdate.playerList = data.playerList;
           // if (data.status) {
@@ -66,7 +66,6 @@ class GameController {
           // if (data.playerList) {
           //   Object.assign({}, columnsToUpdate, {playerList: data.playerList})
           // }
-          // console.error(columnsToUpdate);
             let game = await Game.findOneAndUpdate({ _id: gameId }, columnsToUpdate, { new: true }).populate('pieceList').populate('playerList');
             return game;
         } catch (e) {
