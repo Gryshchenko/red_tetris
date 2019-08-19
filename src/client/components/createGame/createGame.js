@@ -30,6 +30,11 @@ const CreateGame = (props) => {
                         id={'name'}
                     />
                 </ErrorMsg>
+                <Input
+                  id={'singleMode'}
+                  type={'checkbox'}
+                  text={'Single mode'}
+                  />
                 <div className='buttonWidth'>
                     <Button
                         type={'submit'}
@@ -43,12 +48,14 @@ const CreateGame = (props) => {
 
 const handledSumbit = (e, createNewGame, router) => {
     e.preventDefault()
-    const hostName = document.getElementById('name').value
-    const roomName = document.getElementById('roomName').value
+    const hostName = document.getElementById('name').value;
+    const roomName = document.getElementById('roomName').value;
+    const singleMode = document.getElementById('singleMode').checked;
     if (inputValueValid(hostName, roomName)) {
         createNewGame({
             name: hostName,
             room: roomName,
+            isSingleMode: singleMode,
         });
     }
 

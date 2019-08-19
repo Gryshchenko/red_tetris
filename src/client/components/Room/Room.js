@@ -51,10 +51,11 @@ const KEY_TYPE = {
   PAUSE: 'KeyP'
 };
 
-const _onStartGame = (room, startGame) => {
+const _onStartGame = (room, startGame, status) => {
   const gameId = room._id;
   startGame({
-    gameId: gameId
+    gameId: gameId,
+    status,
   })
 };
 
@@ -87,11 +88,16 @@ const RoomComponent = ( props ) => {
     pauseGame,
     setPause,
     dispatch,
+    isSingle,
   } = props;
 //  console.error((getEnemyTime(room.playerList, currentUser.name) + 160), Math.floor((new Date()).getTime() / 1000));
 
   useEffect(() => {
     _keyPressHandler(props);
+    const isSingleMode = room && room.status === constants.gameStatuses.SINGLE;
+    if (isSingleMode || isSingle) {
+      _onStartGame(room, startGame, constants.gameStatuses.SINGLE);
+    }
     return () => {
         removeEventListener("keyup", _keyPressHandler);
     };
@@ -138,11 +144,11 @@ const RoomComponent = ( props ) => {
         stopMove();
       }
 
-    } else if (room && room.status == 1) {
-      if ((getEnemyTime(room.playerList, currentUser.name) + 160) < Math.floor((new Date()).getTime() / 1000)) {
+    } else if (room && (room.status === constants.gameStatuses.STARTED || room.status === constants.gameStatuses.SINGLE)) {
+      if (room.status !== constants.gameStatuses.SINGLE && (getEnemyTime(room.playerList, currentUser.name) + 160) < Math.floor((new Date()).getTime() / 1000)) {
         endGame({
           playerId: currentUser._id,
-          gameId: room._id
+          gameId: room._id,
         });
         console.log('Ended game due to disconnect')
         // startMove(false);
@@ -152,7 +158,7 @@ const RoomComponent = ( props ) => {
         if (_gameIsOver(map)) {
           endGame({
             playerId: currentUser._id,
-            gameId: room._id
+            gameId: room._id,
           });
           console.log('Ended game due to full map')
         } else {
@@ -182,12 +188,12 @@ const RoomComponent = ( props ) => {
 
   });
 
-  const isWaitingPlayer = room && room.playerList && room.playerList.length != 2;
-  const isGameStarted = room && room.status === constants.gameStatuses.NOT_STARTED && currentUser.isHost === false;
+  const isSingleMode = room && room.status === constants.gameStatuses.SINGLE;
+  const isWaitingPlayer = room && room.playerList && room.playerList.length != 2 &&  isSingleMode !== true && isSingle !== true;
+  const isGameStarted = room && room.status === constants.gameStatuses.NOT_STARTED && currentUser.isHost === false && !isSingle;
   const isHost = room && room.status === constants.gameStatuses.NOT_STARTED && currentUser.isHost === true;
   const isFinish = room && room.status === constants.gameStatuses.FINISHED;
   const isPaused = room && room.status === constants.gameStatuses.PAUSED;
-
   return (
     <React.Fragment>
       <ModalWindow
@@ -214,7 +220,7 @@ const RoomComponent = ( props ) => {
               Press button to begin start game...
               <div className='buttonWidth'>
                 <Button
-                  onClick={() => _onStartGame(room, startGame)}
+                  onClick={() => _onStartGame(room, startGame, constants.gameStatuses.STARTED)}
                   type={'submit'}
                   title={'Start'}
                 />
@@ -232,6 +238,7 @@ const RoomComponent = ( props ) => {
                     gameId: room._id,
                     playerList: room.playerList,
                     room: room.name,
+                    status: room.status,
                   }))}
                   type={'submit'}
                   title={'Retry'}
@@ -273,7 +280,7 @@ const RoomComponent = ( props ) => {
               <div className={'tetrisButton tetrisButtonSmall'} />
             </div>
             <div className={'spaceButton'}>
-              <div className={'tetrisButton tetrisButtonBig'} onClick={(event) => _onStartGame(room, startGame)}/>
+              <div className={'tetrisButton tetrisButtonBig'} onClick={(event) => _onStartGame(room, startGame, constants.gameStatuses.SINGLE)}/>
             </div>
           </div>
 
@@ -493,7 +500,8 @@ const mapStateToProps = (state, router) => {
     forceDown: state.game.getIn(['forceMoveDown']),
     rotate: state.game.getIn(['needToRotatePiece']),
     pingPong: state.game.getIn(['pingPong']).toJS(),
-    needToPause: state.game.getIn(['needToPause'])
+    needToPause: state.game.getIn(['needToPause']),
+    isSingle: state.game.getIn(['isSingle']),
   };
 }
 

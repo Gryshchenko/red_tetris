@@ -152,8 +152,12 @@ const getEnemy = (playerList, currentUser) => {
 const isCanMove = (state) => {
   const room = state.getIn(['room']) ? state.getIn(['room']).toJS() : null;
   const currentUser = state.getIn(['currentUser']) ?  state.getIn(['currentUser']).toJS() : null;
-  if (room && room.playerList && room.playerList.length === 2) {
+  const isSingle = room && room.status === constants.gameStatuses.SINGLE;
+  if (room && room.playerList && room.playerList.length === 2 || isSingle) {
     const isGameStarted = room && room.status === constants.gameStatuses.STARTED;
+    if (isSingle) {
+      return true;
+    }
     return isGameStarted ? true : false;
   }
   return false;

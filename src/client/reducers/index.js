@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import { isCanMove } from '../utils';
+import constants from '../../server/const';
 
 const ACTION_TYPE = {
     RETRY_RESPONSE: 'RETRY',
@@ -91,13 +92,17 @@ const initialState = {
     needToRotatePiece: false,
     map,
     errorCode: 0,
-    needToPause: false
+    needToPause: false,
+    isSingle: false,
 }
 
 const reducer = (state = fromJS(initialState), action) => {
 
   switch (action.type) {
     case ACTION_TYPE.RETRY_RESPONSE:
+      if (state.getIn(['isSingle']) === true) {
+        action.data.status = constants.gameStatuses.SINGLE;
+      };
       return state.setIn(['room'], fromJS(action.data))
         .setIn(['map'], fromJS(map))
         .setIn(['currentUser'], fromJS(action.currentUser))
@@ -130,7 +135,9 @@ const reducer = (state = fromJS(initialState), action) => {
     case ACTION_TYPE.SET_CURRENT_USER:
       return state.setIn(['currentUser'], fromJS(action.data));
     case ACTION_TYPE.CREATE_NEW_PLAYER_RESPONSE:
-      return state.setIn(['room'], fromJS(action.data)).setIn(['currentUser'], fromJS(action.currentUser));
+      return state.setIn(['room'], fromJS(action.data))
+        .setIn(['currentUser'], fromJS(action.currentUser))
+        .setIn(['isSingle'], fromJS(action.data.status === constants.gameStatuses.SINGLE  ? true : false));
     case ACTION_TYPE.START_GAME_RESPONSE:
       return state.setIn(['room'], fromJS(action.data)).setIn(['currentPiece'], 1);
     // case ACTION_TYPE.PIECE_LANDED:

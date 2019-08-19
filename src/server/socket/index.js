@@ -35,7 +35,11 @@ export default socket => {
 
 const retry = async (data, socket) => {
   try {
-    const newGame = await Game.updateGame(data.gameId,{status: constants.gameStatuses.NOT_STARTED});
+    const newGame = await Game.updateGame(
+      data.gameId,
+      {
+        status: data.status === constants.gameStatuses.SINGLE ? data.status : constants.gameStatuses.NOT_STARTED,
+      });
     await data.playerList.forEach(async player => {
       if (player.isHost) {
         await Player.updatePlayer(player._id,{
@@ -248,9 +252,16 @@ const createNewPlayer = async (data, socket) => {
     try {
         let game = await Game.createNewGame(data.room);
         const isHost = true;
+        const isSingleMode = data.isSingleMode;
 
         let player = await Player.createNewPlayer(data.name, game._id, socket.id, isHost);
-        game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id), status: constants.gameStatuses.NOT_STARTED });
+        game = await Game.updateGame(
+          game.id,
+          {
+            playerList: game.playerList.concat(player.id),
+            status: isSingleMode ? constants.gameStatuses.SINGLE : constants.gameStatuses.NOT_STARTED,
+          }
+          );
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 'action',
@@ -274,7 +285,7 @@ const startGame = async (data, socket) => {
             throw 'Game does not exists';
         }
 
-        game = await Game.updateGame(data.gameId, { status: constants.gameStatuses.STARTED });
+        game = await Game.updateGame(data.gameId, { status: data.status });
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 'action',
