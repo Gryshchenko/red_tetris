@@ -2,14 +2,16 @@
   display: flex;
   height: 100%;
   justify-content: space-around;
+  align-items: center;
 }
 
 .roomMainFlex {
   display: flex;
   background-color: #9ead86;
   padding: 5px;
-  width: 310px;
-  height: 100%;
+  width: auto;
+  max-width: 310px;
+  height: auto;
   border: 2px solid black;
 }
 
@@ -74,12 +76,12 @@
   border-radius: 20px;
   align-items: center;
   flex-direction: column;
-  min-height: 770px;
+  max-height: 700px;
 }
 
 .control {
   height: 100%;
-  width: 100%;
+  width: auto;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -91,27 +93,33 @@
   flex-direction: column;
   width: 180px;
   align-items: center;
+  position: relative;
+  height: 200px;
 }
 
 .generalButton {
   display: flex;
   flex-direction: column;
   width: 40%;
+  position: relative;
 }
 
 .topButton {
   display: flex;
   justify-content: space-around;
   margin-bottom: 20px;
+  position: relative;
 }
 
 .spaceButton {
   display: flex;
-  justify-content: center
+  justify-content: center;
+  position: relative;
 }
 
 .moveButtonMiddle {
   display: flex;
+  position: relative;
   flex-direction: row;
   width: 100%;
 }
@@ -128,4 +136,51 @@
 }
 .roomPadding {
   padding: 10px 0;
+}
+.roomFontSize {
+  font-size: 10px;
+  position: absolute;
+}
+.pause {
+  left: 0
+}
+.sound {
+  right: 0;
+}
+.start {
+  left: 0;
+  top: -15px;
+}
+.left {
+  left: 0;
+  top: -15px;
+}
+.right {
+  right: 0;
+  top: -15px;
+}
+.rotate {
+  top: -15px;
+}
+.down {
+  bottom: 0;
+}
+@media screen and (max-width: 400px) {
+  .moveButtonMiddle {
+    width: 70%;
+  }
+  .tetrisButtonMiddle {
+    width: 40px;
+    height: 40px;
+  }
+  .tetrisButtonBig {
+    width: 100px;
+    height: 100px;
+  }
+  .roomFontSize {
+    font-size: 8px;
+  }
+  .moveButton {
+    height: 140px;
+  }
 }

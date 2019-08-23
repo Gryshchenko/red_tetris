@@ -313,9 +313,7 @@ const RoomComponent = ( props ) => {
     <div className={'roomMain'}>
       <div className={'tetrisViewMain'}>
         <div className={'roomMainFlex'}>
-          <div>
             <GameBoard />
-          </div>
           <div>
             <GameBoardInfo />
           </div>
@@ -323,8 +321,8 @@ const RoomComponent = ( props ) => {
         <div className={'control'}>
           <div className={'generalButton'}>
             <div className={'topButton'}>
-              <div>Pause</div>
-              <div>Sound off/on</div>
+              <div className={"roomFontSize pause"}>Pause</div>
+              <div className={"roomFontSize sound"}>Sound off/on</div>
             </div>
             <div className={'topButton'}>
               <div onClick={() => props.dispatch(setNeedToPause(true))} className={'tetrisButton tetrisButtonSmall'} />
@@ -332,7 +330,7 @@ const RoomComponent = ( props ) => {
               {/*<div className={'tetrisButton tetrisButtonSmall'} />*/}
             </div>
             <div className={'spaceButton'}>
-              <div>
+              <div className={"roomFontSize start"}>
                 {room.status === constants.gameStatuses.NOT_STARTED || room.status === constants.gameStatuses.SINGLE
                   ? "Force down"
                   : "Start Game"
@@ -352,16 +350,16 @@ const RoomComponent = ( props ) => {
           </div>
 
           <div className={'moveButton'}>
-            <div>Rotate</div>
+            <div className={"roomFontSize rotate"}>Rotate</div>
             <div onClick={() => props.dispatch(needToRotatePiece(true))} className={'tetrisButton tetrisButtonMiddle'} />
             <div className={'moveButtonMiddle'} >
-              <div>Left</div>
+              <div className={"roomFontSize left"}>Left</div>
               <div onClick={() => props.dispatch(moveLeft(true))} className={'tetrisButton tetrisButtonMiddle flex1'} />
               <div className={'flex1'} />
               <div onClick={() => props.dispatch(moveRight(true))} className={'tetrisButton tetrisButtonMiddle flex1'} />
-              <div>Right</div>
+              <div className={"roomFontSize right"}>Right</div>
             </div>
-            <div>Down</div>
+            <div className={"roomFontSize down"}>Down</div>
             <div onClick={() => props.dispatch(moveDown(true))} className={'tetrisButton tetrisButtonMiddle'} />
           </div>
         </div>
