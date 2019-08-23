@@ -13,6 +13,11 @@
   flex-direction: column;
 }
 
+@media screen and (max-width: 800px) {
+  .waitingRoomPlayer {
+    width: auto;
+  }
+}
 .waitingRoomName {
   padding: 10px 0;
 }
