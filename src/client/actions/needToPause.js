@@ -1,4 +1,4 @@
-export default function needToPause(data) {
+export default function setNeedToPause(data) {
     return {
         type: 'needToPause',
         data

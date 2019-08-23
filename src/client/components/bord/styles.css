@@ -1,0 +1,28 @@
+.bordBase {
+  width: 300px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+.bordTextBase {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.bordTitleText {
+  margin: 10px 0;
+  font-weight: bold;
+}
+.bordMainTitle {
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+.bordWinner {
+  border: 1px solid black;
+}
+.bordText {
+  display: flex;
+  align-items: center;
+}
+

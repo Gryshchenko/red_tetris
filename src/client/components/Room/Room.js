@@ -19,7 +19,7 @@ import forceMoveDown from '../../actions/forceMoveDown';
 import needToRotatePiece from '../../actions/needToRotatePiece';
 import pieceLanded from '../../actions/pieceLanded';
 import setCurrentShape from '../../actions/setCurrentShape';
-import needToPause from '../../actions/needToPause';
+import setNeedToPause from '../../actions/needToPause';
 import pauseGame from '../../actions/pauseGame';
 import { placePieceOnBoard, isPossibleToPlace, rotatePiece, clearFullRows, getEnemyTime } from '../../utils';
 import { cloneDeepWith } from 'lodash';
@@ -28,6 +28,7 @@ import constants from '../../../server/const';
 import pingPong from '../../actions/pingPong';
 import { Button } from '../_base/button/Button';
 import retry from '../../actions/retry';
+import { Bord } from '../bord/Bord';
 
 const customStyles = {
   content : {
@@ -37,7 +38,7 @@ const customStyles = {
     bottom                : 'auto',
     marginRight           : '-50%',
     transform             : 'translate(-50%, -50%)',
-    backgroundColor        : 'red',
+    backgroundColor       : '#d9e476',
   }
 };
 
@@ -90,7 +91,6 @@ const RoomComponent = ( props ) => {
     dispatch,
     isSingle,
   } = props;
-//  console.error((getEnemyTime(room.playerList, currentUser.name) + 160), Math.floor((new Date()).getTime() / 1000));
 
   useEffect(() => {
     _keyPressHandler(props);
@@ -119,10 +119,6 @@ const RoomComponent = ( props ) => {
       setPause(false);
     }
 
-    // if (!intervalStarted && currentPiece) {
-    //   startInterval(setInterval(() => startMove(), 1000));
-    // }
-
     if (room && room.status === constants.gameStatuses.PAUSED) {
       if (interval) {
         clearInterval(interval);
@@ -144,8 +140,10 @@ const RoomComponent = ( props ) => {
         stopMove();
       }
 
-    } else if (room && (room.status === constants.gameStatuses.STARTED || room.status === constants.gameStatuses.SINGLE)) {
-      if (room.status !== constants.gameStatuses.SINGLE && (getEnemyTime(room.playerList, currentUser.name) + 160) < Math.floor((new Date()).getTime() / 1000)) {
+    } else if (room && (room.status === constants.gameStatuses.STARTED || room.status === constants.gameStatuses.SINGLE) && room.status !== constants.gameStatuses.PAUSED) {
+      if (
+        (room.status !== constants.gameStatuses.SINGLE)
+        && (getEnemyTime(room.playerList, currentUser.name) + 20) < Math.floor((new Date()).getTime() / 1000)) {
         endGame({
           playerId: currentUser._id,
           gameId: room._id,
@@ -198,7 +196,7 @@ const RoomComponent = ( props ) => {
     <React.Fragment>
       <ModalWindow
         style={customStyles}
-        isOpen={isWaitingPlayer || isGameStarted || isHost || isFinish}
+        isOpen={isWaitingPlayer || isGameStarted || isHost || isFinish || isPaused}
       >
         {
           isWaitingPlayer && (
@@ -210,14 +208,16 @@ const RoomComponent = ( props ) => {
         {
           !isWaitingPlayer && isGameStarted && (
             <div>
-              Wait until anouther user start game...
+              Wait until another user start game...
             </div>
           )
         }
         {
           !isWaitingPlayer && isHost && (
             <div>
-              Press button to begin start game...
+              <div className={"roomPadding"}>
+                Press button to begin start game...
+              </div>
               <div className='buttonWidth'>
                 <Button
                   onClick={() => _onStartGame(room, startGame, constants.gameStatuses.STARTED)}
@@ -231,18 +231,30 @@ const RoomComponent = ( props ) => {
         {
           isFinish && currentUser.isHost && (
             <div>
-              Press button to begin game...
+              <Bord
+                playerList={room.playerList}
+                reason={"finished"}
+              />
               <div className='buttonWidth'>
-                <Button
-                  onClick={() => dispatch(retry({
-                    gameId: room._id,
-                    playerList: room.playerList,
-                    room: room.name,
-                    status: room.status,
-                  }))}
-                  type={'submit'}
-                  title={'Retry'}
-                />
+                <div className={"roomPadding"}>
+                  <Button
+                    onClick={() => dispatch(retry({
+                      gameId: room._id,
+                      playerList: room.playerList,
+                      room: room.name,
+                      status: room.status,
+                    }))}
+                    type={'submit'}
+                    title={'Retry'}
+                  />
+                </div>
+                <div className={"roomPadding"}>
+                  <Button
+                    onClick={() => location.reload()}
+                    type={'submit'}
+                    title={'To main'}
+                  />
+                </div>
               </div>
             </div>
           )
@@ -250,14 +262,50 @@ const RoomComponent = ( props ) => {
         {
           isFinish && !currentUser.isHost && (
             <div>
-              game is over...
+              <Bord
+                playerList={room.playerList}
+                title={"Game over"}
+              />
+              <div className={"roomPadding"}>
+                <Button
+                  onClick={() => location.reload()}
+                  type={'submit'}
+                  title={'To main'}
+                />
+              </div>
             </div>
           )
         }
         {
           isPaused && (
             <div>
-              PAUSE
+              <Bord
+                playerList={room.playerList}
+                title={"PAUSE"}
+              />
+              <div className={"roomPadding"}>
+                <Button
+                  onClick={() => location.reload()}
+                  type={'submit'}
+                  title={'To main'}
+                />
+              </div>
+              {
+                currentUser.isHost && (
+                  <div className={"roomPadding"}>
+                    <Button
+                      onClick={() => {
+                        props.dispatch(setNeedToPause(false));
+                        pauseGame({
+                          gameId: room._id
+                        });
+                      }}
+                      type={'submit'}
+                      title={'Resume'}
+                    />
+                  </div>
+                )
+              }
             </div>
           )
         }
@@ -275,23 +323,46 @@ const RoomComponent = ( props ) => {
         <div className={'control'}>
           <div className={'generalButton'}>
             <div className={'topButton'}>
+              <div>Pause</div>
+              <div>Sound off/on</div>
+            </div>
+            <div className={'topButton'}>
+              <div onClick={() => props.dispatch(setNeedToPause(true))} className={'tetrisButton tetrisButtonSmall'} />
               <div className={'tetrisButton tetrisButtonSmall'} />
-              <div className={'tetrisButton tetrisButtonSmall'} />
-              <div className={'tetrisButton tetrisButtonSmall'} />
+              {/*<div className={'tetrisButton tetrisButtonSmall'} />*/}
             </div>
             <div className={'spaceButton'}>
-              <div className={'tetrisButton tetrisButtonBig'} onClick={(event) => _onStartGame(room, startGame, constants.gameStatuses.SINGLE)}/>
+              <div>
+                {room.status === constants.gameStatuses.NOT_STARTED || room.status === constants.gameStatuses.SINGLE
+                  ? "Force down"
+                  : "Start Game"
+                }
+              </div>
+              <div className={'tetrisButton tetrisButtonBig'} onClick={
+                  () => {
+                    if (room.status === constants.gameStatuses.NOT_STARTED) {
+                      _onStartGame(room, startGame, constants.gameStatuses.SINGLE)
+                    } else {
+                      props.dispatch(forceMoveDown(true))
+                    }
+                    }
+                }
+              />
             </div>
           </div>
 
           <div className={'moveButton'}>
-            <div className={'tetrisButton tetrisButtonMiddle'} />
+            <div>Rotate</div>
+            <div onClick={() => props.dispatch(needToRotatePiece(true))} className={'tetrisButton tetrisButtonMiddle'} />
             <div className={'moveButtonMiddle'} >
-              <div className={'tetrisButton tetrisButtonMiddle flex1'} />
+              <div>Left</div>
+              <div onClick={() => props.dispatch(moveLeft(true))} className={'tetrisButton tetrisButtonMiddle flex1'} />
               <div className={'flex1'} />
-              <div className={'tetrisButton tetrisButtonMiddle flex1'} />
+              <div onClick={() => props.dispatch(moveRight(true))} className={'tetrisButton tetrisButtonMiddle flex1'} />
+              <div>Right</div>
             </div>
-            <div className={'tetrisButton tetrisButtonMiddle'} />
+            <div>Down</div>
+            <div onClick={() => props.dispatch(moveDown(true))} className={'tetrisButton tetrisButtonMiddle'} />
           </div>
         </div>
       </div>
@@ -524,7 +595,7 @@ const mapDispatchToProps = (dispatch) => {
     needToRotatePiece: (data) => dispatch(needToRotatePiece(data)),
     pieceLanded: (data) => dispatch(pieceLanded(data)),
     setCurrentShape: (data) => dispatch(setCurrentShape(data)),
-    setPause: (data) => dispatch(needToPause(data)),
+    setPause: (data) => dispatch(setNeedToPause(data)),
     pauseGame: (data) => dispatch(pauseGame(data)),
     dispatch,
   }

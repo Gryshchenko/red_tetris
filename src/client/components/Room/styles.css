@@ -73,7 +73,8 @@
   box-shadow: inset 0 0 10px #fff;
   border-radius: 20px;
   align-items: center;
-  flex-direction: column
+  flex-direction: column;
+  min-height: 770px;
 }
 
 .control {
@@ -117,4 +118,14 @@
 
 .flex1 {
   flex: 1;
+}
+
+.buttonWidth {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 30px;
+}
+.roomPadding {
+  padding: 10px 0;
 }

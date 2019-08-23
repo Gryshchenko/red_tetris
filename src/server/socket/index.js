@@ -309,7 +309,7 @@ const getAllGames = async (data, socket) => {
             if (game && game.playerList[0]) {
               const isGameNotStart = game.status === constants.gameStatuses.NOT_STARTED;
               const isOnlyHost = game.playerList.length === 1 && game.playerList[0].isHost;
-              const isPlayerOnline = game.playerList[0].lastActiveTime + 160 > Math.floor((new Date()).getTime() / 1000);
+              const isPlayerOnline = game.playerList[0].lastActiveTime + 8 > Math.floor((new Date()).getTime() / 1000);
               if (isGameNotStart && isOnlyHost && isPlayerOnline) {
                 Object.assign( result, {
                   [idx]: game,

@@ -7,6 +7,7 @@ import { Input } from '../_base/input/input';
 import { Button } from '../_base/button/Button';
 import { withRouter } from 'react-router';
 import { ErrorMsg } from '../_base/errorMsg/ErrorMsg';
+import { Bord } from '../bord/Bord';
 
 const VALID_ID = {
     NAME_VALID: 'nameValid',
