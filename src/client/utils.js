@@ -130,7 +130,15 @@ const getEnemy = (playerList, currentUser) => {
     })
     return result;
   }
-
+  const getEnemyMap = (playerList, currentUser) => {
+    let result = null;
+    playerList.forEach((player) => {
+      if (player.map && player.name !== currentUser) {
+      result = player.map;
+      }
+    })
+  return result;
+  }
   const clearFullRows = (board) => {
     let newBoard = board;
     let clearedRows = 0;
@@ -173,4 +181,5 @@ export {
     clearFullRows,
     getEnemyTime,
     getEnemy,
+    getEnemyMap,
 };

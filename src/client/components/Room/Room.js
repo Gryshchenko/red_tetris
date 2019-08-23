@@ -29,6 +29,7 @@ import pingPong from '../../actions/pingPong';
 import { Button } from '../_base/button/Button';
 import retry from '../../actions/retry';
 import { Bord } from '../bord/Bord';
+import { EnemyBoard } from '../enemyBoard';
 
 const customStyles = {
   content : {
@@ -194,6 +195,9 @@ const RoomComponent = ( props ) => {
   const isPaused = room && room.status === constants.gameStatuses.PAUSED;
   return (
     <React.Fragment>
+      <div className={"enemyBord"}>
+        <EnemyBoard/>
+      </div>
       <ModalWindow
         style={customStyles}
         isOpen={isWaitingPlayer || isGameStarted || isHost || isFinish || isPaused}
