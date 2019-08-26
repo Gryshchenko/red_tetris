@@ -26,6 +26,15 @@ class PlayerController {
         }
     }
 
+    static async getPlayers() {
+      try {
+        let players = await PlayerModel.find({});
+
+        return players;
+      } catch (e) {
+        throw `Error occured while getAllPlayers: ${e}`;
+      }
+    }
     static async getPlayer(playerId) {
         try {
             const player = await PlayerModel.findOne({ _id: playerId });

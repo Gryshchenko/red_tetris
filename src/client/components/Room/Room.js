@@ -115,11 +115,11 @@ const RoomComponent = ( props ) => {
 
     if (needToPause) {
       pauseGame({
-        gameId: room._id
+        gameId: room._id,
+        isSingle,
       });
       setPause(false);
     }
-
     if (room && room.status === constants.gameStatuses.PAUSED) {
       if (interval) {
         clearInterval(interval);
@@ -144,6 +144,7 @@ const RoomComponent = ( props ) => {
     } else if (room && (room.status === constants.gameStatuses.STARTED || room.status === constants.gameStatuses.SINGLE) && room.status !== constants.gameStatuses.PAUSED) {
       if (
         (room.status !== constants.gameStatuses.SINGLE)
+        && !isSingle
         && (getEnemyTime(room.playerList, currentUser.name) + 20) < Math.floor((new Date()).getTime() / 1000)) {
         endGame({
           playerId: currentUser._id,
@@ -301,7 +302,8 @@ const RoomComponent = ( props ) => {
                       onClick={() => {
                         props.dispatch(setNeedToPause(false));
                         pauseGame({
-                          gameId: room._id
+                          gameId: room._id,
+                          isSingle,
                         });
                       }}
                       type={'submit'}

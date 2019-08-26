@@ -126,6 +126,7 @@ const getEnemy = (playerList, currentUser) => {
     playerList.forEach((player) => {
       if (player.lastActiveTime && player.name !== currentUser) {
         result = player.lastActiveTime;
+        return ;
       }
     })
     return result;

@@ -22,6 +22,8 @@ export default socket => {
 
     socket.on('getAllGames', data => getAllGames(data, socket));
 
+    socket.on('getAllPlayers', data => getAllPlayers(data, socket));
+
     socket.on('endGame', data => endGame(data, socket));
 
     socket.on('pieceLanded', data => pieceLand(data, socket));
@@ -90,7 +92,11 @@ const pauseGame = async (data, socket) => {
       throw `Game ${data.gameId} was already finished`;
     }
 
-    game = await Game.updateGame(game.id, {  status: game.status == 3 ? 1 : constants.gameStatuses.PAUSED });
+    if (data.isSingle) {
+      game = await Game.updateGame(game.id, {  status: game.status === constants.gameStatuses.PAUSED ? constants.gameStatuses.SINGLE : constants.gameStatuses.PAUSED });
+    } else {
+      game = await Game.updateGame(game.id, {  status: game.status === constants.gameStatuses.PAUSED ? constants.gameStatuses.STARTED : constants.gameStatuses.PAUSED });
+    }
 
     game.playerList.forEach(player => {
       global.io.to(player.socketId).emit(
@@ -329,6 +335,20 @@ const getAllGames = async (data, socket) => {
     } catch (e) {
         throw `Error occured while getAllGames event: ${e}`;
     }
+}
+const getAllPlayers = async (data, socket) => {
+  try {
+    let players = await Player.getPlayers();
+    global.io.to(socket.id).emit(
+      'action',
+      {
+        type: 'GET_ALL_PLAYERS',
+        data: players,
+      }
+    );
+  } catch (e) {
+    throw `Error occured while getAllGames event: ${e}`;
+  }
 }
 
 const endGame = async (data, socket) => {

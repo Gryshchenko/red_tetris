@@ -27,7 +27,6 @@ const setRows = (map) => {
 
 const enemyBoard = (props) => {
   const { map } = props;
-  console.error(1, map)
   if (!map) {
     return null;
   }

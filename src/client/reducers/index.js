@@ -39,6 +39,7 @@ const ACTION_TYPE = {
     DISCONNECT_RESPONSE: 'PLAYER_DISCONNECTED',
     GET_ALL_GAMES: 'GET_ALL_GAMES',
     GAME_PAUSED_RESPONSE: 'GAME_PAUSED',
+    GET_PLAYERS_RESPONSE: 'GET_ALL_PLAYERS',
     NEED_TO_PAUSE: 'needToPause'
 };
 
@@ -94,6 +95,7 @@ const initialState = {
     errorCode: 0,
     needToPause: false,
     isSingle: false,
+    players: null,
 }
 
 const reducer = (state = fromJS(initialState), action) => {
@@ -193,9 +195,12 @@ const reducer = (state = fromJS(initialState), action) => {
     case ACTION_TYPE.GET_ALL_GAMES:
       return state.setIn(['games'], fromJS(action.data));
     case ACTION_TYPE.GAME_PAUSED_RESPONSE:
+      // action.data.status = state.getIn(['isSingle']) && state.getIn(['needToPause']) ? constants.gameStatuses.SINGLE : action.data.status;
       return state.setIn(['room'], fromJS(action.data));
     case ACTION_TYPE.NEED_TO_PAUSE:
       return state.setIn(['needToPause'], action.data);
+    case ACTION_TYPE.GET_PLAYERS_RESPONSE:
+      return state.setIn(['players'], fromJS(action.data));
     default:
       return state
     }
