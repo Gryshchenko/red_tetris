@@ -1,15 +1,16 @@
 
 import React, { useEffect } from 'react';
 import './styles.css';
+import { withRouter } from 'react-router';
 
-const Logo = () => {
+const Logo = (props) => {
     useEffect(() => {
         setLogoTextAnimation();
     });
     return (
         <React.Fragment>
             <div>
-                <span className={'logo'} id={'logo'}/>
+                <span onClick={() => props.history.push(`/`)} className={'logo'} id={'logo'}/>
             </div>
         </React.Fragment>
     );
@@ -30,6 +31,4 @@ const setLogoTextAnimation = () => {
     }, 100);
 }
 
-export {
-    Logo,
-};
+export default withRouter(Logo);

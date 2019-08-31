@@ -6,7 +6,7 @@ import getGames from '../../actions/getGames';
 import CreateGame from '../createGame/createGame';
 import JoinGame from '../joinGame/JoinGame';
 import Collapsible from 'react-collapsible';
-import { Logo } from '../logo/Logo';
+import Logo from '../logo/Logo';
 import constants from '../../../server/const';
 
 const createGameErrors = {
@@ -33,7 +33,7 @@ const Main = ({getGames, currentUser, games, router, room}) => {
     return (
         <section className='main'>
             <Logo />
-            <div onClick={() => router.history.push('/score')} className={"scoreLink"}>Score list</div>
+            <div onClick={() => router.history.push('/score')} className={"scoreLink"}>TOP 20</div>
             <div className='centerMain' style={{top: topPosition}}>
               {
                 ( games && Object.keys(games).length > 0)  && (

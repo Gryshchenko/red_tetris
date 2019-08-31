@@ -1,53 +1,19 @@
-.waitingRoom {
-  height: 100%;
-  width: 100%;
+.scoreBase {
+  width: auto;
+  max-width: 300px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-}
-
-.waitingRoomPlayer {
-  width: 500px;
-  padding: 15px 0;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-}
-
-@media screen and (max-width: 800px) {
-  .waitingRoomPlayer {
-    width: auto;
-  }
-}
-.waitingRoomName {
-  padding: 10px 0;
-}
-
-.waitingRoomPlayerMain {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  border: 2px solid grey;
-  padding: 10px;
-  margin: 10px 0;
-  box-shadow: 6px 11px 9px -1px rgba(0,0,0,0.45);
-}
-
-.waitingRoomPlayers {
-  margin-top: 100px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.waitingRoomButton {
-  display: flex;
-  justify-content: space-between;
-  width: 50%;
   margin: 0 auto;
 }
-
-.availableRooms {
+.emptyList {
   display: flex;
-  margin: 10px 0;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.emptyText {
+  text-decoration: underline;
+  font-style: italic;
+  cursor: pointer;
 }

@@ -3,6 +3,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import './styles.css'
 import getPlayers from '../../actions/getPlayers';
+import Logo from '../logo/Logo';
 
 const customStyles = {
   content : {
@@ -17,34 +18,43 @@ const customStyles = {
   }
 };
 
-const ScoreRoom = ({ players, getPlayers }) => {
+const ScoreRoom = ({ players, getPlayers, router }) => {
   useEffect(() => {
-    getPlayers();
+    if (!players) {
+      getPlayers();
+    }
   });
   if (!players) {
-    return <div>
-      <div></div>
-      Score list is empty
-    </div>;
-  }
-  return (
-    <div>
-      {
-        Object.keys(players).map((key) => {
-          return (
-            <React.Fragment key={key}>
-              <div className={'waitingRoomPlayerMain'}>
-                <div className={'waitingRoomPlayer'}>
-                  <div className={'waitingRoomName'}>Room name: {players[key].name}</div>
-                  <div className={'waitingRoomName'}>Player score: {players[key].score}</div>
+    return (
+      <div className={'emptyList'}>
+        <Logo />
+        <div >
+          Score list is empty <a className={'emptyText'} onClick={() => router.history.push(`/`)}> go to main page</a>
+        </div>
+      </div>
+      );
+  } else {
+    players = players.sort((fp, sp) => fp.score > sp.score).slice(0, 20);
+    return (
+      <div className={'scoreBase'}>
+        <Logo />
+        {
+          Object.keys(players).map((key) => {
+            return (
+              <React.Fragment key={key}>
+                <div className={'waitingRoomPlayerMain'}>
+                  <div className={'waitingRoomPlayer'}>
+                    <div className={'waitingRoomName'}>Player name: {players[key].name}</div>
+                    <div className={'waitingRoomName'}>Player score: {players[key].score}</div>
+                  </div>
                 </div>
-              </div>
-            </React.Fragment >
-          );
-        })
-      }
-    </div>
-  );
+              </React.Fragment >
+            );
+          })
+        }
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state, router) => {
