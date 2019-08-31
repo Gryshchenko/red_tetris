@@ -33,6 +33,7 @@ const Main = ({getGames, currentUser, games, router, room}) => {
     return (
         <section className='main'>
             <Logo />
+            <div onClick={() => router.history.push('/score')} className={"scoreLink"}>Score list</div>
             <div className='centerMain' style={{top: topPosition}}>
               {
                 ( games && Object.keys(games).length > 0)  && (

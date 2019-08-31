@@ -3,9 +3,18 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  cursor: pointer;
   align-items: center;
 }
 
+.scoreLink {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
+  color: white;
+  text-decoration: underline;
+}
 
 .collapsibleTrigger {
   color: white;

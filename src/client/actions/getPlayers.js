@@ -1,6 +1,6 @@
 export default function getPlayers(data) {
   return {
-    type: 'server/getPlayers',
+    type: 'server/getAllPlayers',
     data,
   }
 }

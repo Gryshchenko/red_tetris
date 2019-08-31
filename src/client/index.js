@@ -13,6 +13,7 @@ import { Provider } from 'react-redux'
 
 import { HashRouter, Route } from 'react-router-dom';
 import WaitingRoom from './components/waitingRoom/WaitingRoom';
+import ScoreRoom from './components/scoreRoom/ScoreRoom';
 
 
 require("babel-core/register");
@@ -40,6 +41,7 @@ ReactDom.render((
          {/*<Router history={history}> */}
         <Route exact path='/' component={Main} />
         <Route path='/game' component={WaitingRoom} />
+        <Route path='/score' component={ScoreRoom} />
       </React.Fragment>
        {/*</Router> */}
     </Provider>

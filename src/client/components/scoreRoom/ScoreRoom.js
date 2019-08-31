@@ -18,11 +18,14 @@ const customStyles = {
 };
 
 const ScoreRoom = ({ players, getPlayers }) => {
-  // useEffect(() => {
-  //   getPlayers();
-  // });
+  useEffect(() => {
+    getPlayers();
+  });
   if (!players) {
-    return null;
+    return <div>
+      <div></div>
+      Score list is empty
+    </div>;
   }
   return (
     <div>
