@@ -98,7 +98,7 @@ export const initialState = {
     players: null,
 }
 
-const reducer = (state = fromJS(initialState), action) => {
+export const reducer = (state = fromJS(initialState), action) => {
 
   switch (action.type) {
     case ACTION_TYPE.RETRY_RESPONSE:
