@@ -2,7 +2,7 @@ import { fromJS } from 'immutable';
 import { isCanMove } from '../utils';
 import constants from '../../server/const';
 
-const ACTION_TYPE = {
+export const ACTION_TYPE = {
     RETRY_RESPONSE: 'RETRY',
     QUERY_GAME_RESPONSE: 'QUERY_GAME_RESPONSE',
     PING_PONG: 'server/pingPong',
@@ -66,7 +66,7 @@ export const map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
-const initialState = {
+export const initialState = {
     pingPong: {
       pending: false,
     },
