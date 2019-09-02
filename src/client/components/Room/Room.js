@@ -293,12 +293,17 @@ const RoomComponent = ( props ) => {
               <div className='buttonWidth'>
                 <div className={"roomPadding"}>
                   <Button
-                    onClick={() => dispatch(retry({
-                      gameId: room._id,
-                      playerList: room.playerList,
-                      room: room.name,
-                      status: room.status,
-                    }))}
+                    onClick={() => {
+                      dispatch(retry({
+                        gameId: room._id,
+                        playerList: room.playerList,
+                        room: room.name,
+                        status: room.status,
+                        }));
+                      if(isSingleMode || isSingle) {
+                          _onStartGame(room, startGame, constants.gameStatuses.SINGLE);
+                      }
+                      }}
                     type={'submit'}
                     title={'Retry'}
                   />
@@ -377,13 +382,12 @@ const RoomComponent = ( props ) => {
         <div className={'control'}>
           <div className={'generalButton'}>
             <div className={'topButton'}>
-              <div className={"roomFontSize pause"}>Pause</div>
+              <div className={"roomFontSize pause"} onClick={() => props.dispatch(needToPause(true))}>Pause</div>
               <div className={"roomFontSize sound"}>Sound</div>
             </div>
             <div className={'topButton'}>
               <div onClick={() => props.dispatch(setNeedToPause(true))} className={'tetrisButton tetrisButtonSmall'} />
               <div className={'tetrisButton tetrisButtonSmall'} />
-              {/*<div className={'tetrisButton tetrisButtonSmall'} />*/}
             </div>
             <div className={'spaceButton'}>
               <div className={"roomFontSize start"}>
@@ -394,11 +398,7 @@ const RoomComponent = ( props ) => {
               </div>
               <div className={'tetrisButton tetrisButtonBig'} onClick={
                   () => {
-                    if (room.status === constants.gameStatuses.NOT_STARTED) {
-                      _onStartGame(room, startGame, constants.gameStatuses.SINGLE)
-                    } else {
                       props.dispatch(forceMoveDown(true))
-                    }
                     }
                 }
               />
