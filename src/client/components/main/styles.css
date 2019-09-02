@@ -35,3 +35,12 @@
   position: absolute;
   transition: .5s top;
 }
+
+.mainAudio {
+  position: absolute;
+  top: 0px;
+  right: 100px;
+  margin: 20px;
+  color: white;
+  text-decoration: underline;
+}

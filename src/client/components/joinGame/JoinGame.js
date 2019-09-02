@@ -34,7 +34,7 @@ const joinGameErrors = {
   [constants.gameErrorCode.PLAYER_EXIST]: 'Selected name are exist',
 }
 
-const JoinGame = ({ router, games, createNewPlayer, joinGame, joinGameResponse, checkUser, checkUserData }) => {
+const JoinGame = ({ router, games, createNewPlayer, joinGame, joinGameResponse, checkUser, checkUserData, setSound }) => {
     const [isModal, setModal] = useState(false);
     const [currentUser, setCurrentUser] = useState('');
     const setModalOff = () => setModal(false);
@@ -44,7 +44,7 @@ const JoinGame = ({ router, games, createNewPlayer, joinGame, joinGameResponse, 
     }
     return (
         <div className="joinGameWrap">
-            <form onSubmit={(e) => handledSumbit(e, setModalOn, setCurrentUser, checkUser, checkUserData)}>
+            <form onSubmit={(e) => handledSumbit(e, setModalOn, setCurrentUser, checkUser, checkUserData, setSound)}>
                 <ErrorMsg id={VALID_ID.JOIN_NAME_VALID}>
                     <Input
                         title={'Your name'}
@@ -93,13 +93,14 @@ const JoinGame = ({ router, games, createNewPlayer, joinGame, joinGameResponse, 
     );
 }
 
-const handledSumbit = (e, setModalOn, setCurrentUser, checkUser, checkUserData) => {
+const handledSumbit = (e, setModalOn, setCurrentUser, checkUser, checkUserData, setSound) => {
     e.preventDefault();
     const currentUser = document.getElementById('joinGameName').value;
 
     if (inputValueValid(currentUser)) {
         checkUser(currentUser);
       if (checkUserData.isExistUserName) {
+        setSound();
         setModalOn();
         setCurrentUser(currentUser);
       }
