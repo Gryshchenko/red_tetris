@@ -65,6 +65,10 @@ let interval;
 
 let blockMovement = false;
 
+let themeAudio;
+let resultsAudio;
+let moveAudio = new Audio('../../../sounds/Rotate.wav');
+
 const RoomComponent = ( props ) => {
   const {
     room,
@@ -142,11 +146,31 @@ const RoomComponent = ( props ) => {
         console.log('Interval cleared');
       }
 
+      if (!resultsAudio) {
+        themeAudio.pause();
+        themeAudio = null;
+        resultsAudio = new Audio('../../../sounds/Results.mp3');
+        resultsAudio.loop = true;
+        resultsAudio.play();
+      }
+
       if (needToMoveDown) {
         stopMove();
       }
 
     } else if (room && (room.status === constants.gameStatuses.STARTED || room.status === constants.gameStatuses.SINGLE) && room.status !== constants.gameStatuses.PAUSED) {
+
+      if (resultsAudio) {
+        resultsAudio.pause();
+        resultsAudio = null;
+      }
+
+      if (!themeAudio) {
+        themeAudio = new Audio('../../../sounds/GameTheme.mp3');
+        themeAudio.loop = true;
+        themeAudio.play();
+      }
+
       if (
         (room.status !== constants.gameStatuses.SINGLE)
         && !isSingle
@@ -179,6 +203,9 @@ const RoomComponent = ( props ) => {
         stopMove(false);
         forceMoveDown(false);
       } else {
+        // if (forceDown || left || right || down || rotate) {
+        //   moveAudio.play();
+        // }
         if (forceDown) {
           _forceMoveDownTetri(props);
           blockMovement = true;
@@ -188,7 +215,7 @@ const RoomComponent = ( props ) => {
         else if (left){
           _moveTetriLeft(props);
           console.warn("Left");
-        } 
+        }
         else if (right) {
           _moveTetriRight(props);
           console.warn("Right");
@@ -200,7 +227,6 @@ const RoomComponent = ( props ) => {
         else if (rotate) {
           _rotateTetri(props);
         }
-  
         if (needToMoveDown) {
           _moveTetriDown(props);
           stopMove();
@@ -502,8 +528,10 @@ const _calculateScore = (clearedRows) => {
       score = 50;
       break ;
     case 3:
-      score = 80;
+      score = 100;
       break ;
+    case 4:
+      score = 150;
   }
   return score;
 }
