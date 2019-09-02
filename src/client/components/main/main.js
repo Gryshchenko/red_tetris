@@ -10,9 +10,9 @@ import Logo from '../logo/Logo';
 import constants from '../../../server/const';
 
 const createGameErrors = {
-  [constants.gameErrorCode.BOTH_EXIST]: "Selected name and room name are exist",
-  [constants.gameErrorCode.GAME_EXIST]: 'Selected room name are exist',
-  [constants.gameErrorCode.PLAYER_EXIST]: 'Selected name are exist',
+  [constants.gameErrorCode.BOTH_EXIST]: "These player and room names already exist",
+  [constants.gameErrorCode.GAME_EXIST]: 'This room name already exists',
+  [constants.gameErrorCode.PLAYER_EXIST]: 'This player name already exists',
 }
 
 const Main = ({getGames, currentUser, games, router, room}) => {

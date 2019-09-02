@@ -63,6 +63,8 @@ const _onStartGame = (room, startGame, status) => {
 
 let interval;
 
+let blockMovement = false;
+
 const RoomComponent = ( props ) => {
   const {
     room,
@@ -74,9 +76,7 @@ const RoomComponent = ( props ) => {
     stopMove,
     pingPong,
     setPingPong,
-    startInterval,
     startMove,
-    intervalStarted,
     currentPieceX,
     currentPieceY,
     left,
@@ -91,6 +91,11 @@ const RoomComponent = ( props ) => {
     setPause,
     dispatch,
     isSingle,
+    needToRotatePiece,
+    moveDown,
+    moveLeft,
+    moveRight,
+    forceMoveDown
   } = props;
 
   useEffect(() => {
@@ -166,22 +171,41 @@ const RoomComponent = ( props ) => {
         }
       }
 
-      if (left){
-        _moveTetriLeft(props);
-      } else if (right) {
-        _moveTetriRight(props);
-      } else if (down) {
-        _moveTetriDown(props);
-      } else if (rotate) {
-        _rotateTetri(props);
-      } else if (forceDown) {
-        _forceMoveDownTetri(props);
+      if (blockMovement) {
+        moveDown(false);
+        moveLeft(false);
+        moveRight(false);
+        needToRotatePiece(false);
+        stopMove(false);
+        forceMoveDown(false);
+      } else {
+        if (forceDown) {
+          _forceMoveDownTetri(props);
+          blockMovement = true;
+          setTimeout(() => { blockMovement = false }, 100);
+          console.warn("Force");
+        }
+        else if (left){
+          _moveTetriLeft(props);
+          console.warn("Left");
+        } 
+        else if (right) {
+          _moveTetriRight(props);
+          console.warn("Right");
+        }
+        else if (down) {
+          _moveTetriDown(props);
+          console.warn("Down");
+        }
+        else if (rotate) {
+          _rotateTetri(props);
+        }
+  
+        if (needToMoveDown) {
+          _moveTetriDown(props);
+          stopMove();
+       }
       }
-
-      if (needToMoveDown) {
-        _moveTetriDown(props);
-        stopMove();
-     }
     } else if (room && room.status == 0) {
 
     }
@@ -206,14 +230,14 @@ const RoomComponent = ( props ) => {
         {
           isWaitingPlayer && (
             <div>
-              wait pls another player...
+              Waiting for another player...
             </div>
           )
         }
         {
           !isWaitingPlayer && isGameStarted && (
             <div>
-              Wait until another user start game...
+              Waiting for host to start the game...
             </div>
           )
         }
@@ -221,7 +245,7 @@ const RoomComponent = ( props ) => {
           !isWaitingPlayer && isHost && (
             <div>
               <div className={"roomPadding"}>
-                Press button to begin start game...
+                Press button to start the game...
               </div>
               <div className='buttonWidth'>
                 <Button
@@ -328,7 +352,7 @@ const RoomComponent = ( props ) => {
           <div className={'generalButton'}>
             <div className={'topButton'}>
               <div className={"roomFontSize pause"}>Pause</div>
-              <div className={"roomFontSize sound"}>Sound off/on</div>
+              <div className={"roomFontSize sound"}>Sound</div>
             </div>
             <div className={'topButton'}>
               <div onClick={() => props.dispatch(setNeedToPause(true))} className={'tetrisButton tetrisButtonSmall'} />
@@ -413,6 +437,8 @@ const _keyPressHandler = (props) => addEventListener('keyup', function (event) {
       break;
     case KEY_TYPE.SPACE:
       // if (isGameStarted) {
+          clearInterval(interval);
+          interval = null;
       props.dispatch(forceMoveDown(true));
       // }
       break;
@@ -489,6 +515,7 @@ const _forceMoveDownTetri = (props) => {
 
   while (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, y, currentPiece)) {
     y++;
+    pieceMove({ posX: currentPieceX, posY: y - 1});
   }
   let clearedRows = _placePiece(props, currentPieceX, y - 1, _deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
   let score = _calculateScore(clearedRows);
