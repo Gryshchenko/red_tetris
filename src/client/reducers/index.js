@@ -99,7 +99,6 @@ export const initialState = {
 }
 
 export const reducer = (state = fromJS(initialState), action) => {
-
   switch (action.type) {
     case ACTION_TYPE.RETRY_RESPONSE:
       if (state.getIn(['isSingle']) === true) {
