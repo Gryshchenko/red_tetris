@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  cursor: pointer;
   align-items: center;
 }
 
@@ -14,6 +13,7 @@
   margin: 20px;
   color: white;
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .collapsibleTrigger {
