@@ -65,6 +65,7 @@ let interval;
 
 let blockMovement = false;
 
+let soundOn = true;
 let themeAudio;
 let resultsAudio;
 let moveAudio = new Audio('../../../sounds/Rotate.wav');
@@ -102,6 +103,8 @@ const RoomComponent = ( props ) => {
     forceMoveDown
   } = props;
 
+  const [soundOn, setSound] = useState(true);
+
   useEffect(() => {
     _keyPressHandler(props);
     const isSingleMode = room && room.status === constants.gameStatuses.SINGLE;
@@ -114,6 +117,11 @@ const RoomComponent = ( props ) => {
   }, []);
 
   useEffect(() => {
+    if (!soundOn && themeAudio) {
+      themeAudio.pause();
+      themeAudio = null;
+    }
+
     if (!pingPong.pending) {
       setPingPong({playerId: currentUser._id, lastActiveTime: Math.floor((new Date()).getTime() / 1000)});
     }
@@ -146,7 +154,7 @@ const RoomComponent = ( props ) => {
         console.log('Interval cleared');
       }
 
-      if (!resultsAudio) {
+      if (!resultsAudio && soundOn) {
         themeAudio.pause();
         themeAudio = null;
         resultsAudio = new Audio('../../../sounds/Results.mp3');
@@ -165,7 +173,7 @@ const RoomComponent = ( props ) => {
         resultsAudio = null;
       }
 
-      if (!themeAudio) {
+      if (!themeAudio && soundOn) {
         themeAudio = new Audio('../../../sounds/GameTheme.mp3');
         themeAudio.loop = true;
         themeAudio.play();
@@ -382,12 +390,12 @@ const RoomComponent = ( props ) => {
         <div className={'control'}>
           <div className={'generalButton'}>
             <div className={'topButton'}>
-              <div className={"roomFontSize pause"} onClick={() => props.dispatch(needToPause(true))}>Pause</div>
+              <div className={"roomFontSize pause"}>Pause</div>
               <div className={"roomFontSize sound"}>Sound</div>
             </div>
             <div className={'topButton'}>
               <div onClick={() => props.dispatch(setNeedToPause(true))} className={'tetrisButton tetrisButtonSmall'} />
-              <div className={'tetrisButton tetrisButtonSmall'} />
+              <div className={'tetrisButton tetrisButtonSmall'} onClick={() => setSound(!soundOn)} />
             </div>
             <div className={'spaceButton'}>
               <div className={"roomFontSize start"}>
