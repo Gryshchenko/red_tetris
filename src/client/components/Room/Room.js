@@ -147,7 +147,7 @@ const RoomComponent = ( props ) => {
       }
 
       if (!resultsAudio) {
-        // themeAudio.pause();
+        themeAudio.pause();
         themeAudio = null;
         resultsAudio = new Audio('../../../sounds/Results.mp3');
         resultsAudio.loop = true;
@@ -165,11 +165,11 @@ const RoomComponent = ( props ) => {
         resultsAudio = null;
       }
 
-      // if (!themeAudio) {
-      //   themeAudio = new Audio('../../../sounds/GameTheme.mp3');
-      //   themeAudio.loop = true;
-      //   themeAudio.play();
-      // }
+      if (!themeAudio) {
+        themeAudio = new Audio('../../../sounds/GameTheme.mp3');
+        themeAudio.loop = true;
+        themeAudio.play();
+      }
 
       if (
         (room.status !== constants.gameStatuses.SINGLE)

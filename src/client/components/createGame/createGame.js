@@ -15,10 +15,10 @@ const VALID_ID = {
 }
 
 const CreateGame = (props) => {
-  const { router, createNewGame, setSound } = props;
+  const { router, createNewGame } = props;
     return (
         <div className="createGameWrap">
-            <form onSubmit={(e) => handledSumbit(e, createNewGame, router, setSound)}>
+            <form onSubmit={(e) => handledSumbit(e, createNewGame, router)}>
                 <ErrorMsg id={VALID_ID.NAME_VALID}>
                     <Input
                         title={'Room name'}
@@ -47,13 +47,12 @@ const CreateGame = (props) => {
     );
 }
 
-const handledSumbit = (e, createNewGame, router, setSound) => {
+const handledSumbit = (e, createNewGame, router) => {
     e.preventDefault()
     const hostName = document.getElementById('name').value;
     const roomName = document.getElementById('roomName').value;
     const singleMode = document.getElementById('singleMode').checked;
     if (inputValueValid(hostName, roomName)) {
-      setSound();
         createNewGame({
             name: hostName,
             room: roomName,
