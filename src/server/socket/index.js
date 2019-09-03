@@ -35,7 +35,7 @@ export default socket => {
     socket.on('pauseGame', data => pauseGame(data, socket));
 }
 
-const retry = async (data, socket) => {
+export const retry = async (data, socket) => {
   try {
     const newGame = await Game.updateGame(
       data.gameId,
@@ -65,16 +65,23 @@ const retry = async (data, socket) => {
     });
 
     let game = await Game.getGameByName(data.room);
-    data.playerList.forEach(player => {
-      global.io.to(player.socketId).emit(
-        'action',
-        {
-          type: 'RETRY',
-          data: game,
-          currentUser: player,
-        }
-      );
-    });
+    const result = {
+      type: 'RETRY',
+      data: game,
+      currentUser: player,
+    };
+    if (data.test) {
+      return result;
+    } else {
+      data.playerList.forEach(player => {
+        global.io.to(player.socketId).emit(
+          'action',
+          {
+            ...result,
+          }
+        );
+      });
+    }
   } catch (e) {
     throw `Error occured in retry event: ${e}`;
   }
@@ -143,22 +150,34 @@ const disconnect = async (data, socket) => {
     }
 }
 
-const createGameFromQueryString = async (data, socket) => {
+export const createGameFromQueryString = async (data, socket) => {
   try {
     const game = await Game.getGameByName(data.room);
     const player = await Player.getPlayerByName(data.name);
     if (!game && !player) {
       await createNewPlayer(data,socket);
+      return {
+        errorCode: 0,
+      };
     } else if (game && !player) {
       await joinGame(data, socket);
+      return {
+        errorCode: 0,
+      };
     } else {
+      const result = {
+        type: 'QUERY_GAME_RESPONSE',
+        data: null,
+        currentUser: null,
+        errorCode: constants.gameErrorCode.CANT_CREATE,
+      };
+      if (data.test) {
+        return result;
+      }
       global.io.to(socket.id).emit(
         'action',
         {
-          type: 'QUERY_GAME_RESPONSE',
-          data: null,
-          currentUser: null,
-          errorCode: constants.gameErrorCode.CANT_CREATE,
+          ...result,
         });
     }
 
@@ -167,7 +186,7 @@ const createGameFromQueryString = async (data, socket) => {
   }
 }
 
-const createNewGame = async (data, socket) => {
+export const createNewGame = async (data, socket) => {
   try {
     const game = await Game.getGameByName(data.room);
     const player = await Player.getPlayerByName(data.name);
@@ -176,14 +195,21 @@ const createNewGame = async (data, socket) => {
     } else {
       const playerErrorCode = player ? constants.gameErrorCode.PLAYER_EXIST : null;
       const gameErrorCode = game ? constants.gameErrorCode.GAME_EXIST : null;
-      global.io.to(socket.id).emit(
-        'action',
-        {
-          type: 'GAME_CREATED',
-          data: null,
-          currentUser: null,
-          errorCode: playerErrorCode && gameErrorCode ? constants.gameErrorCode.BOTH_EXIST : playerErrorCode || gameErrorCode,
-        });
+      const result = {
+        type: 'GAME_CREATED',
+        data: null,
+        currentUser: null,
+        errorCode: playerErrorCode && gameErrorCode ? constants.gameErrorCode.BOTH_EXIST : playerErrorCode || gameErrorCode,
+      };
+      if (data.test) {
+        return result;
+      } else {
+        global.io.to(socket.id).emit(
+          'action',
+          {
+            ...result,
+          });
+      }
     }
   } catch (e) {
     throw `Error occured while createNewGame event: ${e}`;
@@ -207,23 +233,21 @@ const pingPong = async (data, socket) => {
   }
 
 }
-const checkUser = async (data, socket) => {
+export const checkUser = async (data, socket) => {
   try {
     const player = await Player.getPlayerByName(data);
-    if (!player) {
-        global.io.to(socket.id).emit(
-          'action',
-          {
-            type: 'CHECK_USER',
-            data: true,
-          }
-        );
+    const result = {
+      type: 'CHECK_USER',
+      data: !player ? true : false,
+
+    }
+    if (data.user) {
+      return result;
     } else {
       global.io.to(socket.id).emit(
         'action',
         {
-          type: 'CHECK_USER',
-          data: false,
+          ...result,
         });
     }
   } catch (e) {
@@ -231,30 +255,36 @@ const checkUser = async (data, socket) => {
   }
 
 }
-const joinGame = async (data, socket) => {
+export const joinGame = async (data, socket) => {
   try {
       let game = await Game.getGameByName(data.room);
-      console.error(1, data.room);
       let player = await Player.createNewPlayer(data.name, game._id, socket.id, false);
       game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id), status: constants.gameStatuses.NOT_STARTED });
-      game.playerList.forEach(player => {
-        global.io.to(player.socketId).emit(
-          'action',
-          {
-            type: 'JOIN_GAME',
-            data: game,
-            currentUser: player,
-            errorCode: 0,
-          }
-        );
-      });
+      const result = {
+        type: 'JOIN_GAME',
+        data: game,
+        currentUser: player,
+        errorCode: 0,
+      };
+      if (data.test) {
+        return result;
+      } else {
+        game.playerList.forEach(player => {
+          global.io.to(player.socketId).emit(
+            'action',
+            {
+              ...result,
+            }
+          );
+        });
+      }
   } catch (e) {
     throw `Error occured while joinGame event: ${e}`;
   }
 
 }
 
-const createNewPlayer = async (data, socket) => {
+export const createNewPlayer = async (data, socket) => {
     try {
         let game = await Game.createNewGame(data.room);
         const isHost = true;
@@ -268,13 +298,19 @@ const createNewPlayer = async (data, socket) => {
             status: isSingleMode ? constants.gameStatuses.SINGLE : constants.gameStatuses.NOT_STARTED,
           }
           );
+        const result = {
+          type: 'PLAYER_CREATED',
+          data: game,
+          currentUser: player
+        };
+        if (data.test) {
+          return result;
+        }
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 'action',
                 {
-                    type: 'PLAYER_CREATED',
-                    data: game,
-                    currentUser: player
+                  ...result,
                 }
             );
         });
@@ -283,7 +319,7 @@ const createNewPlayer = async (data, socket) => {
     }
 }
 
-const startGame = async (data, socket) => {
+export const startGame = async (data, socket) => {
     try {
         let game = await Game.getGameById(data.gameId);
 
@@ -292,12 +328,18 @@ const startGame = async (data, socket) => {
         }
 
         game = await Game.updateGame(data.gameId, { status: data.status });
+        const result = {
+          type: 'GAME_STARTED',
+          data: game
+        }
+        if (data.test) {
+          return result;
+        }
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 'action',
                 {
-                    type: 'GAME_STARTED',
-                    data: game
+                  ...result,
                 }
             );
         });
@@ -306,7 +348,7 @@ const startGame = async (data, socket) => {
     }
 }
 
-const getAllGames = async (data, socket) => {
+export const getAllGames = async (data, socket) => {
     try {
         let games = await Game.getAllGames();
         let result = {};
@@ -325,13 +367,20 @@ const getAllGames = async (data, socket) => {
           })
         }
 
-        global.io.to(socket.id).emit(
+        const data = {
+          type: 'GET_ALL_GAMES',
+          data: result,
+        }
+        if (data.test) {
+          return data;
+        } else {
+          global.io.to(socket.id).emit(
             'action',
             {
-                type: 'GET_ALL_GAMES',
-                data: result,
+              ...data,
             }
-        );
+          );
+        }
     } catch (e) {
         throw `Error occured while getAllGames event: ${e}`;
     }

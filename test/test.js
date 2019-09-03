@@ -59,10 +59,36 @@ describe('main', function() {
         data: {
           status: constants.gameStatuses.STARTED,
         },
-        currentUser: null,
+        currentUser: 0,
       }), () => {
         const state = fromJS(initialState);
-        return state.setIn(['room'], fromJS(null))
+        return state.setIn(['room'], fromJS(0))
+      })
+    })
+    it(ACTION_TYPE.QUERY_GAME_RESPONSE + " CAN'T CREATE", () => {
+      is(reducer(fromJS({...initialState, isSingle: false}), {
+        type: ACTION_TYPE.RETRY_RESPONSE,
+        data: {
+          status: constants.gameStatuses.STARTED,
+        },
+        currentUser: constants.gameErrorCode.CANT_CREATE,
+      }), () => {
+        const state = fromJS(initialState);
+        return state.setIn(['room'], fromJS(constants.gameErrorCode.CANT_CREATE))
+      })
+    })
+    it(ACTION_TYPE.CREATE_NEW_PLAYER_RESPONSE + " SUCCESS", () => {
+      is(reducer(fromJS({...initialState, isSingle: false}), {
+        type: ACTION_TYPE.CREATE_NEW_PLAYER_RESPONSE,
+        data: {
+          name: "test_name",
+          room: "test_room",
+        },
+      }), () => {
+        const state = fromJS(initialState);
+        return state.setIn(['room'], fromJS({data: "test"}))
+          .setIn(['currentUser'], fromJS("test"))
+          .setIn(['isSingle'], fromJS(false));
       })
     })
   });
