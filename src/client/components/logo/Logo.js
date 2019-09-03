@@ -1,29 +1,32 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles.css';
 import { withRouter } from 'react-router';
 
 const Logo = (props) => {
+    const [logoText, setLogoText] = useState('');
+
     useEffect(() => {
-        setLogoTextAnimation();
-    });
+        setLogoTextAnimation(setLogoText);
+    }, []);
     return (
         <React.Fragment>
             <div>
-                <span onClick={() => props.history.push(`/`)} className={'logo'} id={'logo'}/>
+                <span onClick={() => props.history.push(`/`)} className={'logo'}>{logoText}</span>
             </div>
         </React.Fragment>
     );
 }
 
-const setLogoTextAnimation = () => {
-    const logo = document.getElementById('logo');
-    const newLogo = 'RED TETRIS';
+const setLogoTextAnimation = (setLogoText) => {
+    const newLogoText = 'RED TETRIS';
+    let tmp = '';
     let i = 0;
-    if (logo.innerHTML.length > 0) return ;
-    const interval = setInterval(() => {
-        if (i < newLogo.length) {
-            logo.innerHTML = logo.innerHTML + newLogo[i];
+
+    let interval = setInterval(() => {
+        if (i < newLogoText.length) {
+            tmp += newLogoText[i];
+            setLogoText(tmp);
             i++;
         } else {
             clearInterval(interval);

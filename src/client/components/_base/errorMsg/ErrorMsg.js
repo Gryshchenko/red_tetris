@@ -1,14 +1,13 @@
-
 import React from 'react';
 import './styles.css';
 
-const ErrorMsg = ({ children, id }) => {
+const ErrorMsg = ({ children, errorMessage }) => {
     return (
         <div>
             <div>
                 {children}
             </div>
-            <span className='valid' id={id} />
+            <span className='valid'>{errorMessage}</span>
         </div>
     );
 }

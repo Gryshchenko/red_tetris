@@ -62,10 +62,7 @@ const _onStartGame = (room, startGame, status) => {
 };
 
 let interval;
-
 let blockMovement = false;
-
-let soundOn = true;
 let themeAudio;
 let resultsAudio;
 let moveAudio = new Audio('../../../sounds/Rotate.wav');

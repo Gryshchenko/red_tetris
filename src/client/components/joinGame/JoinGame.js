@@ -37,6 +37,8 @@ const joinGameErrors = {
 const JoinGame = ({ router, games, createNewPlayer, joinGame, joinGameResponse, checkUser, checkUserData }) => {
     const [isModal, setModal] = useState(false);
     const [currentUser, setCurrentUser] = useState('');
+    const [joinGameName, setJoinGameName] = useState('');
+    const [joinGameNameError, setJoinGameNameError] = useState('');
     const setModalOff = () => setModal(false);
     const setModalOn = () => setModal(true);
     if (!games || Object.keys(games).length < 1) {
@@ -44,11 +46,15 @@ const JoinGame = ({ router, games, createNewPlayer, joinGame, joinGameResponse, 
     }
     return (
         <div className="joinGameWrap">
-            <form onSubmit={(e) => handledSumbit(e, setModalOn, setCurrentUser, checkUser, checkUserData)}>
-                <ErrorMsg id={VALID_ID.JOIN_NAME_VALID}>
+            <form onSubmit={(e) => handledSumbit(e, setModalOn, setCurrentUser, checkUser, checkUserData, joinGameName, setJoinGameNameError)}>
+                <ErrorMsg errorMessage={joinGameNameError}>
                     <Input
                         title={'Your name'}
-                        id={'joinGameName'}
+                        value={joinGameName}
+                        onChange={(event) => {
+                          setJoinGameName(event.target.value);
+                          setJoinGameNameError('');
+                        }}
                     />
                 </ErrorMsg>
                 {checkUserData.isExistUserName === false && (
@@ -93,11 +99,10 @@ const JoinGame = ({ router, games, createNewPlayer, joinGame, joinGameResponse, 
     );
 }
 
-const handledSumbit = (e, setModalOn, setCurrentUser, checkUser, checkUserData) => {
+const handledSumbit = (e, setModalOn, setCurrentUser, checkUser, checkUserData, currentUser, setJoinGameNameError) => {
     e.preventDefault();
-    const currentUser = document.getElementById('joinGameName').value;
 
-    if (inputValueValid(currentUser)) {
+    if (inputValueValid(currentUser, setJoinGameNameError)) {
         checkUser(currentUser);
       if (checkUserData.isExistUserName) {
         setModalOn();
@@ -107,10 +112,10 @@ const handledSumbit = (e, setModalOn, setCurrentUser, checkUser, checkUserData) 
 
 }
 
-const inputValueValid = (name) => {
+const inputValueValid = (name, setJoinGameNameError) => {
     let isValid = true;
     if (name === '') {
-        document.getElementById(VALID_ID.JOIN_NAME_VALID).innerHTML = 'Name is required';
+        setJoinGameNameError('Name is required');
         isValid = false;
 
     }

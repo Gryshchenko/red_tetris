@@ -1,41 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import './styles.css';
-// import createNewPlayer from '../../actions/createNewPlayer';
 import createNewGame from '../../actions/createNewGame';
 import { Input } from '../_base/input/input';
 import { Button } from '../_base/button/Button';
 import { withRouter } from 'react-router';
 import { ErrorMsg } from '../_base/errorMsg/ErrorMsg';
-import { Bord } from '../bord/Bord';
-
-const VALID_ID = {
-    NAME_VALID: 'nameValid',
-    ROOM_VALID: 'roomValid',
-}
 
 const CreateGame = (props) => {
-  const { router, createNewGame } = props;
+    const [roomName, setRoomName] = useState('');
+    const [playerName, setPlayerName] = useState('');
+    const [singleMode, setSingleMode] = useState(false);
+
+    const [roomNameError, setRoomNameError] = useState('');
+    const [playerNameError, setPlayerNameError] = useState('');
+
+    const { createNewGame } = props;
+
     return (
         <div className="createGameWrap">
-            <form onSubmit={(e) => handledSumbit(e, createNewGame, router)}>
-                <ErrorMsg id={VALID_ID.NAME_VALID}>
+            <form onSubmit={(e) => handledSumbit(e, createNewGame, roomName, playerName, singleMode, setRoomNameError, setPlayerNameError)}>
+                <ErrorMsg errorMessage={roomNameError}>
                     <Input
                         title={'Room name'}
-                        id={'roomName'}
+                        value={roomName}
+                        onChange={(event) => {
+                            setRoomName(event.target.value);
+                            setRoomNameError('');
+                        }}
                     />
                 </ErrorMsg>
-                <ErrorMsg id={VALID_ID.ROOM_VALID}>
+                <ErrorMsg errorMessage={playerNameError}>
                     <Input
                         title={'Your name'}
-                        id={'name'}
+                        value={playerName}
+                        onChange={(event) => {
+                            setPlayerName(event.target.value);
+                            setPlayerNameError('');
+                        }}
                     />
                 </ErrorMsg>
                 <Input
-                  id={'singleMode'}
-                  type={'checkbox'}
-                  text={'Single mode'}
-                  />
+                    type={'checkbox'}
+                    text={'Single mode'}
+                    value={singleMode}
+                    onChange={(event) => {
+                        setSingleMode(event.target.value);
+                    }}
+                    wrapperStyle={{
+                        display: 'flex',
+                        height: '10px'
+                    }}
+                    textStyle={{
+                        margin: '3px',
+                        height: '10px'
+                    }}
+                />
                 <div className='buttonWidth'>
                     <Button
                         type={'submit'}
@@ -47,12 +67,9 @@ const CreateGame = (props) => {
     );
 }
 
-const handledSumbit = (e, createNewGame, router) => {
+const handledSumbit = (e, createNewGame, roomName, hostName, singleMode, setRoomNameError, setPlayerNameError) => {
     e.preventDefault()
-    const hostName = document.getElementById('name').value;
-    const roomName = document.getElementById('roomName').value;
-    const singleMode = document.getElementById('singleMode').checked;
-    if (inputValueValid(hostName, roomName)) {
+    if (inputValueValid(hostName, roomName, setRoomNameError, setPlayerNameError)) {
         createNewGame({
             name: hostName,
             room: roomName,
@@ -62,15 +79,15 @@ const handledSumbit = (e, createNewGame, router) => {
 
 }
 
-const inputValueValid = (name, room) => {
+const inputValueValid = (name, room, setRoomNameError, setPlayerNameError) => {
     let isValid = true;
     if (name === '') {
-        document.getElementById(VALID_ID.NAME_VALID).innerHTML = 'Name is required';
+        setPlayerNameError('Player name is required');
         isValid = false;
 
     }
     if (room === '') {
-        document.getElementById(VALID_ID.ROOM_VALID).innerHTML = 'Room name is required';
+        setRoomNameError('Room name is required');
         isValid = false;
 
     }
