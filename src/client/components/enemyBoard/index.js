@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './styles.css';
 import { connect } from 'react-redux';
 import { getEnemyMap } from '../../utils';
+import {map as cleanMap} from '../../reducers/index';
 
 const setBlockClassName = (color) => {
   if (color != 0) return 'base';
@@ -26,33 +27,29 @@ const setRows = (map) => {
 }
 
 const enemyBoard = (props) => {
-  const { map } = props;
-  if (!map) {
-    return null;
-  }
+  const { room, currentUser } = props;
+  const [enemyMap, setEnemyMap] = useState(null);
+
+  useEffect(() => {
+    setEnemyMap(getEnemyMap(room.playerList, currentUser.name));
+  });
+
   return (
       <Wrapper>
-        {setRows(map)}
+        {setRows(enemyMap && enemyMap.length ? enemyMap : cleanMap)}
       </Wrapper>
   )
 };
 
-const mapStateToProps = (state, router) => {
+const mapStateToProps = (state) => {
   const room = state.game.getIn(['room']) ? state.game.getIn(['room']).toJS() : null;
   const currentUser = state.game.getIn(['currentUser']) ?  state.game.getIn(['currentUser']).toJS() : null;
-  let map = null;
-  if (room && currentUser) {
-    map = getEnemyMap(room.playerList, currentUser.name);
-  }
+
   return {
-    map,
+    room,
+    currentUser
   };
 }
-
-const mapDispatchToProps = (dispatch) => {
-  return { }
-}
-
 const X = ({ color, idx }) => {
   return (
     <div key={idx} className={`block blockBorder ${setBlockClassName(color)}`} />
@@ -73,7 +70,7 @@ const Wrapper = ({ children }) => {
   );
 }
 
-const EnemyBoard = connect(mapStateToProps, mapDispatchToProps)(enemyBoard);
+const EnemyBoard = connect(mapStateToProps)(enemyBoard);
 export {
   EnemyBoard,
 };

@@ -513,21 +513,27 @@ const _calculateScore = (clearedRows) => {
 }
 
 const _forceMoveDownTetri = (props) => {
-  const { forceMoveDown, map, room, currentPieceX, currentPieceY, currentPiece, pieceLanded, currentUser } = props;
+  const { forceMoveDown, map, room, currentPieceX, currentPieceY, currentPiece, pieceLanded, currentUser, shape } = props;
 
   let y = currentPieceY + 1;
 
   while (isPossibleToPlace(map, room.pieceList[currentPiece - 1].shape, currentPieceX, y, currentPiece)) {
     y++;
-    pieceMove({ posX: currentPieceX, posY: y - 1});
   }
+  pieceMove({ posX: currentPieceX, posY: y - 1});
   let clearedRows = _placePiece(props, currentPieceX, y - 1, _deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
   let score = _calculateScore(clearedRows);
+
+  let newMap = _deletePiece(cloneDeepWith(map), currentPiece);
+
+  newMap = placePieceOnBoard(newMap, room.pieceList[currentPiece - 1].shape, currentPieceX, y - 1, currentPiece);
+  let resultOfClearing = clearFullRows(newMap);
+  newMap = resultOfClearing.newBoard;
 
   pieceLanded({
     playerId: currentUser._id,
     gameId: room._id,
-    playerMap: map,
+    playerMap: newMap,
     currentPiece,
     score: room.playerList.find(player => player._id == currentUser._id).score + score,
     clearedRows: room.playerList.find(player => player._id == currentUser._id).clearedRows + clearedRows
@@ -545,10 +551,16 @@ const _moveTetriDown = (props) => {
     let clearedRows = _placePiece(props, currentPieceX, currentPieceY, _deletePiece(cloneDeepWith(map), currentPiece), room.pieceList[currentPiece - 1].shape, true);
     let score = _calculateScore(clearedRows);
 
+    let newMap = _deletePiece(cloneDeepWith(map), currentPiece);
+
+    newMap = placePieceOnBoard(newMap, room.pieceList[currentPiece - 1].shape, currentPieceX, currentPieceY, currentPiece);
+    let resultOfClearing = clearFullRows(newMap);
+    newMap = resultOfClearing.newBoard;
+
     pieceLanded({
       playerId: currentUser._id,
       gameId: room._id,
-      playerMap: map,
+      playerMap: newMap,
       currentPiece,
       score: room.playerList.find(player => player._id == currentUser._id).score + score,
       clearedRows: room.playerList.find(player => player._id == currentUser._id).clearedRows + clearedRows

@@ -18,6 +18,7 @@ export const ACTION_TYPE = {
     SET_CURRENT_USER: 'setCurrentUser',
     PIECE_LANDED: 'server/pieceLanded',
     PIECE_LANDED_RESPONSE: 'PIECE_LANDED',
+    ENEMY_PIECE_LANDED_RESPONSE: 'ENEMIES_PIECE_LANDED',
     START_GAME: 'server/startGame',
     END_GAME: 'server/endGame',
     GAME_ENDED: 'GAME_ENDED',
@@ -145,6 +146,8 @@ export const reducer = (state = fromJS(initialState), action) => {
     //     return state.setIn(['room'], fromJS(action.data)).setIn(['pieceNotPlaced'], true).setIn(['currentPieceX'], 3).setIn(['currentPieceY'], 0);
     case ACTION_TYPE.PIECE_LANDED_RESPONSE:
       return state.setIn(['room'], fromJS(action.data)).setIn(['pieceNotPlaced'], true).setIn(['currentPieceX'], 3).setIn(['currentPieceY'], 0).setIn(['currentPiece'], fromJS(action.currentPiece));
+    case ACTION_TYPE.ENEMY_PIECE_LANDED_RESPONSE:
+      return state.setIn(['room'], fromJS(action.data));
     case ACTION_TYPE.START_INTERVAL:
       return state.setIn(['intervalStarted'], fromJS(action.data));
     case ACTION_TYPE.START_MOVE:
