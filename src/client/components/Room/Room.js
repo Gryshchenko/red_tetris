@@ -211,19 +211,15 @@ const RoomComponent = ( props ) => {
           _forceMoveDownTetri(props);
           blockMovement = true;
           setTimeout(() => { blockMovement = false }, 100);
-          console.warn("Force");
         }
         else if (left){
           _moveTetriLeft(props);
-          console.warn("Left");
         }
         else if (right) {
           _moveTetriRight(props);
-          console.warn("Right");
         }
         else if (down) {
           _moveTetriDown(props);
-          console.warn("Down");
         }
         else if (rotate) {
           _rotateTetri(props);
@@ -248,9 +244,11 @@ const RoomComponent = ( props ) => {
 
   return (
     <React.Fragment>
-      <div className={"enemyBord"}>
-        <EnemyBoard/>
-      </div>
+      { !isSingleMode && !isFinish &&
+       <div className={"enemyBord"}>
+          <EnemyBoard/>
+        </div>
+      }
       <ModalWindow
         style={customStyles}
         isOpen={isWaitingPlayer || isGameStarted || isHost || isFinish || isPaused}
@@ -291,6 +289,7 @@ const RoomComponent = ( props ) => {
               <Bord
                 playerList={room.playerList}
                 reason={"finished"}
+                isSingleMode={room && room.playerList.length == 1}
               />
               <div className='buttonWidth'>
                 <div className={"roomPadding"}>

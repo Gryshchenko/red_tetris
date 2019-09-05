@@ -13,12 +13,11 @@ const customStyles = {
     backgroundColor       : '#d9e476',
   }
 };
-const Bord = ({playerList, title}) => {
+const Bord = ({playerList, title, isSingleMode}) => {
     if (!playerList || !playerList.length) {
       return null;
     }
     let winName = null;
-    let winScore = 0;
     return (
         <React.Fragment>
           {/*<ModalWindow*/}
@@ -29,9 +28,8 @@ const Bord = ({playerList, title}) => {
               <div className={"bordMainTitle"}>{title}</div>
               {
                 playerList.map((player, index) => {
-                  if (winScore < player.score) {
+                  if (!isSingleMode && !player.lost) {
                     winName = player.name;
-                    winScore = player.score;
                   }
                   return (
                     <div key={index} className={"bordBase"}>
@@ -43,24 +41,16 @@ const Bord = ({playerList, title}) => {
                         <div className={"bordTitleText"}>Score:</div>
                         <div className={"bordText"}>{player.score}</div>
                       </div>
-                      <div className={"bordTextBase"}>
-                        <div className={"bordTitleText"}>Total pieces:</div>
-                        <div className={"bordText"}>{player.currentPiece}</div>
-                      </div>
                     </div>
                   );
                 })
               }
               {
-                winScore && (
+                !isSingleMode && (
                   <div>
                     <div className={"bordTextBase "}>
-                      <div className={"bordTitleText"}>Winner name:</div>
+                      <div className={"bordTitleText"}>Winner is:</div>
                       <div className={"bordText"}>{winName}</div>
-                    </div>
-                    <div className={"bordTextBase"}>
-                      <div className={"bordTitleText"}>Score:</div>
-                      <div className={"bordText"}>{winScore}</div>
                     </div>
                   </div>
                 )
