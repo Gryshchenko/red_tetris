@@ -35,6 +35,19 @@ class PlayerController {
         throw `Error occured while getAllPlayers: ${e}`;
       }
     }
+
+    static async getTop20() {
+      try {
+        let players = await PlayerModel.find({
+          score: { $gt: 1 }
+        }).limit(20).sort({ score: -1 }).exec();
+
+        return players;
+      } catch (e) {
+        throw `Error occured while getTop20: ${e}`;
+      }
+    }
+
     static async getPlayer(playerId) {
         try {
             const player = await PlayerModel.findOne({ _id: playerId });

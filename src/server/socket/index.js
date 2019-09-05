@@ -387,7 +387,7 @@ export const getAllGames = async (data, socket) => {
 }
 const getAllPlayers = async (data, socket) => {
   try {
-    let players = await Player.getPlayers();
+    let players = await Player.getTop20();
     global.io.to(socket.id).emit(
       'action',
       {
