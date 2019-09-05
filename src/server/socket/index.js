@@ -67,8 +67,7 @@ export const retry = async (data, socket) => {
     let game = await Game.getGameByName(data.room);
     const result = {
       type: 'RETRY',
-      data: game,
-      currentUser: player,
+      data: game
     };
     if (data.test) {
       return result;
@@ -78,6 +77,7 @@ export const retry = async (data, socket) => {
           'action',
           {
             ...result,
+            currentUser: player
           }
         );
       });
@@ -263,7 +263,6 @@ export const joinGame = async (data, socket) => {
       const result = {
         type: 'JOIN_GAME',
         data: game,
-        currentUser: player,
         errorCode: 0,
       };
       if (data.test) {
@@ -274,6 +273,7 @@ export const joinGame = async (data, socket) => {
             'action',
             {
               ...result,
+              currentUser: player
             }
           );
         });
@@ -300,8 +300,7 @@ export const createNewPlayer = async (data, socket) => {
           );
         const result = {
           type: 'PLAYER_CREATED',
-          data: game,
-          currentUser: player
+          data: game
         };
         if (data.test) {
           return result;
@@ -311,6 +310,7 @@ export const createNewPlayer = async (data, socket) => {
                 'action',
                 {
                   ...result,
+                  currentUser: player
                 }
             );
         });
@@ -405,7 +405,6 @@ const endGame = async (data, socket) => {
         await Player.updatePlayer(data.playerId, { lost: true });
         let game = await Game.updateGame(data.gameId, { status: constants.gameStatuses['FINISHED'] });
 
-      // console.log(game);
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
                 {

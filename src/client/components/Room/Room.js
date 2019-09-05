@@ -134,6 +134,7 @@ const RoomComponent = ( props ) => {
       });
       setPause(false);
     }
+
     if (room && room.status === constants.gameStatuses.PAUSED) {
       if (interval) {
         clearInterval(interval);
@@ -147,8 +148,6 @@ const RoomComponent = ( props ) => {
       if (interval) {
         clearInterval(interval);
         interval = null;
-        console.log(interval);
-        console.log('Interval cleared');
       }
 
       if (!resultsAudio && soundOn) {
@@ -184,17 +183,14 @@ const RoomComponent = ( props ) => {
           playerId: currentUser._id,
           gameId: room._id,
         });
-        console.log('Ended game due to disconnect')
-        // startMove(false);
       }
 
-      if (pieceNotPlaced && currentPiece) {
+      if (pieceNotPlaced && currentPiece && room.status !== constants.gameStatuses.FINISHED) {
         if (_gameIsOver(map)) {
           endGame({
             playerId: currentUser._id,
             gameId: room._id,
           });
-          console.log('Ended game due to full map')
         } else {
           _placePiece(props, currentPieceX, currentPieceY, map, room.pieceList[currentPiece - 1].shape);
         }
@@ -249,6 +245,7 @@ const RoomComponent = ( props ) => {
   const isHost = room && room.status === constants.gameStatuses.NOT_STARTED && currentUser.isHost === true;
   const isFinish = room && room.status === constants.gameStatuses.FINISHED;
   const isPaused = room && room.status === constants.gameStatuses.PAUSED;
+
   return (
     <React.Fragment>
       <div className={"enemyBord"}>
@@ -434,53 +431,27 @@ const _gameIsOver = (map) => {
   return map[0].find(cell => cell != 0) != undefined;
 }
 
-const _enemyLost = (playerList, currentUser) => {
-  return playerList.find(player => player._id != currentUser._id).lost;
-}
-
-
 const _keyPressHandler = (props) => addEventListener('keyup', function (event) {
-  // window.keyPressHandler = true;
-  // console.error(event.code);
-  // const { room, startGame, currentUser } = props
-  // if (event && room && room.playerList && room.playerList.length == 2) {
-  //   const isGameStarted = room && room.status === constants.gameStatuses.STARTED;
   switch (event.code) {
     case KEY_TYPE.ARROW_DOWN:
-      // if (isGameStarted) {
       props.dispatch(moveDown(true));
-      // }
       break;
     case KEY_TYPE.ARROW_UP:
-      // if (isGameStarted) {
       props.dispatch(needToRotatePiece(true));
-      // }
       break;
     case KEY_TYPE.ARROW_LEFT:
-      // if (isGameStarted) {
       props.dispatch(moveLeft(true));
-      // }
       break;
     case KEY_TYPE.ARROW_RIGHT:
-      // if (isGameStarted) {
       props.dispatch(moveRight(true));
-      // }
       break;
     case KEY_TYPE.SPACE:
-      // if (isGameStarted) {
-          clearInterval(interval);
-          interval = null;
+      clearInterval(interval);
+      interval = null;
       props.dispatch(forceMoveDown(true));
-      // }
       break;
     case KEY_TYPE.PAUSE:
       props.dispatch(needToPause(true));
-    // case KEY_TYPE.ENTER:
-    //   // if (currentUser.isHost && !isGameStarted) {
-    //     return _onStartGame( room, startGame)
-    //   }
-    // }
-    // }
   }
 });
 

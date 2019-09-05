@@ -44,7 +44,7 @@ const Bord = ({playerList, title}) => {
                         <div className={"bordText"}>{player.score}</div>
                       </div>
                       <div className={"bordTextBase"}>
-                        <div className={"bordTitleText"}>Total piece:</div>
+                        <div className={"bordTitleText"}>Total pieces:</div>
                         <div className={"bordText"}>{player.currentPiece}</div>
                       </div>
                     </div>

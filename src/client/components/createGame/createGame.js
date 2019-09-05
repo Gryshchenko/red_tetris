@@ -43,9 +43,9 @@ const CreateGame = (props) => {
                 <Input
                     type={'checkbox'}
                     text={'Single mode'}
-                    value={singleMode}
+                    checked={singleMode}
                     onChange={(event) => {
-                        setSingleMode(event.target.value);
+                        setSingleMode(event.target.checked);
                     }}
                     wrapperStyle={{
                         display: 'flex',
