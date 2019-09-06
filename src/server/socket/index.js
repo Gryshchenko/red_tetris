@@ -407,10 +407,11 @@ const endGame = async (data, socket) => {
 
         game.playerList.forEach(player => {
             global.io.to(player.socketId).emit(
-                {
-                    type: 'GAME_ENDED',
-                    data: game
-                }
+              'action',
+              {
+                  type: 'GAME_ENDED',
+                  data: game
+              }
             );
         });
     } catch (e) {
