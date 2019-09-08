@@ -1,0 +1,611 @@
+
+<html>
+    <head>
+        <title>Mocha</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+        @charset "utf-8";
+
+body {
+  margin:0;
+}
+
+#mocha {
+  font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 60px 50px;
+}
+
+#mocha ul,
+#mocha li {
+  margin: 0;
+  padding: 0;
+}
+
+#mocha ul {
+  list-style: none;
+}
+
+#mocha h1,
+#mocha h2 {
+  margin: 0;
+}
+
+#mocha h1 {
+  margin-top: 15px;
+  font-size: 1em;
+  font-weight: 200;
+}
+
+#mocha h1 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+#mocha h1 a:hover {
+  text-decoration: underline;
+}
+
+#mocha .suite .suite h1 {
+  margin-top: 0;
+  font-size: .8em;
+}
+
+#mocha .hidden {
+  display: none;
+}
+
+#mocha h2 {
+  font-size: 12px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+#mocha .suite {
+  margin-left: 15px;
+}
+
+#mocha .test {
+  margin-left: 15px;
+  overflow: hidden;
+}
+
+#mocha .test.pending:hover h2::after {
+  content: '(pending)';
+  font-family: arial, sans-serif;
+}
+
+#mocha .test.pass.medium .duration {
+  background: #c09853;
+}
+
+#mocha .test.pass.slow .duration {
+  background: #b94a48;
+}
+
+#mocha .test.pass::before {
+  content: '✓';
+  font-size: 12px;
+  display: block;
+  float: left;
+  margin-right: 5px;
+  color: #00d6b2;
+}
+
+#mocha .test.pass .duration {
+  font-size: 9px;
+  margin-left: 5px;
+  padding: 2px 5px;
+  color: #fff;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.2);
+  -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.2);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.2);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+
+#mocha .test.pass.fast .duration {
+  display: none;
+}
+
+#mocha .test.pending {
+  color: #0b97c4;
+}
+
+#mocha .test.pending::before {
+  content: '◦';
+  color: #0b97c4;
+}
+
+#mocha .test.fail {
+  color: #c00;
+}
+
+#mocha .test.fail pre {
+  color: black;
+}
+
+#mocha .test.fail::before {
+  content: '✖';
+  font-size: 12px;
+  display: block;
+  float: left;
+  margin-right: 5px;
+  color: #c00;
+}
+
+#mocha .test pre.error {
+  color: #c00;
+  max-height: 300px;
+  overflow: auto;
+}
+
+#mocha .test .html-error {
+  overflow: auto;
+  color: black;
+  line-height: 1.5;
+  display: block;
+  float: left;
+  clear: left;
+  font: 12px/1.5 monaco, monospace;
+  margin: 5px;
+  padding: 15px;
+  border: 1px solid #eee;
+  max-width: 85%; /*(1)*/
+  max-width: calc(100% - 42px); /*(2)*/
+  max-height: 300px;
+  word-wrap: break-word;
+  border-bottom-color: #ddd;
+  -webkit-border-radius: 3px;
+  -webkit-box-shadow: 0 1px 3px #eee;
+  -moz-border-radius: 3px;
+  -moz-box-shadow: 0 1px 3px #eee;
+  border-radius: 3px;
+}
+
+#mocha .test .html-error pre.error {
+  border: none;
+  -webkit-border-radius: none;
+  -webkit-box-shadow: none;
+  -moz-border-radius: none;
+  -moz-box-shadow: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 18px;
+  max-height: none;
+}
+
+/**
+ * (1): approximate for browsers not supporting calc
+ * (2): 42 = 2*15 + 2*10 + 2*1 (padding + margin + border)
+ *      ^^ seriously
+ */
+#mocha .test pre {
+  display: block;
+  float: left;
+  clear: left;
+  font: 12px/1.5 monaco, monospace;
+  margin: 5px;
+  padding: 15px;
+  border: 1px solid #eee;
+  max-width: 85%; /*(1)*/
+  max-width: calc(100% - 42px); /*(2)*/
+  word-wrap: break-word;
+  border-bottom-color: #ddd;
+  -webkit-border-radius: 3px;
+  -webkit-box-shadow: 0 1px 3px #eee;
+  -moz-border-radius: 3px;
+  -moz-box-shadow: 0 1px 3px #eee;
+  border-radius: 3px;
+}
+
+#mocha .test h2 {
+  position: relative;
+}
+
+#mocha .test a.replay {
+  position: absolute;
+  top: 3px;
+  right: 0;
+  text-decoration: none;
+  vertical-align: middle;
+  display: block;
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  text-align: center;
+  background: #eee;
+  font-size: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  -webkit-transition: opacity 200ms;
+  -moz-transition: opacity 200ms;
+  transition: opacity 200ms;
+  opacity: 0.3;
+  color: #888;
+}
+
+#mocha .test:hover a.replay {
+  opacity: 1;
+}
+
+#mocha-report.pass .test.fail {
+  display: none;
+}
+
+#mocha-report.fail .test.pass {
+  display: none;
+}
+
+#mocha-report.pending .test.pass,
+#mocha-report.pending .test.fail {
+  display: none;
+}
+#mocha-report.pending .test.pass.pending {
+  display: block;
+}
+
+#mocha-error {
+  color: #c00;
+  font-size: 1.5em;
+  font-weight: 100;
+  letter-spacing: 1px;
+}
+
+#mocha-stats {
+  position: fixed;
+  top: 15px;
+  right: 10px;
+  font-size: 12px;
+  margin: 0;
+  color: #888;
+  z-index: 1;
+}
+
+#mocha-stats .progress {
+  float: right;
+  padding-top: 0;
+  
+  /**
+   * Set safe initial values, so mochas .progress does not inherit these
+   * properties from Bootstrap .progress (which causes .progress height to
+   * equal line height set in Bootstrap).
+   */
+  height: auto;
+  box-shadow: none;
+  background-color: initial;
+}
+
+#mocha-stats em {
+  color: black;
+}
+
+#mocha-stats a {
+  text-decoration: none;
+  color: inherit;
+}
+
+#mocha-stats a:hover {
+  border-bottom: 1px solid #eee;
+}
+
+#mocha-stats li {
+  display: inline-block;
+  margin: 0 5px;
+  list-style: none;
+  padding-top: 11px;
+}
+
+#mocha-stats canvas {
+  width: 40px;
+  height: 40px;
+}
+
+#mocha code .comment { color: #ddd; }
+#mocha code .init { color: #2f6fad; }
+#mocha code .string { color: #5890ad; }
+#mocha code .keyword { color: #8a6343; }
+#mocha code .number { color: #2f6fad; }
+
+@media screen and (max-device-width: 480px) {
+  #mocha {
+    margin: 60px 0px;
+  }
+
+  #mocha #stats {
+    position: absolute;
+  }
+}
+#mocha .test.pass pre {
+    display: none;
+}
+
+#mocha .test.fail pre {
+    display: none;
+}
+
+#mocha .test pre.error {
+    display: block;
+}
+
+#mocha .test .html-error pre.error {
+    box-shadow: none;
+}
+
+#mocha .test:hover h2:after {
+    color: #888888;
+    content: "(view source)";
+    font-family: arial;
+    font-size: 12px;
+    position: relative;
+    right: -10px;
+    top: 0;
+}
+
+#mocha .test.pass.pending h2 {
+    cursor: auto;
+}
+
+#mocha .mocha-header {
+    right: 30px;
+    position: fixed;
+    top: 15px;
+    font-size: 14px;
+    margin: 0;
+    color: #888;
+    z-index: 1;
+}
+
+#mocha .mocha-header em {
+    font-style: normal;
+    color: black;
+}
+
+#mocha .mocha-header ul {
+    display: inline-block;
+}
+
+#mocha .mocha-stats li {
+    display: inline-block;
+    margin: 0 5px;
+    list-style: none;
+    padding-top: 11px;
+}
+
+#mocha .mocha-menu {
+    margin-right: 10px;
+}
+
+#mocha .mocha-menu li {
+    display: inline-block;
+    margin-left: 10px;
+    list-style: none;
+}
+
+#mocha .mocha-menu li span {
+    display: inline-block;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    padding: 3px 7px 2px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+    border-radius: 5px;
+    user-select: none;
+}
+
+#mocha .mocha-menu li span.checked {
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,.2);
+}
+
+#mocha .toggle-passes {
+    background: #b94a48;
+}
+
+        </style>
+    </head>
+    <body>
+        <div id="mocha">
+            <div class="mocha-header">
+                <ul class="mocha-menu">
+                    <li><span id="toggle-passes" class="toggle-passes">show failures only</span></li>
+                </ul>
+                <ul class="mocha-stats">
+                    <li class="passes">passes: <em>100</em></li>
+                    <li class="pending">pending: <em>0</em></li>
+                    <li class="failures">failures: <em>0</em></li>
+                    <li class="duration">duration: <em>65ms</em></li>
+                </ul>
+            </div>
+            <ul id="report"><li class="suite"><h1>main</h1><ul><li class="suite"><h1>reducer</h1><ul><li class="test pass fast"><h2>initial state<span class="duration">6ms</span></h2><pre><code>(0, _immutable.is)((0, _reducers.reducer)(undefined, {}).toJS(), _extends({}, _reducers.initialState));</code></pre></li><li class="test pass fast"><h2>RETRY_SINGLE<span class="duration">1ms</span></h2><pre><code>(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: true })), {
+  type: _reducers.ACTION_TYPE.RETRY_RESPONSE,
+  data: {
+    status: _const2.default.gameStatuses.STARTED
+  },
+  currentUser: null
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return state.setIn(['room'], (0, _immutable.fromJS)(null)).setIn(['map'], (0, _immutable.fromJS)(_reducers.map)).setIn(['currentUser'], (0, _immutable.fromJS)(null)).setIn(['pieceNotPlaced'], (0, _immutable.fromJS)(false)).setIn(['needToMoveDown'], (0, _immutable.fromJS)(false)).setIn(['currentPieceY'], (0, _immutable.fromJS)(0)).setIn(['currentPieceX'], (0, _immutable.fromJS)(3)).setIn(['moveLeft'], (0, _immutable.fromJS)(false)).setIn(['moveRight'], (0, _immutable.fromJS)(false)).setIn(['currentPiece'], (0, _immutable.fromJS)(null)).setIn(['moveDown'], (0, _immutable.fromJS)(false));
+});</code></pre></li><li class="test pass fast"><h2>RETRY_MULTI<span class="duration">0ms</span></h2><pre><code>(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: false })), {
+  type: _reducers.ACTION_TYPE.RETRY_RESPONSE,
+  data: {
+    status: _const2.default.gameStatuses.STARTED
+  },
+  currentUser: null
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return state.setIn(['room'], (0, _immutable.fromJS)(null)).setIn(['map'], (0, _immutable.fromJS)(_reducers.map)).setIn(['currentUser'], (0, _immutable.fromJS)(null)).setIn(['pieceNotPlaced'], (0, _immutable.fromJS)(false)).setIn(['needToMoveDown'], (0, _immutable.fromJS)(false)).setIn(['currentPieceY'], (0, _immutable.fromJS)(0)).setIn(['currentPieceX'], (0, _immutable.fromJS)(3)).setIn(['moveLeft'], (0, _immutable.fromJS)(false)).setIn(['moveRight'], (0, _immutable.fromJS)(false)).setIn(['currentPiece'], (0, _immutable.fromJS)(null)).setIn(['moveDown'], (0, _immutable.fromJS)(false));
+});</code></pre></li><li class="test pass fast"><h2>QUERY_GAME_RESPONSE<span class="duration">0ms</span></h2><pre><code>(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: false })), {
+  type: _reducers.ACTION_TYPE.RETRY_RESPONSE,
+  data: {
+    status: _const2.default.gameStatuses.STARTED
+  },
+  currentUser: 0
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return null;
+  return state.setIn(['room'], (0, _immutable.fromJS)(0));
+});</code></pre></li><li class="test pass fast"><h2>QUERY_GAME_RESPONSE CAN'T CREATE<span class="duration">1ms</span></h2><pre><code>(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: false })), {
+  type: _reducers.ACTION_TYPE.RETRY_RESPONSE,
+  data: {
+    status: _const2.default.gameStatuses.STARTED
+  },
+  currentUser: _const2.default.gameErrorCode.CANT_CREATE
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return state.setIn(['room'], (0, _immutable.fromJS)(_const2.default.gameErrorCode.CANT_CREATE));
+});</code></pre></li><li class="test pass fast"><h2>server/pingPong<span class="duration">0ms</span></h2><pre><code>var time = Math.floor(new Date().getTime() / 1000);
+(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: false })), {
+  type: _reducers.ACTION_TYPE.PING_PONG,
+  data: {
+    panding: true,
+    lastActiveTime: time
+  }
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return state.setIn(['pingPong'], (0, _immutable.fromJS)({ pending: true, lastActiveTime: time }));
+});</code></pre></li><li class="test pass fast"><h2>PING_PONG<span class="duration">1ms</span></h2><pre><code>var time = Math.floor(new Date().getTime() / 1000);
+(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: false })), {
+  type: _reducers.ACTION_TYPE.PING_PONG,
+  data: {
+    panding: false,
+    lastActiveTime: time
+  }
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return state.setIn(['pingPong'], (0, _immutable.fromJS)({ pending: false, lastActiveTime: time }));
+});</code></pre></li><li class="test pass fast"><h2>server/joinGame<span class="duration">0ms</span></h2><pre><code>var time = Math.floor(new Date().getTime() / 1000);
+(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: false })), {
+  type: _reducers.ACTION_TYPE.PING_PONG,
+  data: {
+    panding: true
+  }
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return state.setIn(['joinGame'], (0, _immutable.fromJS)({ pending: true }));
+});</code></pre></li><li class="test pass fast"><h2>GAME_CREATEDOK<span class="duration">0ms</span></h2><pre><code>(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: false })), {
+  type: _reducers.ACTION_TYPE.PING_PONG,
+  data: {
+    errorCode: 0
+  }
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return state.setIn(['room'], (0, _immutable.fromJS)(action.data)).setIn(['currentUser'], (0, _immutable.fromJS)({ errorCode: 0 }));
+});</code></pre></li><li class="test pass fast"><h2>GAME_CREATED CANT_CREATE<span class="duration">1ms</span></h2><pre><code>(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: false })), {
+  type: _reducers.ACTION_TYPE.PING_PONG,
+  data: {
+    errorCode: _const2.default.gameErrorCode.CANT_CREATE
+  }
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return state.setIn(['room'], (0, _immutable.fromJS)(action.data)).setIn(['currentUser'], (0, _immutable.fromJS)({ errorCode: _const2.default.gameErrorCode.CANT_CREATE }));
+});</code></pre></li><li class="test pass fast"><h2>GAME_CREATED PLAYER_EXIST<span class="duration">0ms</span></h2><pre><code>(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: false })), {
+  type: _reducers.ACTION_TYPE.PING_PONG,
+  data: {
+    errorCode: _const2.default.gameErrorCode.PLAYER_EXIST
+  }
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return state.setIn(['room'], (0, _immutable.fromJS)(action.data)).setIn(['currentUser'], (0, _immutable.fromJS)({ errorCode: _const2.default.gameErrorCode.PLAYER_EXIST }));
+});</code></pre></li><li class="test pass fast"><h2>GAME_CREATED GAME_EXIST<span class="duration">0ms</span></h2><pre><code>(0, _immutable.is)((0, _reducers.reducer)((0, _immutable.fromJS)(_extends({}, _reducers.initialState, { isSingle: false })), {
+  type: _reducers.ACTION_TYPE.PING_PONG,
+  data: {
+    errorCode: _const2.default.gameErrorCode.GAME_EXIST
+  }
+}), function () {
+  var state = (0, _immutable.fromJS)(_reducers.initialState);
+  return null;
+  return state.setIn(['room'], (0, _immutable.fromJS)(action.data)).setIn(['currentUser'], (0, _immutable.fromJS)({ errorCode: _const2.default.gameErrorCode.GAME_EXIST }));
+});</code></pre></li><li class="test pass fast"><h2>setNewLocalMapTRUE<span class="duration">2ms</span></h2><pre><code>return assert.equal(false, _lodash2.default.isEqual((0, _reducers.reducer)((0, _immutable.fromJS)(_reducers.initialState), {
+        type: _reducers.ACTION_TYPE.SET_NEW_LOCAL_MAP,
+        data: _reducers.map
+      }), function () {
+        var state = (0, _immutable.fromJS)(_reducers.initialState);
+        return state;
+        return state.setIn(['map'], (0, _immutable.fromJS)(_reducers.map)).setIn(['pieceNotPlaced'], false);
+      }));</code></pre></li></ul></li><li class="suite"><h1>actions</h1><ul><li class="test pass fast"><h2>checkUSer<span class="duration">1ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _checkUser2.default)({}), { type: 'server/checkUser', data: {} }));</code></pre></li><li class="test pass fast"><h2>createGameFromQueryString<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _createGameFromQueryString2.default)({}), { type: 'server/createGameFromQueryString', data: {} }));</code></pre></li><li class="test pass fast"><h2>crateNewGame<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _createNewGame2.default)({}), { type: 'server/createNewGame', data: {} }));</code></pre></li><li class="test pass fast"><h2>crateNewPlayer<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _createNewPlayer2.default)({}), { type: 'server/createNewPlayer', data: {} }));</code></pre></li><li class="test pass fast"><h2>crateNewRoom<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _createNewRoom2.default)({}), { type: 'server/createNewRoom', data: {} }));</code></pre></li><li class="test pass fast"><h2>disconnect<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _disconnect2.default)({}), { type: 'server/disconnect', data: {} }));</code></pre></li><li class="test pass fast"><h2>endGame<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _endGame2.default)({}), { type: 'server/endGame', data: {} }));</code></pre></li><li class="test pass fast"><h2>enterPress<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _enterPress2.default)(), { type: 'enterPress' }));</code></pre></li><li class="test pass fast"><h2>forceMoveDown<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _forceMoveDown2.default)({}), { type: 'forceMoveDown', data: {} }));</code></pre></li><li class="test pass fast"><h2>getGames<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _getGames2.default)({}), { type: 'server/getAllGames', data: {} }));</code></pre></li><li class="test pass fast"><h2>getPlayers<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _getPlayers2.default)({}), { type: 'server/getAllPlayers', data: {} }));</code></pre></li><li class="test pass fast"><h2>joinGame<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _joinGame2.default)({}), { type: 'server/joinGame', data: {} }));</code></pre></li><li class="test pass fast"><h2>moveDown<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _moveDown2.default)({}), { type: 'moveDown', data: {} }));</code></pre></li><li class="test pass fast"><h2>moveLeft<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _moveLeft2.default)({}), { type: 'moveLeft', data: {} }));</code></pre></li><li class="test pass fast"><h2>moveRight<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _moveRight2.default)({}), { type: 'moveRight', data: {} }));</code></pre></li><li class="test pass fast"><h2>needToPause<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _needToPause2.default)({}), { type: 'needToPause', data: {} }));</code></pre></li><li class="test pass fast"><h2>needToRotatePiece<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _needToRotatePiece2.default)({}), { type: 'needToRotatePiece', data: {} }));</code></pre></li><li class="test pass fast"><h2>pauseGame<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _pauseGame2.default)({}), { type: 'server/pauseGame', data: {} }));</code></pre></li><li class="test pass fast"><h2>pieceLanded<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _pieceLanded2.default)({}), { type: 'server/pieceLanded', data: {} }));</code></pre></li><li class="test pass fast"><h2>pieceMove<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _pieceMove2.default)({}), { type: 'pieceMove', data: {} }));</code></pre></li><li class="test pass fast"><h2>piecePlaced<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _piecePlaced2.default)({}), { type: 'piecePlaced', data: {} }));</code></pre></li><li class="test pass fast"><h2>pingPong<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _pingPong2.default)({}), { type: 'server/pingPong', data: {} }));</code></pre></li><li class="test pass fast"><h2>server<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _server.ping)(), { type: 'server/ping' }));</code></pre></li><li class="test pass fast"><h2>setCurrentShape<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _setCurrentShape2.default)({}), { type: 'setCurrentShape', data: {} }));</code></pre></li><li class="test pass fast"><h2>setCurrentUser<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _setCurrentUser2.default)({}), { type: 'setCurrentUser', data: {} }));</code></pre></li><li class="test pass fast"><h2>setNewLocalMap<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _setNewLocalMap2.default)({}), { type: 'setNewLocalMap', data: {} }));</code></pre></li><li class="test pass fast"><h2>startGame<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _startGame2.default)({}), { type: 'server/startGame', data: {} }));</code></pre></li><li class="test pass fast"><h2>startInterval<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _startInterval2.default)({}), { type: 'startInterval', data: {} }));</code></pre></li><li class="test pass fast"><h2>startMove<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _startMove2.default)({}), { type: 'startMove', data: {} }));</code></pre></li><li class="test pass fast"><h2>stopMove<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _stopMove2.default)({}), { type: 'stopMove', data: {} }));</code></pre></li><li class="test pass fast"><h2>retry<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, _lodash2.default.isEqual((0, _retry2.default)({}), { type: 'server/retry', data: {} }));</code></pre></li></ul></li><li class="suite"><h1>utils</h1><ul><li class="test pass fast"><h2>isPossibleToPlace  map type=O set x = 5 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 5, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=I set x = 5 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 5, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=T set x = 5 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 5, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=S set x = 5 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 5, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=S set x = 5 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 5, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=L set x = 5 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 5, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=L set x = 5 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 5, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=O set x = 0 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 0, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=I set x = 0 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 0, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=T set x = 0 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 0, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=S set x = 0 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 0, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=S set x = 0 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 0, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=L set x = 0 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 0, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=L set x = 0 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 0, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=O set x = 7 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=I set x = 7 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=T set x = 7 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=S set x = 7 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=S set x = 7 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=L set x = 7 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=L set x = 7 y = 0<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 0, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=O set x = 7 y = 16<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 16, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=I set x = 7 y = 16<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 16, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=T set x = 7 y = 16<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 16, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=S set x = 7 y = 16<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 16, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=S set x = 7 y = 16<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 16, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=L set x = 7 y = 16<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 16, data));</code></pre></li><li class="test pass fast"><h2>isPossibleToPlace  map type=L set x = 7 y = 16<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, (0, _utils.isPossibleToPlace)(_testMap.emptyMap, data, 7, 16, data));</code></pre></li><li class="test pass fast"><h2>not PossibleToPlace  map type=O set x = -1 y = -1<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, !(0, _utils.isPossibleToPlace)(_testMap.fullMap, data, -1, -1, data));</code></pre></li><li class="test pass fast"><h2>not PossibleToPlace  map type=I set x = -1 y = -1<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, !(0, _utils.isPossibleToPlace)(_testMap.fullMap, data, -1, -1, data));</code></pre></li><li class="test pass fast"><h2>not PossibleToPlace  map type=T set x = -1 y = -1<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, !(0, _utils.isPossibleToPlace)(_testMap.fullMap, data, -1, -1, data));</code></pre></li><li class="test pass fast"><h2>not PossibleToPlace  map type=S set x = -1 y = -1<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, !(0, _utils.isPossibleToPlace)(_testMap.fullMap, data, -1, -1, data));</code></pre></li><li class="test pass fast"><h2>not PossibleToPlace  map type=S set x = -1 y = -1<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, !(0, _utils.isPossibleToPlace)(_testMap.fullMap, data, -1, -1, data));</code></pre></li><li class="test pass fast"><h2>not PossibleToPlace  map type=L set x = -1 y = -1<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, !(0, _utils.isPossibleToPlace)(_testMap.fullMap, data, -1, -1, data));</code></pre></li><li class="test pass fast"><h2>not PossibleToPlace  map type=L set x = -1 y = -1<span class="duration">0ms</span></h2><pre><code>return assert.equal(true, !(0, _utils.isPossibleToPlace)(_testMap.fullMap, data, -1, -1, data));</code></pre></li><li class="test pass fast"><h2>rotate type=O direction=&gt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=O direction= ↓ <span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=O direction=&lt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=I direction=&gt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=I direction= ↓ <span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=I direction=&lt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=T direction=&gt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=T direction= ↓ <span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=T direction=&lt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=S direction=&gt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=S direction= ↓ <span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=S direction=&lt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=S direction=&gt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=S direction= ↓ <span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=S direction=&lt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=L direction=&gt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=L direction= ↓ <span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=L direction=&lt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=L direction=&gt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=L direction= ↓ <span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li><li class="test pass fast"><h2>rotate type=L direction=&lt;<span class="duration">0ms</span></h2><pre><code>newShape = (0, _utils.rotatePiece)(data);
+return assert.equal(true, _lodash2.default.isEqual(newShape, newShape));</code></pre></li></ul></li></ul></li></ul>
+        </div>
+        <script>
+        function hideSuitesWithout(className) {
+    var suites = document.querySelectorAll('#report > .suite');
+
+    for (var i = 0; i < suites.length; i++) {
+        let suite = suites[i];
+
+        var els = suite.getElementsByClassName(className);
+        if (!els.length) {
+            suite.classList.add('hidden');
+        }
+    }
+}
+
+function unhide() {
+    var suites = document.getElementsByClassName('suite hidden');
+
+    while (suites.length) {
+        suites[0].classList.remove('hidden');
+    }
+}
+
+function togglePasses() {
+    var report = document.getElementById('report');
+
+    report.classList.toggle('hide-passes');
+
+    if (report.classList.contains('hide-passes')) {
+        hideSuitesWithout('test fail');
+    } else {
+        unhide();
+    }
+}
+
+document.getElementById('toggle-passes').addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    this.classList.toggle('checked');
+
+    togglePasses();
+});
+
+var tests = document.getElementsByClassName('test');
+
+for (var i = 0; i < tests.length; i++) {
+    var elem = tests[i];
+    var head = elem.children[0];
+
+    head.onclick = function () {
+        var code = this.parentElement.children[1];
+        var display = code.style.display;
+
+        if (display && display === 'block') {
+            code.style.display = 'none';
+        } else {
+            code.style.display = 'block';
+        }
+    };
+}
+        </script>
+    </body>
+</html>

@@ -34,6 +34,8 @@ import startGame from '../src/client/actions/startGame';
 import startInterval from '../src/client/actions/startInterval';
 import startMove from '../src/client/actions/startMove';
 import stopMove from '../src/client/actions/stopMove';
+import { isPossibleToPlace, rotatePiece } from '../src/client/utils';
+import { directions, emptyMap, fullMap, testPieces, tetrominoNames } from './testMap';
 const assert = chai.assert;
 
 describe('main', function() {
@@ -283,9 +285,6 @@ describe('main', function() {
     it ('pingPong', () => {
       return assert.equal(true,_.isEqual(pingPong({}), {type: 'server/pingPong', data: {}}))
     })
-    it ('retry', () => {
-      return assert.equal(true,_.isEqual(retry({}), {type: 'server/retry', data: {}}))
-    })
     it ('server', () => {
       return assert.equal(true,_.isEqual(ping(), {type: 'server/ping'}))
     })
@@ -309,6 +308,75 @@ describe('main', function() {
     })
     it ('stopMove', () => {
       return assert.equal(true,_.isEqual(stopMove({}), {type: 'stopMove', data: {}}))
+    })
+    it ('retry', () => {
+      return assert.equal(true,_.isEqual(retry({}), {type: 'server/retry', data: {}}))
+    })
+  })
+  describe('utils', () => {
+    testPieces.forEach((data, index) => {
+      it (`isPossibleToPlace  map type=${tetrominoNames[index]} set x = 5 y = 0`, () => {
+        return assert.equal(true, isPossibleToPlace(
+          emptyMap,
+          data,
+          5,
+          0,
+          data,
+        ))
+      })
+    })
+    testPieces.forEach((data, index) => {
+      it (`isPossibleToPlace  map type=${tetrominoNames[index]} set x = 0 y = 0`, () => {
+        return assert.equal(true, isPossibleToPlace(
+          emptyMap,
+          data,
+          0,
+          0,
+          data,
+        ))
+      })
+    })
+    testPieces.forEach((data, index) => {
+      it (`isPossibleToPlace  map type=${tetrominoNames[index]} set x = 7 y = 0`, () => {
+        return assert.equal(true, isPossibleToPlace(
+          emptyMap,
+          data,
+          7,
+          0,
+          data,
+        ))
+      })
+    })
+    testPieces.forEach((data, index) => {
+      it (`isPossibleToPlace  map type=${tetrominoNames[index]} set x = 7 y = 16`, () => {
+        return assert.equal(true, isPossibleToPlace(
+          emptyMap,
+          data,
+          7,
+          16,
+          data,
+        ))
+      })
+    })
+    testPieces.forEach((data, index) => {
+      it (`not PossibleToPlace  map type=${tetrominoNames[index]} set x = -1 y = -1`, () => {
+        return assert.equal(true, !isPossibleToPlace(
+          fullMap,
+          data,
+          -1,
+          -1,
+          data,
+        ))
+      })
+    })
+    testPieces.forEach((data, index) => {
+      let newShape = data;
+        [0, 1, 2].forEach((i) => {
+          it (`rotate type=${tetrominoNames[index]} direction=${directions[i]}`, () => {
+            newShape = rotatePiece(data);
+            return assert.equal(true, _.isEqual(newShape, newShape))
+        })
+      })
     })
   })
 });

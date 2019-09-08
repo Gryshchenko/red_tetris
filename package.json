@@ -9,7 +9,7 @@
     "client-dev": "webpack-dev-server --colors --hot --inline --host 127.0.0.1 --port 8083",
     "srv-dev": "cross-env NODE_ENV=development nodemon src/server/main.js --exec babel-node",
     "srv-dist": "DEBUG=tetris:* babel src --out-dir dist",
-    "test": "mocha --require babel-core/register --reporter spec"
+    "test": "mocha --require babel-core/register --reporter mocha-simple-html-reporter --reporter-options output=report.html"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
