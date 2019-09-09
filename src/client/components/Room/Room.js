@@ -327,12 +327,14 @@ const RoomComponent = ( props ) => {
                 playerList={room.playerList}
                 title={"Game over"}
               />
-              <div className={"roomPadding"}>
-                <Button
-                  onClick={() => location.reload()}
-                  type={'submit'}
-                  title={'To main'}
-                />
+              <div className='buttonWidth'>
+                <div className={"roomPadding"}>
+                  <Button
+                    onClick={() => location.reload()}
+                    type={'submit'}
+                    title={'To main'}
+                  />
+                </div>
               </div>
             </div>
           )
@@ -343,31 +345,23 @@ const RoomComponent = ( props ) => {
               <Bord
                 playerList={room.playerList}
                 title={"PAUSE"}
+                isPaused={true}
               />
-              <div className={"roomPadding"}>
-                <Button
-                  onClick={() => location.reload()}
-                  type={'submit'}
-                  title={'To main'}
-                />
+              <div className='buttonWidth'>
+                <div className={"roomPadding"}>
+                  <Button
+                    onClick={() => {
+                      props.dispatch(setNeedToPause(false));
+                      pauseGame({
+                        gameId: room._id,
+                        isSingle,
+                      });
+                    }}
+                    type={'submit'}
+                    title={'Resume'}
+                  />
+                </div>
               </div>
-              {
-                currentUser.isHost && (
-                  <div className={"roomPadding"}>
-                    <Button
-                      onClick={() => {
-                        props.dispatch(setNeedToPause(false));
-                        pauseGame({
-                          gameId: room._id,
-                          isSingle,
-                        });
-                      }}
-                      type={'submit'}
-                      title={'Resume'}
-                    />
-                  </div>
-                )
-              }
             </div>
           )
         }
@@ -450,7 +444,7 @@ const _keyPressHandler = (props) => addEventListener('keyup', function (event) {
       props.dispatch(forceMoveDown(true));
       break;
     case KEY_TYPE.PAUSE:
-      props.dispatch(needToPause(true));
+      props.dispatch(setNeedToPause(true));
   }
 });
 

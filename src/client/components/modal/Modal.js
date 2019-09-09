@@ -7,7 +7,7 @@ import './styles.css';
 const ModalComponent = ({room, children, isOpen, style }) => {
     return (
         <React.Fragment>
-          <Modal style={style} isOpen={isOpen}>
+          <Modal style={style} isOpen={isOpen} ariaHideApp={false}>
             {children}
           </Modal>
         </React.Fragment>

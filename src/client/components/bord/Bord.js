@@ -13,7 +13,7 @@ const customStyles = {
     backgroundColor       : '#d9e476',
   }
 };
-const Bord = ({playerList, title, isSingleMode}) => {
+const Bord = ({playerList, title, isSingleMode, isPaused}) => {
     if (!playerList || !playerList.length) {
       return null;
     }
@@ -46,7 +46,7 @@ const Bord = ({playerList, title, isSingleMode}) => {
                 })
               }
               {
-                !isSingleMode && (
+                !isSingleMode && !isPaused && (
                   <div>
                     <div className={"bordTextBase "}>
                       <div className={"bordTitleText"}>Winner is:</div>

@@ -60,35 +60,7 @@ const placePieceOnBoard = (board, shape, posX, posY, currentPiece) => {
     return board;
 };
 
-const prepareShape = (shape) => {
-//     let newShape = cloneDeepWith(shape);
-
-//     // newShape.forEach((row, index) => {
-//     //     if (!row.includes(1)) {
-//     //     }
-//     // });
-// console.log(newShape)
-//     for (let i = newShape.length - 1; i >= 2; i--) {
-//         if (!newShape[i].includes(1)) {
-//             newShape.unshift(i, 1);
-//         }
-//     }
-//     return newShape;
-    let newShape = [];
-
-    shape.forEach((row, index) => {
-        if (row.includes(1)) {
-            newShape.push(row);
-        }
-    });
-
-    console.log(newShape)
-
-    return newShape;
-}
-
 const isPossibleToPlace = (board, shape, posX, posY, currentPiece) => {
-    // let prepearedShape = prepareShape(shape);
 let prepearedShape = shape;
     try {
         prepearedShape.forEach((line, y) => {

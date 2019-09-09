@@ -57,15 +57,6 @@ class GameController {
             if (data.status > -1) columnsToUpdate.status = data.status;
             if (data.pieceList) columnsToUpdate.pieceList = data.pieceList;
             if (data.playerList) columnsToUpdate.playerList = data.playerList;
-          // if (data.status) {
-          //   Object.assign({}, columnsToUpdate, {status: data.status})
-          // }
-          // if (data.pieceList) {
-          //   Object.assign({}, columnsToUpdate, {pieceList: data.pieceList})
-          // }
-          // if (data.playerList) {
-          //   Object.assign({}, columnsToUpdate, {playerList: data.playerList})
-          // }
             let game = await Game.findOneAndUpdate({ _id: gameId }, columnsToUpdate, { new: true }).populate('pieceList').populate('playerList');
             return game;
         } catch (e) {
@@ -75,12 +66,7 @@ class GameController {
 
     static async deleteGame(gameId) {
         try {
-            console.error(gameId)
             let game = await Game.findOne({ name: gameId });
-            console.error(game);
-            // game.pieceList.map(piece => {
-            //     Piece.deletePiece(piece._id);
-            // });
             game.playerList.map(player => {
                 Player.deletePlayer(player._id);
             });
