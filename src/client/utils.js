@@ -1,8 +1,9 @@
-import { cloneDeepWith } from 'lodash';
 import constants from '../server/const';
-
-const getRoomName = () => {
-    const hash = window.location.hash;
+const getRoomName = (win) => {
+    if (!win) {
+      return  null;
+    }
+    const hash = win.location.hash;
     const roomNameStart = hash.indexOf("e/");
     const roomNameEnd = hash.indexOf("[");
     const roomName = hash.slice(roomNameStart + 2, roomNameEnd);
@@ -11,9 +12,11 @@ const getRoomName = () => {
     }
     return roomName;
 };
-
-const getName = () => {
-    const hash = window.location.hash;
+const getName = (win) => {
+  if (!win) {
+    return  null;
+  }
+    const hash = win.location.hash;
     const nameStart = hash.indexOf("[");
     const nameEnd = hash.indexOf("]");
     const name = hash.slice(nameStart + 1, nameEnd);
@@ -22,8 +25,7 @@ const getName = () => {
     }
     return name;
 };
-
-const isPartOfPiece = (i, j, shape, posX, posY) => {
+export const isPartOfPiece = (i, j, shape, posX, posY) => {
     const x = i - posX;
     const y = j - posY;
 
@@ -36,7 +38,6 @@ const isPartOfPiece = (i, j, shape, posX, posY) => {
         return false;
     }
 };
-
 const rotatePiece = (shape) => {
     let newShape = [];
         shape.map((row, i) => {
@@ -48,7 +49,6 @@ const rotatePiece = (shape) => {
 
     return newShape;
 };
-
 const placePieceOnBoard = (board, shape, posX, posY, currentPiece) => {
     board.map((row, j) => {
         row.map((cell, i) => {
@@ -59,7 +59,6 @@ const placePieceOnBoard = (board, shape, posX, posY, currentPiece) => {
     });
     return board;
 };
-
 const isPossibleToPlace = (board, shape, posX, posY, currentPiece) => {
 let prepearedShape = shape;
     try {
@@ -92,7 +91,6 @@ const getEnemy = (playerList, currentUser) => {
   })
   return result;
 }
-
   const getEnemyTime = (playerList, currentUser) => {
     let result = 0;
     playerList.forEach((player) => {
@@ -130,9 +128,10 @@ const getEnemy = (playerList, currentUser) => {
     };
 }
 
-const isCanMove = (state) => {
-  const room = state.getIn(['room']) ? state.getIn(['room']).toJS() : null;
-  const currentUser = state.getIn(['currentUser']) ?  state.getIn(['currentUser']).toJS() : null;
+const isCanMove = (room) => {
+  if(!room) {
+    return false;
+  }
   const isSingle = room && room.status === constants.gameStatuses.SINGLE;
   if (room && room.playerList && room.playerList.length === 2 || isSingle) {
     const isGameStarted = room && room.status === constants.gameStatuses.STARTED;

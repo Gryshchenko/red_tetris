@@ -34,8 +34,25 @@ import startGame from '../src/client/actions/startGame';
 import startInterval from '../src/client/actions/startInterval';
 import startMove from '../src/client/actions/startMove';
 import stopMove from '../src/client/actions/stopMove';
-import { isPossibleToPlace, rotatePiece } from '../src/client/utils';
-import { directions, emptyMap, fullMap, testPieces, tetrominoNames } from './testMap';
+import {
+  getEnemy,
+  getEnemyMap, getEnemyTime,
+  getName,
+  getRoomName, isCanMove,
+  isPartOfPiece,
+  isPossibleToPlace,
+  placePieceOnBoard,
+  rotatePiece,
+} from '../src/client/utils';
+import {
+  directions,
+  emptyMap,
+  fullMap,
+  testPieces,
+  testPlaceEmptyMap,
+  testPlaceOnBord,
+  tetrominoNames,
+} from './testMap';
 const assert = chai.assert;
 
 describe('main', function() {
@@ -314,6 +331,30 @@ describe('main', function() {
     })
   })
   describe('utils', () => {
+    it (`getRoomName`, () => {
+      return assert.equal(true, getRoomName() === null ? true : false )
+    })
+    it (`getName`, () => {
+      return assert.equal(true, getName() === null ? true : false )
+    })
+    it (`isPartOfPiece`, () => {
+      return assert.equal(true, isPartOfPiece(0, 0, testPieces[0], 0, 0));
+    })
+    it (`isPartOfPiece`, () => {
+      return assert.equal(false, isPartOfPiece(0, -1, testPieces[1], 0, -3));
+    })
+    it (`placePieceOnBoard true`, () => {
+      return assert.equal(true, _.isEqual(placePieceOnBoard(testPlaceEmptyMap, testPieces[0], 0, 0, 1), testPlaceEmptyMap));
+    })
+    it (`placePieceOnBoard false`, () => {
+      return assert.equal(false, _.isEqual(placePieceOnBoard(fullMap, testPieces[0], -4, -100, 2), testPlaceEmptyMap));
+    })
+    it (`isPossibleToPlace true`, () => {
+      return assert.equal(true, isPossibleToPlace(emptyMap, testPieces[0], 0, 0, 1));
+    })
+    it (`isPossibleToPlace  fasle`, () => {
+      return assert.equal(false, _.isEqual(isPossibleToPlace(testPlaceEmptyMap, testPieces[0], -5, 0, 2), emptyMap));
+    })
     testPieces.forEach((data, index) => {
       it (`isPossibleToPlace  map type=${tetrominoNames[index]} set x = 5 y = 0`, () => {
         return assert.equal(true, isPossibleToPlace(
@@ -377,6 +418,89 @@ describe('main', function() {
             return assert.equal(true, _.isEqual(newShape, newShape))
         })
       })
+    })
+    it (`isCanMove false`, () => {
+      return assert.equal(false, isCanMove())
+    })
+    it (`isCanMove true SINGLE`, () => {
+      return assert.equal(true, isCanMove({status: constants.gameStatuses.SINGLE, playerList: [1,2]}))
+    })
+    it (`isCanMove true MULTI`, () => {
+      return assert.equal(true, isCanMove({status: constants.gameStatuses.SINGLE, playerList: [1,2]}))
+    })
+    it (`getEnemyMap true`, () => {
+      return assert.equal(true, _.isEqual(getEnemyMap([
+        {
+          name: 'test',
+          map: fullMap,
+        },
+        {
+          name: 'test2',
+          map: emptyMap,
+        }
+      ], 'test'), emptyMap))
+    })
+    it (`getEnemyMap false`, () => {
+      return assert.equal(false, _.isEqual(getEnemyMap([
+        {
+          name: 'test',
+          map: fullMap,
+        },
+        {
+          name: 'test2',
+          map: fullMap,
+        }
+      ], 'test'), emptyMap))
+    })
+    it (`getEnemy true`, () => {
+      return assert.equal(false, _.isEqual(getEnemy([
+        {
+          name: 'test',
+          map: fullMap,
+        },
+        {
+          name: 'test2',
+          map: fullMap,
+        }
+      ], 'test'), {name: 'test2', map: fullMap}))
+    })
+    it (`getEnemy false`, () => {
+      return assert.equal(false, _.isEqual(getEnemy([
+        {
+          name: 'test',
+          map: fullMap,
+        },
+        {
+          name: 'test',
+          map: fullMap,
+        }
+      ], 'test'), 0))
+    })
+    it (`getEnemyTime true`, () => {
+      const lastActiveTime = 23;
+      return assert.equal(false, _.isEqual(getEnemy([
+        {
+          name: 'test34',
+          lastActiveTime,
+        },
+        {
+          name: 'test',
+          lastActiveTime,
+        }
+      ], 'test'), lastActiveTime))
+    })
+    it (`getEnemyTime false`, () => {
+      const lastActiveTime = 23;
+      return assert.equal(true, _.isEqual(getEnemyTime([
+        {
+          name: 'test',
+          lastActiveTime,
+        },
+        {
+          name: 'test',
+          lastActiveTime,
+        }
+      ], 'test'), 0))
     })
   })
 });

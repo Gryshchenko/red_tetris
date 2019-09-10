@@ -9,8 +9,8 @@ import constants from '../../../server/const';
 
 
 const addUser = (createGameFromQueryString, router) => {
-  const roomName = getRoomName();
-  const name = getName();
+  const roomName = getRoomName(window);
+  const name = getName(window);
   if (!name || !roomName) {
     router.history.push(`/`);
   } else {

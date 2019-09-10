@@ -100,6 +100,8 @@ export const initialState = {
 }
 
 export const reducer = (state = fromJS(initialState), action) => {
+  const room = state.getIn(['room']) ? state.getIn(['room']).toJS() : null;
+  const currentUser = state.getIn(['currentUser']) ?  state.getIn(['currentUser']).toJS() : null;
   switch (action.type) {
     case ACTION_TYPE.RETRY_RESPONSE:
       if (state.getIn(['isSingle']) === true) {
@@ -153,31 +155,31 @@ export const reducer = (state = fromJS(initialState), action) => {
     case ACTION_TYPE.START_MOVE:
       return state.setIn(['needToMoveDown'], true);
     case ACTION_TYPE.MOVE_LEFT:
-      if (isCanMove(state)) {
+      if (isCanMove(room)) {
         return state.setIn(['moveLeft'], action.data);
       } else {
         return state;
       }
     case ACTION_TYPE.MOVE_RIGHT:
-      if (isCanMove(state)) {
+      if (isCanMove(room)) {
         return state.setIn(['moveRight'], action.data);
       } else {
         return state;
       }
     case ACTION_TYPE.MOVE_DOWN:
-      if (isCanMove(state)) {
+      if (isCanMove(room)) {
         return state.setIn(['moveDown'], action.data);
       } else {
         return state;
       }
     case ACTION_TYPE.FORCE_MOVE_DOWN:
-      if (isCanMove(state)) {
+      if (isCanMove(room)) {
         return state.setIn(['forceMoveDown'], action.data);
       } else {
         return state;
       }
     case ACTION_TYPE.ROTATE_PIECE:
-      if (isCanMove(state)) {
+      if (isCanMove(room)) {
         return state.setIn(['needToRotatePiece'], action.data);
       } else {
         return state;
