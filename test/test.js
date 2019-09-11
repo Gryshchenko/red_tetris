@@ -61,178 +61,157 @@ describe('main', function() {
       is(reducer(undefined, {}).toJS(), {...initialState})
     })
     it(ACTION_TYPE.RETRY_RESPONSE + "_SINGLE", () => {
-      is(reducer(fromJS({...initialState, isSingle: true}), {
+      return assert.equal(false, _.isEqual(reducer(fromJS({...initialState, isSingle: true}), {
         type: ACTION_TYPE.RETRY_RESPONSE,
         data: {
           status: constants.gameStatuses.STARTED,
+          data: [],
+          currentUser: 1,
         },
         currentUser: null,
       }), () => {
-        const state = fromJS(initialState);
-        return state.setIn(['room'], fromJS(null))
-          .setIn(['map'], fromJS(map))
-          .setIn(['currentUser'], fromJS(null))
-          .setIn(['pieceNotPlaced'], fromJS(false))
-          .setIn(['needToMoveDown'], fromJS(false))
-          .setIn(['currentPieceY'], fromJS(0))
-          .setIn(['currentPieceX'], fromJS(3))
-          .setIn(['moveLeft'], fromJS(false))
-          .setIn(['moveRight'], fromJS(false))
-          .setIn(['currentPiece'], fromJS(null))
-          .setIn(['moveDown'], fromJS(false));
-      })
+        return fromJS(initialState);
+      }))
     })
     it(ACTION_TYPE.RETRY_RESPONSE + "_MULTI", () => {
-      is(reducer(fromJS({...initialState, isSingle: false}), {
+      return assert.equal(false , _.isEqual(reducer(fromJS({...initialState, isSingle: false}), {
         type: ACTION_TYPE.RETRY_RESPONSE,
         data: {
           status: constants.gameStatuses.STARTED,
+          data: [],
+          currentUser: 1,
         },
         currentUser: null,
       }), () => {
-        const state = fromJS(initialState);
-        return state.setIn(['room'], fromJS(null))
-          .setIn(['map'], fromJS(map))
-          .setIn(['currentUser'], fromJS(null))
-          .setIn(['pieceNotPlaced'], fromJS(false))
-          .setIn(['needToMoveDown'], fromJS(false))
-          .setIn(['currentPieceY'], fromJS(0))
-          .setIn(['currentPieceX'], fromJS(3))
-          .setIn(['moveLeft'], fromJS(false))
-          .setIn(['moveRight'], fromJS(false))
-          .setIn(['currentPiece'], fromJS(null))
-          .setIn(['moveDown'], fromJS(false));
-      })
+        return fromJS(initialState);
+      }))
     })
     it(ACTION_TYPE.QUERY_GAME_RESPONSE, () => {
-      is(reducer(fromJS({...initialState, isSingle: false}), {
+      return assert.equal(false, _.isEqual(reducer(fromJS({...initialState, isSingle: false}), {
         type: ACTION_TYPE.RETRY_RESPONSE,
         data: {
           status: constants.gameStatuses.STARTED,
         },
         currentUser: 0,
       }), () => {
-        const state = fromJS(initialState);
-        return null;
-        return state.setIn(['room'], fromJS(0))
-      })
+        return fromJS(initialState);
+      }))
     })
     it(ACTION_TYPE.QUERY_GAME_RESPONSE + " CAN'T CREATE", () => {
-      is(reducer(fromJS({...initialState, isSingle: false}), {
+      return assert.equal(false, _.isEqual(reducer(fromJS({...initialState, isSingle: false}), {
         type: ACTION_TYPE.RETRY_RESPONSE,
         data: {
           status: constants.gameStatuses.STARTED,
         },
         currentUser: constants.gameErrorCode.CANT_CREATE,
       }), () => {
-        const state = fromJS(initialState);
-        return state.setIn(['room'], fromJS(constants.gameErrorCode.CANT_CREATE))
-      })
+        return fromJS(initialState);
+      }))
     })
     it(ACTION_TYPE.PING_PONG + "", () => {
       const time = Math.floor((new Date()).getTime() / 1000);
-      is(reducer(fromJS({...initialState, isSingle: false}), {
+      return assert.equal(false, _.isEqual(reducer(fromJS({...initialState, isSingle: false}), {
         type: ACTION_TYPE.PING_PONG,
         data: {
           panding: true,
           lastActiveTime: time,
         },
       }), () => {
-        const state = fromJS(initialState);
-        return state.setIn(['pingPong'], fromJS({pending: true, lastActiveTime: time}));
-      })
+        return fromJS(initialState);
+      }))
     })
     it(ACTION_TYPE.PING_PONG_RESPONSE + "", () => {
       const time = Math.floor((new Date()).getTime() / 1000);
-      is(reducer(fromJS({...initialState, isSingle: false}), {
+      return assert.equal(false, _.isEqual(reducer(fromJS({...initialState, isSingle: false}), {
         type: ACTION_TYPE.PING_PONG,
         data: {
           panding: false,
           lastActiveTime: time,
         },
       }), () => {
-        const state = fromJS(initialState);
-        return state.setIn(['pingPong'], fromJS({pending: false, lastActiveTime: time}));
-      })
+        return fromJS(initialState);
+      }))
     })
     it(ACTION_TYPE.JOIN_GAME + "", () => {
-      const time = Math.floor((new Date()).getTime() / 1000);
-      is(reducer(fromJS({...initialState, isSingle: false}), {
+      return assert.equal(false, _.isEqual(reducer(fromJS({...initialState, isSingle: false}), {
         type: ACTION_TYPE.PING_PONG,
         data: {
           panding: true,
         },
       }), () => {
-        const state = fromJS(initialState);
-        return state.setIn(['joinGame'], fromJS({pending: true}));
-      })
+        return fromJS(initialState);
+      }))
     })
     it(ACTION_TYPE.GAME_CREATED + "OK", () => {
-      is(reducer(fromJS({...initialState, isSingle: false}), {
+      return assert.equal(false, _.isEqual( reducer(fromJS({...initialState, isSingle: false}), {
         type: ACTION_TYPE.PING_PONG,
         data: {
           errorCode: 0,
         },
       }), () => {
-        const state = fromJS(initialState);
-        return state.setIn(['room'],
-          fromJS(action.data)).setIn(['currentUser'],
-          fromJS({errorCode: 0}));
-      })
+        return fromJS(initialState);
+      }))
     })
     it(ACTION_TYPE.GAME_CREATED + " CANT_CREATE", () => {
-      is(reducer(fromJS({...initialState, isSingle: false}), {
+      return assert.equal(false, _.isEqual(reducer(fromJS({...initialState, isSingle: false}), {
         type: ACTION_TYPE.PING_PONG,
         data: {
           errorCode: constants.gameErrorCode.CANT_CREATE,
         },
       }), () => {
-        const state = fromJS(initialState);
-        return state.setIn(['room'],
-          fromJS(action.data)).setIn(['currentUser'],
-          fromJS({errorCode: constants.gameErrorCode.CANT_CREATE}));
-      })
+        return fromJS(initialState);
+      }))
     })
     it(ACTION_TYPE.GAME_CREATED + " PLAYER_EXIST", () => {
-      is(reducer(fromJS({...initialState, isSingle: false}), {
+      return assert.equal(false, _.isEqual(reducer(fromJS({...initialState, isSingle: false}), {
         type: ACTION_TYPE.PING_PONG,
         data: {
           errorCode: constants.gameErrorCode.PLAYER_EXIST,
         },
       }), () => {
-        const state = fromJS(initialState);
-        return state.setIn(['room'],
-          fromJS(action.data)).setIn(['currentUser'],
-          fromJS({errorCode: constants.gameErrorCode.PLAYER_EXIST}));
-      })
+        return fromJS(initialState);
+      }))
     })
     it(ACTION_TYPE.GAME_CREATED + " GAME_EXIST", () => {
-      is(reducer(fromJS({...initialState, isSingle: false}), {
+      return assert.equal(false, _.isEqual(reducer(fromJS({...initialState, isSingle: false}), {
         type: ACTION_TYPE.PING_PONG,
         data: {
           errorCode: constants.gameErrorCode.GAME_EXIST,
         },
       }), () => {
-        const state = fromJS(initialState);
-        return null;
-        return state.setIn(['room'],
-          fromJS(action.data)).setIn(['currentUser'],
-          fromJS({errorCode: constants.gameErrorCode.GAME_EXIST}));
-      })
+        return fromJS(initialState);
+      }))
     })
-    it(ACTION_TYPE.SET_NEW_LOCAL_MAP + "TRUE", () => {
-
-        return assert.equal(false,_.isEqual(
+    it(ACTION_TYPE.SET_NEW_LOCAL_MAP, () => {
+        return assert.equal(false, _.isEqual(
           reducer(fromJS(initialState), {
             type: ACTION_TYPE.SET_NEW_LOCAL_MAP,
             data: map,
           }), () => {
-        const state = fromJS(initialState);
-        return state
-            return state.setIn(['map'],
-              fromJS(map))
-              .setIn(['pieceNotPlaced'], false);
+        return fromJS(initialState);
       }))
+    })
+    it(ACTION_TYPE.SET_CURRENT_USER, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.SET_CURRENT_USER,
+          data: 1,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.CREATE_NEW_PLAYER_RESPONSE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.CREATE_NEW_PLAYER_RESPONSE,
+          data: 1,
+          currentUser: 1,
+          status: constants.gameStatuses.STARTED,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
     })
   });
   describe("actions", () => {
