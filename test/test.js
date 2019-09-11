@@ -213,6 +213,207 @@ describe('main', function() {
           return fromJS(state);
         }))
     })
+    it(ACTION_TYPE.START_GAME_RESPONSE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.START_GAME_RESPONSE,
+          data: 1,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.PIECE_LANDED_RESPONSE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.PIECE_LANDED_RESPONSE,
+          data: 1,
+          currentPiece: 2,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.ENEMY_PIECE_LANDED_RESPONSE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.ENEMY_PIECE_LANDED_RESPONSE,
+          data: 1,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.START_INTERVAL, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.START_INTERVAL,
+          data: 1,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.START_MOVE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.START_MOVE,
+          data: null,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.MOVE_LEFT, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.MOVE_LEFT,
+          data: null,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.MOVE_RIGHT, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.MOVE_RIGHT,
+          data: null,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.MOVE_DOWN, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.MOVE_DOWN,
+          data: null,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.FORCE_MOVE_DOWN, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.FORCE_MOVE_DOWN,
+          data: null,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.ROTATE_PIECE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.FORCE_MOVE_DOWN,
+          data: null,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.STOP_MOVE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.STOP_MOVE,
+          data: null,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.PIECE_MOVE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.PIECE_MOVE,
+          data: {posY: 2, posX: 2},
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.ENTER_PRESS, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.ENTER_PRESS,
+          data: {posY: 2, posX: 2},
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.PIECE_PLACED, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.PIECE_PLACED,
+          data: null,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.SET_CURRENT_SHAPE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.SET_CURRENT_SHAPE,
+          data: 1,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.GAME_ENDED, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.GAME_ENDED,
+          data: 1,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.GET_ALL_GAMES, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.GET_ALL_GAMES,
+          data: 1,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.GAME_PAUSED_RESPONSE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.GAME_PAUSED_RESPONSE,
+          data: 1,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.NEED_TO_PAUSE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.NEED_TO_PAUSE,
+          data: 1,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
+    it(ACTION_TYPE.GET_PLAYERS_RESPONSE, () => {
+      return assert.equal(false, _.isEqual(
+        reducer(fromJS(initialState), {
+          type: ACTION_TYPE.GET_PLAYERS_RESPONSE,
+          data: 1,
+        }), () => {
+          const state = initialState;
+          return fromJS(state);
+        }))
+    })
   });
   describe("actions", () => {
     it ('checkUSer', () => {
