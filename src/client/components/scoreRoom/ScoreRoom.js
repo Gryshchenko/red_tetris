@@ -24,7 +24,7 @@ const ScoreRoom = ({ players, getPlayers, router }) => {
       getPlayers();
     }
   });
-  if (!players) {
+  if (!players || players.length === 0) {
     return (
       <div className={'emptyList'}>
         <Logo />
