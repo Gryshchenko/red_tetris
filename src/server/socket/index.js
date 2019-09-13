@@ -154,6 +154,15 @@ export const createGameFromQueryString = async (data, socket) => {
   try {
     const game = await Game.getGameByName(data.room);
     const player = await Player.getPlayerByName(data.name);
+
+    if (game && game.playerList && game.playerList.length == 2) {
+      throw `Game is full`;
+    }
+
+    if (game && game.status != constants.gameStatuses.NOT_STARTED) {
+      throw `Game is finished`;
+    }
+
     if (!game && !player) {
       await createNewPlayer(data,socket);
       return {
@@ -182,7 +191,13 @@ export const createGameFromQueryString = async (data, socket) => {
     }
 
   } catch (e) {
-    throw `Error occured while createGameFromQueryString event: ${e}`;
+    global.io.to(socket.id).emit(
+      'action',
+      {
+        type: 'QUERY_GAME_RESPONSE',
+        errorCode: constants.gameErrorCode.CANT_CREATE,
+      }
+    );
   }
 }
 
@@ -259,6 +274,19 @@ export const joinGame = async (data, socket) => {
   try {
       let game = await Game.getGameByName(data.room);
       let player = await Player.createNewPlayer(data.name, game._id, socket.id, false);
+
+      if (!game) {
+        throw `Game not exists`;
+      }
+
+      if (game && game.playerList && game.playerList.length == 2) {
+        throw `Game is full`;
+      }
+
+      if (game && game.status != constants.gameStatuses.NOT_STARTED) {
+        throw `Game is finished`;
+      }
+
       game = await Game.updateGame(game.id, { playerList: game.playerList.concat(player.id), status: constants.gameStatuses.NOT_STARTED });
       const result = {
         type: 'JOIN_GAME',
@@ -279,7 +307,14 @@ export const joinGame = async (data, socket) => {
         });
       }
   } catch (e) {
-    throw `Error occured while joinGame event: ${e}`;
+    global.io.to(socket.id).emit(
+      'action',
+      {
+        type: 'JOIN_GAME',
+        errorCode: constants.gameErrorCode.CANT_CREATE,
+        text: e
+      }
+    );
   }
 
 }
