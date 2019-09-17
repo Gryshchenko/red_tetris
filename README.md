@@ -14,7 +14,14 @@ Not used:
 1. React / Redux
 2. Immutable
 3. MongoDB
-3. Mocha (tests)
+4. Mocha (tests)
+5. NodeJS
+
+## Install
+1. Install MongoDB
+2. npm install
+3. npm run client-dev
+4. npm run server-dev
 
 ### Mobile
 ![User registration](./gif/mobile.gif)
