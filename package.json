@@ -53,7 +53,7 @@
     "chai-equal-jsx": "^1.0.9",
     "coveralls": "^3.0.6",
     "css-loader": "^2.1.1",
-    "eslint": "^2.13.1",
+    "eslint": "^6.6.0",
     "eslint-plugin-babel": "^3.3.0",
     "eslint-plugin-react": "^5.2.2",
     "mocha": "^2.5.3",
